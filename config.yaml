@@ -1,0 +1,9 @@
+audio:
+  sample_rate: 22050
+  n_mels: 128
+  n_chroma: 12
+  segment_seconds: 10
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  splits_dir: data/splits
