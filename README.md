@@ -5,7 +5,11 @@ understanding musical context (genre, mood, emotion) from audio structure
 and text (lyrics/tags/captions).
 
 See `PROGRESS.md` for week-by-week status. The full design spec lives in the
-course notes repo at `docs/superpowers/specs/2026-08-15-gnn-bert-music-context-design.md`.
+parent CSE715 notes repo at
+`../../docs/superpowers/specs/2026-08-15-gnn-bert-music-context-design.md`.
+
+This is an independent git repo that happens to sit inside the CSE715 notes
+repo; that path is gitignored there, so the two never interfere.
 
 ## Setup
 

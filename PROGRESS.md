@@ -1,7 +1,7 @@
 # Progress Log
 
 Tracks weekly progress against `docs/superpowers/specs/2026-08-15-gnn-bert-music-context-design.md`
-(spec lives in the CSE715 course notes repo). Each entry: what was done,
+(spec lives in the parent CSE715 notes repo at `../../docs/superpowers/specs/`). Each entry: what was done,
 links to proof (commits/plots/metrics), and open blockers.
 
 ## Week 1 (Aug 15-21): Repo scaffold + preprocessing foundations
