@@ -1,10 +1,13 @@
 # Progress Log
 
+**Deadline: 11 September 2026** (corrected 2026-08-16, was 2 October).
+Same week structure and task order; the weeks are just shorter.
+
 Tracks weekly progress against `docs/superpowers/specs/2026-08-15-gnn-bert-music-context-design.md`
 (spec lives in the parent CSE715 notes repo at `../../docs/superpowers/specs/`). Each entry: what was done,
 links to proof (commits/plots/metrics), and open blockers.
 
-## Week 1 (Aug 15-21): Repo scaffold + preprocessing foundations
+## Week 1 (Aug 15-18): Repo scaffold + preprocessing foundations
 
 - [x] Private repo created and scaffolded — commit `8407ff6`, verified `isPrivate: true`
 - [x] Python 3.12 venv created (`.venv/`). **Only Week 1 deps installed**
@@ -31,28 +34,28 @@ Full suite at end of Week 1: **9 passed**.
 
 Blockers: project board auth scope (above); no dataset bytes on disk yet.
 
-## Week 2 (Aug 21-28): Task 1 — BERT tag classifier
+## Week 2 (Aug 19-22): Task 1 — BERT tag classifier
 
 (to be filled in when Week 2 starts — see issue #1)
 
-## Week 3 (Aug 28-Sep 4): Task 2 — GNN on music structure graphs
+## Week 3 (Aug 23-27): Task 2 — GNN on music structure graphs
 
 (to be filled in when Week 3 starts — see issue #2)
 
-## Week 4 (Sep 4-11): Task 3 — GNN-BERT fusion (part 1)
+## Week 4 (Aug 28-31): Task 3 — GNN-BERT fusion (part 1)
 
 (to be filled in when Week 4 starts — see issue #3)
 
-## Week 5 (Sep 11-17): Task 3 — ablations, t-SNE, case studies
+## Week 5 (Sep 1-4): Task 3 — ablations, t-SNE, case studies
 
 (to be filled in when Week 5 starts — see issue #4)
 
-## Week 6 (Sep 17-24): Task 4 — contrastive retrieval
+## Week 6 (Sep 5-8): Task 4 — contrastive retrieval
 
 (to be filled in when Week 6 starts — see issue #5)
 
-## Week 7 (Sep 24-29): Report, demo notebook, cleanup
+## Week 7 (Sep 9-10): Report, demo notebook, cleanup
 
 (to be filled in when Week 7 starts — see issue #6)
 
-## Buffer (Sep 29-Oct 2): Submission only
+## Buffer (Sep 11): Submission only
