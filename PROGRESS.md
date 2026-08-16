@@ -36,26 +36,26 @@ Blockers: project board auth scope (above); no dataset bytes on disk yet.
 
 ## Week 2 (Aug 19-22): Task 1 — BERT tag classifier
 
-(to be filled in when Week 2 starts — see issue #1)
+(to be filled in when Week 2 starts — see issue #9)
 
 ## Week 3 (Aug 23-27): Task 2 — GNN on music structure graphs
 
-(to be filled in when Week 3 starts — see issue #2)
+(to be filled in when Week 3 starts — see issue #10)
 
 ## Week 4 (Aug 28-31): Task 3 — GNN-BERT fusion (part 1)
 
-(to be filled in when Week 4 starts — see issue #3)
+(to be filled in when Week 4 starts — see issue #11)
 
 ## Week 5 (Sep 1-4): Task 3 — ablations, t-SNE, case studies
 
-(to be filled in when Week 5 starts — see issue #4)
+(to be filled in when Week 5 starts — see issue #12)
 
 ## Week 6 (Sep 5-8): Task 4 — contrastive retrieval
 
-(to be filled in when Week 6 starts — see issue #5)
+(to be filled in when Week 6 starts — see issue #13)
 
 ## Week 7 (Sep 9-10): Report, demo notebook, cleanup
 
-(to be filled in when Week 7 starts — see issue #6)
+(to be filled in when Week 7 starts — see issue #14)
 
 ## Buffer (Sep 11): Submission only
