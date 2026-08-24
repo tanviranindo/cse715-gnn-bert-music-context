@@ -25,14 +25,39 @@ links to proof (commits/plots/metrics), and open blockers.
       scope. Fix with `gh auth refresh -s project,read:project` (interactive
       browser flow), then `gh project create --owner @me --title "GNN-BERT Music Context"`
       and add Backlog / This Week / In Progress / Done columns in the web UI.
-- [ ] **Datasets not yet downloaded.** Start the MusicCaps `yt-dlp` scrape
-      and the ~22GB FMA-medium download first — both are long-running and
-      Task 4 (Week 6) depends on the scrape. Record the actual MusicCaps clip
-      count here when it finishes; do not assume all 5,521.
+- [x] **GPU training environment stood up (2026-08-24).** Rented a Vast.ai
+      on-demand instance (RTX 4090, 24GB VRAM, 205GB disk, ~$0.15-0.36/hr
+      depending on host) since local machine (M2 Pro, 16GB RAM, 78GB free
+      disk) and Deepnote's free tier (CPU-only, ephemeral browser terminal)
+      were both insufficient. Repo cloned, `requirements.txt` installed
+      (torch 2.13.0, torch-geometric 2.8.0, transformers 5.15.1), all 9
+      Week 1 tests re-verified passing on the instance, CUDA confirmed
+      available (`torch.cuda.is_available() == True`). Work runs inside
+      `tmux` sessions on the instance so long jobs survive SSH disconnects.
+- [x] **Datasets downloaded and validated (2026-08-24):**
+  - FMA-medium: `fma_medium.zip` (~22GB) + `fma_metadata.zip` (342MB) —
+    zip integrity verified (`unzip -tq`, no errors).
+  - MagnaTagATune: all 3 split-zip parts + `annotations_final.csv` (21MB)
+    downloaded. Parts 2-3 correctly show as raw split-archive data (not
+    corruption) — merge with `zip -F` before extracting.
+  - DEAM: `deam_audio.zip` (1.3GB) — zip integrity verified, no errors.
+  - MusicCaps: **captions CSV validated at exactly 5,521 rows** (full
+    expected count), correct columns
+    (`ytid,start_s,end_s,audioset_positive_labels,aspect_list,caption,author_id,is_balanced_subset,is_audioset_eval`).
+    **Audio: 5,355 of 5,521 clips (97%) — NOT scraped via yt-dlp.**
+    Direct YouTube scraping from the Vast.ai datacenter IP was 100%
+    blocked by YouTube's bot detection ("Sign in to confirm you're not a
+    bot") even with `--extractor-args player_client=android/tv`
+    workarounds. Used a pre-scraped mirror instead:
+    `mahendra0203/musiccaps_processed_full` on Hugging Face (7 parquet
+    shards, 3.4GB, columns `audio,caption,youtube_id,start_time,end_time,aspect_list`),
+    row count validated via `pyarrow` (765 × 7 = 5,355 exactly). This is
+    the actual retrieved clip count — do not assume all 5,521 exist per
+    the spec's own caution about this.
 
-Full suite at end of Week 1: **9 passed**.
+Full suite at end of Week 1: **9 passed** (re-verified on GPU instance).
 
-Blockers: project board auth scope (above); no dataset bytes on disk yet.
+Blockers: project board auth scope (above, still open).
 
 ## Week 2 (Aug 19-22): Task 1 — BERT tag classifier
 
