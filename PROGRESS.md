@@ -34,7 +34,7 @@ links to proof (commits/plots/metrics), and open blockers.
       Week 1 tests re-verified passing on the instance, CUDA confirmed
       available (`torch.cuda.is_available() == True`). Work runs inside
       `tmux` sessions on the instance so long jobs survive SSH disconnects.
-- [x] **Datasets downloaded and validated (2026-08-24):**
+- [x] **Datasets downloaded and validated (2026-08-24), including FMA-medium integrity check (unzip -tq, no errors):**
   - FMA-medium: `fma_medium.zip` (~22GB) + `fma_metadata.zip` (342MB) —
     zip integrity verified (`unzip -tq`, no errors).
   - MagnaTagATune: all 3 split-zip parts + `annotations_final.csv` (21MB)
