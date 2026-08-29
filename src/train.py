@@ -81,6 +81,9 @@ def main() -> None:
                    help="mtat: include artist in the text (memorisation risk)")
     p.add_argument("--strip-leakage", action="store_true",
                    help="musiccaps: delete aspect words from the caption")
+    p.add_argument("--save-checkpoint", action="store_true",
+                   help="persist encoder weights for Task 3/4 reuse")
+    p.add_argument("--checkpoint-dir", default="/data/checkpoints")
     args = p.parse_args()
 
     torch.manual_seed(args.seed)
@@ -189,6 +192,20 @@ def main() -> None:
     (out / "plots").mkdir(parents=True, exist_ok=True)
     tag = f"task1_{args.dataset}" + ("_stripped" if args.strip_leakage else "")
     (out / f"metrics_{tag}.json").write_text(json.dumps(results, indent=2))
+
+    # Persist the encoder: Task 3 fuses this text branch with the GNN, and
+    # Task 4 reuses it as the text tower. Runs are seeded so this is a
+    # convenience, not the only route back to the weights.
+    if args.save_checkpoint:
+        ckpt_dir = Path(args.checkpoint_dir)
+        ckpt_dir.mkdir(parents=True, exist_ok=True)
+        torch.save(
+            {"model_state": model.state_dict(), "vocab": vocab,
+             "config": vars(args), "threshold": thr,
+             "test_metrics": results["test"]},
+            ckpt_dir / f"{tag}.pt",
+        )
+        print(f"[ckpt] {ckpt_dir}/{tag}.pt")
 
     examples = []
     for r, probs_row in list(zip(splits["test"], p_test))[:5]:
