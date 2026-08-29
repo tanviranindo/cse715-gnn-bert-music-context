@@ -438,5 +438,10 @@
   "time": "00:02",
   "iso": "2026-08-29T18:02:37Z",
   "text": "instance unreachable"
+ },
+ {
+  "time": "03:22",
+  "iso": "2026-08-29T21:22:15Z",
+  "text": "phase: unknown -> no instance running"
  }
 ]

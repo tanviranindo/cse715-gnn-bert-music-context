@@ -67,7 +67,8 @@ for name,key,dl_t,ex_t in SPEC:
 disk=num("DISK")
 st={"generated_at":datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     "ssh_reachable":os.environ.get("REMOTE_OK")=="true",
-    "phase":kv.get("PHASE","unknown").strip(),
+    "phase":(kv.get("PHASE","").strip() or
+             ("no instance running" if not os.environ.get("IID") else "unreachable")),
     "job_running":kv.get("DL","0").strip()=="1",
     "datasets":ds,
     "disk":{"used_gb":round(disk/1e9,2),"total_gb":60,
