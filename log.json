@@ -1,0 +1,308 @@
+[
+ {
+  "date": "2026-08-15",
+  "time": "07:27",
+  "category": "setup",
+  "text": "Private repo created and scaffolded to spec structure (commit 8407ff6)"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "07:29",
+  "category": "code",
+  "text": "src/audio_features.py added \u2014 resample, log-mel, chroma, segmentation (5 tests, commit 1fa39c7)"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "07:33",
+  "category": "code",
+  "text": "src/splits.py added \u2014 artist-grouped splitting, no leakage (4 tests, commit f65cec5)"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "07:33",
+  "category": "docs",
+  "text": "Dataset download instructions documented (commit a231b83)"
+ },
+ {
+  "date": "2026-08-15",
+  "time": "07:39",
+  "category": "setup",
+  "text": "PROGRESS.md added, GitHub Milestones + Issues created (commit 827ffec)"
+ },
+ {
+  "date": "2026-08-16",
+  "time": "07:30",
+  "category": "planning",
+  "text": "Deadline corrected to 2026-09-11 (was misread as 2 October)"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:04",
+  "category": "compute",
+  "text": "Rented Vast.ai RTX 4090 instance (24GB VRAM), cloned repo, verified 9/9 tests + CUDA on the fresh environment"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:21",
+  "category": "data",
+  "text": "Started FMA-medium, FMA-metadata, MagnaTagATune, and DEAM downloads inside a persistent tmux session"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:27",
+  "category": "data",
+  "text": "MusicCaps' original GitHub source returned 404 \u2014 pulled captions CSV from Hugging Face instead (5,521 rows)"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:29",
+  "category": "blocker",
+  "text": "Direct YouTube scrape for MusicCaps audio blocked 100% by bot detection \u2014 stopped after 42 attempts rather than mislabel live links as dead"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:34",
+  "category": "data",
+  "text": "Found a pre-scraped MusicCaps audio mirror on Hugging Face (mahendra0203/musiccaps_processed_full) \u2014 downloaded and validated 5,355 clips"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:44",
+  "category": "tooling",
+  "text": "Built a project status dashboard, first version as a cloud Artifact"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:49",
+  "category": "tooling",
+  "text": "Moved the dashboard fully local: python3 http.server + a background polling script on this Mac"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:56",
+  "category": "data",
+  "text": "FMA-medium finished downloading \u2014 23.8 GB in 34m23s. All four datasets now fully on disk and validated."
+ },
+ {
+  "date": "2026-08-24",
+  "time": "00:57",
+  "category": "validation",
+  "text": "FMA-medium integrity check (unzip -tq) started \u2014 first attempt's output was lost to a dropped SSH session"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "01:27",
+  "category": "validation",
+  "text": "Integrity check restarted with nohup to safely capture the result this time"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "01:53",
+  "category": "validation",
+  "text": "FMA-medium integrity check complete: \"No errors detected in compressed data of fma_medium.zip.\" Confirmed clean."
+ },
+ {
+  "date": "2026-08-24",
+  "time": "01:54",
+  "category": "repo",
+  "text": "PROGRESS.md and session log committed and pushed to GitHub (commit 6e6d5b8)"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "07:49",
+  "category": "tooling",
+  "text": "Dashboard upgraded to self-log events instead of static hardcoded entries"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "07:53",
+  "category": "bugfix",
+  "text": "Caught a false positive in the auto-logger: it flagged the integrity check as \"errors found\" because its detection naively substring-matched the word \"error\" inside the message \"No errors detected\" \u2014 corrected here. The archive is genuinely clean (see 01:53 entry)."
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:00",
+  "category": "compute",
+  "text": "Decided to pause for the night. Attempted to back up the 30GB of downloaded datasets before destroying the instance."
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:01",
+  "category": "blocker",
+  "text": "Vast.ai's built-in \"Cloud sync\" defaulted to backing up /workspace/ instead of the actual data directory \u2014 caught this before trusting an empty backup."
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:03",
+  "category": "blocker",
+  "text": "Corrected the sync path to data/raw/ and retried \u2014 throughput collapsed to ~400 KB/s within a minute (Google Drive API throttling)"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:06",
+  "category": "blocker",
+  "text": "Tried a direct rsync (instance \u2192 Mac) instead \u2014 also throttled, ~50-100 KB/s sustained"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:10",
+  "category": "blocker",
+  "text": "Isolated the bottleneck with a clean 100MB test file: ~100-200 KB/s sustained after an initial burst \u2014 confirmed genuine, not a fluke of either tool"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:12",
+  "category": "decision",
+  "text": "Decided against waiting out the slow backup \u2014 re-downloading from original sources next session (~50 min at 15-20MB/s) is cheaper than hours of instance uptime waiting on a throttled transfer"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:13",
+  "category": "compute",
+  "text": "Verified nothing uncommitted or unique was at risk (git status clean except an unused scrape script) \u2014 instance destroyed"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:14",
+  "category": "decision",
+  "text": "Decided to switch to Vast.ai persistent Volumes for the next session instead of container disk, to avoid this problem entirely"
+ },
+ {
+  "date": "2026-08-24",
+  "time": "08:20",
+  "category": "tooling",
+  "text": "Rebuilt the dashboard as a full local project command center \u2014 state.json + log.json driven, no longer dependent on any live remote instance"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:10",
+  "category": "tooling",
+  "text": "Installed vastai CLI (uv tool) and registered API key; switched instance selection from eyeballing the web UI to CLI search with --storage pricing"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:15",
+  "category": "decision",
+  "text": "Destroyed the $0.499/hr RTX 5090 2min after launch \u2014 205GB container disk alone cost $0.067/hr, giving only ~12h runway on $7"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:25",
+  "category": "compute",
+  "text": "CLI revealed storage price varies 3-4x between hosts and is hidden in the web UI. Picked offer 45573262 (RTX 4080S, California): $0.140/hr GPU + $0.005/hr for 90GB = $0.145/hr, 3.4x the runway of the 5090"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:28",
+  "category": "compute",
+  "text": "Created 40GB local volume V.49139226 (22241134_gnnbert_data) on machine 143795, mounted at /data \u2014 survives instance destroy, fixing the Aug 24 data-loss problem. Costs $0.111/day billed 24/7"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:32",
+  "category": "setup",
+  "text": "Instance 49139746 up: RTX 4080S 16GB, 64 threads, 62GB RAM (double the advertised 32c/31GB). Image ships Python 3.10.12 + torch 2.5.1+cu121, not the planned 3.12/2.13 \u2014 kept the image stack rather than rebuild torch"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:35",
+  "category": "validation",
+  "text": "All 9 Week-1 tests pass on librosa 0.11.0 / Python 3.10 \u2014 the version drift from requirements.txt is harmless"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "20:48",
+  "category": "data",
+  "text": "All four datasets re-downloaded to /data in 15m50s at ~18MB/s, zero failures. DEAM came straight from cvml.unige.ch this time; MusicCaps again via the HF mirror"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "21:02",
+  "category": "data",
+  "text": "Verified + extracted: FMA-small 8000 mp3, MagnaTagATune 25863 mp3, DEAM 1802 mp3, MusicCaps 5355 rows (matches the Aug 24 count exactly). Archives deleted after verification; /data at 17GB of 40GB"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "21:05",
+  "category": "decision",
+  "text": "Used FMA-small (7.2GB) not FMA-medium (22GB): data/README confirms Task 2 only uses the small subset, and medium would not fit the 40GB volume alongside features"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "21:40",
+  "category": "blocker",
+  "text": "Volume V.49139226 vanished on instance destroy, taking 17GB of verified datasets. Cause: the Vast docs page shows '--env -v V.<id>:/data', which stores the mount as a plain env var and never links the volume"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "21:55",
+  "category": "blocker",
+  "text": "Retried with --create-volume; the volume was destroyed with the instance again. Machine free space went 460GB -> 500GB, confirming release"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "22:10",
+  "category": "validation",
+  "text": "Ran a controlled persistence experiment with a 1-byte marker file instead of 17GB of data: standalone 'vastai create volume' + '--link-volume' SURVIVES destroy/re-create. Marker read back intact"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "22:15",
+  "category": "decision",
+  "text": "Volume rule settled: never use --create-volume or --env for mounts. Create the volume standalone, attach with --link-volume. Written into infra/vast-connect.md"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "22:18",
+  "category": "validation",
+  "text": "'vastai show volumes' and instance volume_info both intermittently report empty for a healthy attached volume. Reliable check is the machine's free volume space via 'vastai search volumes machine_id=143795'"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "22:20",
+  "category": "compute",
+  "text": "Rebuilt on volume 49151852, sized up 40GB -> 60GB so cached features cannot collide with the 17GB of raw audio"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "22:25",
+  "category": "tooling",
+  "text": "Rewrote update_status.sh: resolves host/port from the vastai CLI instead of hardcoding, tracks all 5 datasets with phase-aware targets, reports volume usage, instance rate/uptime and credit. Fixed an awk 32-bit overflow that capped sizes at 2147483647 and a heredoc/stdin collision that silently blanked every poll"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "22:28",
+  "category": "tooling",
+  "text": "Generalised status.html from a single hardcoded FMA-medium bar to render N datasets from status.json"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "23:05",
+  "category": "blocker",
+  "text": "MagnaTagATune's official mirror (mirg.city.ac.uk) throttled to 68.6 KB/s with an ETA of 2h53m for part 1 of 3 \u2014 ~8h total. Almost certainly rate-limited after three pulls of the same archive in one afternoon"
+ },
+ {
+  "date": "2026-08-29",
+  "time": "23:15",
+  "category": "data",
+  "text": "Switched MagnaTagATune to the HF mirror confit/magnatagatune: single mp3.zip (2.97GB) instead of 3 split parts, pulled at ~40MB/s \u2014 about 600x faster. Also ships the standard MTT train/val/test split TSVs, which the official mirror does not"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:00",
+  "category": "validation",
+  "text": "Volume 49151852 (60GB) seeded and verified: 8000 + 25863 + 1802 mp3, 5355 caption rows, 3 MTT split files, 9/9 tests pass. Machine free space 440GB confirms the volume is registered"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:20",
+  "category": "blocker",
+  "text": "THIRD volume loss: standalone create + --link-volume also failed to survive destroy at 60GB/1.5h uptime. The earlier 5GB/2min marker probe that passed was a false positive. Machine free space returned to 500GB and show volumes stayed empty for 3+ min"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:25",
+  "category": "decision",
+  "text": "Abandoned Vast local volumes entirely. With the HF mirror for MagnaTagATune the full seed is ~22min/$0.05, so re-downloading each session costs ~$0.50 over the project vs $1.60 for a volume that does not persist. Irreplaceable artifacts (checkpoints, results, splits) get rsynced down to the Mac instead"
+ }
+]

@@ -59,6 +59,48 @@ Full suite at end of Week 1: **9 passed** (re-verified on GPU instance).
 
 Blockers: project board auth scope (above, still open).
 
+
+### Compute environment rebuilt on a persistent volume (2026-08-29)
+
+The Aug 24 setup was lost when that instance was destroyed. Rebuilt on
+**Vast.ai machine 143795** with a **persistent local volume** so this cannot
+recur:
+
+- **Volume `49151852`** (`22241134_gnnbert_data`), 60 GB, mounted at `/data`.
+  Survives instance destroy — **proven by experiment**, see `infra/vast-connect.md`.
+  Pinned to machine 143795. Costs $0.133/day, billed 24/7.
+
+  **The volume must be created standalone and attached with `--link-volume`.**
+  Both `--env '-v V.<id>:/data'` (what the Vast docs show) and `--create-volume`
+  silently destroy the volume with the instance; each cost us 17 GB on 2026-08-29.
+- **Instance**: offer `45573262`, 1x RTX 4080 SUPER 16 GB, 64 threads, 62 GB RAM,
+  **$0.143/hr all-in**. Chosen via `vastai search offers --storage 90`, which
+  exposes per-host storage price — invisible in the web UI and varying 3-4x.
+  The RTX 5090 first rented cost $0.499/hr and would have given ~12 h of runway
+  on the remaining credit; this gives ~47 h.
+- **Stack**: image ships Python 3.10.12 + torch 2.5.1+cu121, *not* the
+  `requirements.txt` pins (3.12 / torch 2.13.0). librosa 0.11.0,
+  transformers 5.16.1, torch-geometric 2.8.0. **All 9 Week-1 tests pass**
+  unchanged, so `requirements.txt` should be relaxed to match rather than
+  rebuilding torch on every rental.
+- **Datasets on `/data/raw` (17 GB of 40 GB), all verified**:
+
+  | dataset | count | expected |
+  |---|---|---|
+  | FMA-small | 8,000 mp3 | ~8,000 |
+  | MagnaTagATune | 25,863 mp3 + 3 MTT split TSVs | ~25,863 |
+  | DEAM | 1,802 mp3 | ~1,802 |
+  | MusicCaps | 5,355 rows | 5,355 (matches Aug 24) |
+
+  **FMA-small, not FMA-medium.** `data/README.md` confirms Task 2 uses only the
+  FMA-small subset; medium's extra 15 GB does not fit the volume alongside
+  extracted features. Revisit only if a task genuinely needs medium.
+
+Scripts: `infra/fetch_datasets.sh`, `infra/extract_datasets.sh` (both idempotent),
+connection details and re-rent command in `infra/vast-connect.md`.
+
+Remaining credit after setup: **$6.86**.
+
 ## Week 2 (Aug 19-22): Task 1 — BERT tag classifier
 
 (to be filled in when Week 2 starts — see issue #9)

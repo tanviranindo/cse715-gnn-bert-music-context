@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GNN-BERT Mission Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F3F5F7; --surface: #FFFFFF; --surface-2: #EDF0F3; --border: #DCE1E8;
+    --text: #131A29; --text-dim: #5B6472;
+    --accent: #0D9488; --accent-soft: #CCF3EC;
+    --good: #16A34A; --good-soft: #DCFCE7;
+    --warn: #B45309; --warn-soft: #FEF3C7;
+    --bad: #DC2626; --bad-soft: #FEE2E2;
+    --blocked: #7C3AED; --blocked-soft: #EDE4FD;
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0F1A; --surface: #131A29; --surface-2: #1B2436; --border: #263049;
+      --text: #E7EAF2; --text-dim: #8D97AF;
+      --accent: #5EEAD4; --accent-soft: #10352F;
+      --good: #4ADE80; --good-soft: #12321F;
+      --warn: #FBBF24; --warn-soft: #3A2C0C;
+      --bad: #F87171; --bad-soft: #3A1616;
+      --blocked: #A78BFA; --blocked-soft: #251C42;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F1A; --surface: #131A29; --surface-2: #1B2436; --border: #263049;
+    --text: #E7EAF2; --text-dim: #8D97AF;
+    --accent: #5EEAD4; --accent-soft: #10352F;
+    --good: #4ADE80; --good-soft: #12321F;
+    --warn: #FBBF24; --warn-soft: #3A2C0C;
+    --bad: #F87171; --bad-soft: #3A1616;
+    --blocked: #A78BFA; --blocked-soft: #251C42;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif; line-height: 1.5; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+  h1, h2 { font-family: "Manrope", ui-sans-serif, system-ui, sans-serif; text-wrap: balance; margin: 0; }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  header { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 28px; margin-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+  h1 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-dim); font-size: 0.95rem; margin-top: 6px; }
+  .deadline-stat { text-align: right; }
+  .deadline-stat .num { font-family: "IBM Plex Mono", monospace; font-size: 2.4rem; font-weight: 600; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+  .deadline-stat .label { color: var(--text-dim); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+  .clock-bar { display: flex; justify-content: space-between; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 20px; margin-bottom: 24px; font-family: "IBM Plex Mono", monospace; font-size: 0.82rem; }
+  .clock-bar .live-dot { display: inline-flex; align-items: center; gap: 6px; color: var(--good); font-weight: 600; }
+  .clock-bar .live-dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 1.6s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .clock-bar .live-dot::before { animation: none; } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 32px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; }
+  .card h2 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); font-weight: 700; margin-bottom: 14px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; font-family: "IBM Plex Mono", monospace; letter-spacing: 0.02em; white-space: nowrap; }
+  .pill.good { background: var(--good-soft); color: var(--good); }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .pill.bad { background: var(--bad-soft); color: var(--bad); }
+  .pill.blocked { background: var(--blocked-soft); color: var(--blocked); }
+  .pill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .pill.warn::before { animation: pulse 1.6s ease-in-out infinite; }
+  .kv { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 0.88rem; }
+  .kv:last-child { border-bottom: none; }
+  .kv .k { color: var(--text-dim); }
+  .kv .v { font-family: "IBM Plex Mono", monospace; text-align: right; }
+  .dataset-row { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .dataset-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .dataset-row:first-child { padding-top: 0; }
+  .dataset-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .dataset-name { font-weight: 600; font-size: 0.9rem; }
+  .dataset-meta { color: var(--text-dim); font-size: 0.76rem; font-family: "IBM Plex Mono", monospace; margin-top: 2px; }
+  .bar-track { height: 6px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width 0.6s ease; }
+  .bar-fill.done { background: var(--good); }
+  .bar-fill.partial { background: var(--warn); }
+  .blocker { display: flex; gap: 10px; align-items: flex-start; font-size: 0.86rem; }
+  .blocker p { margin: 4px 0 0; color: var(--text-dim); font-size: 0.82rem; }
+  .timeline-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; margin-bottom: 32px; }
+  .timeline { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-top: 18px; }
+  .tl-step { text-align: center; }
+  .tl-dot-row { display: flex; align-items: center; }
+  .tl-dot-row .line { flex: 1; height: 2px; background: var(--border); }
+  .tl-dot-row:first-child .line:first-child, .tl-dot-row:last-child .line:last-child { visibility: hidden; }
+  .tl-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--surface-2); border: 2px solid var(--border); flex-shrink: 0; }
+  .tl-dot.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .tl-label { margin-top: 8px; font-size: 0.72rem; color: var(--text-dim); line-height: 1.3; }
+  .tl-label .wk { display: block; font-family: "IBM Plex Mono", monospace; color: var(--text); font-weight: 600; font-size: 0.76rem; }
+  .log-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; }
+  .log-entry { display: flex; gap: 14px; font-size: 0.85rem; padding: 8px 0; }
+  .log-entry:not(:last-child) { border-bottom: 1px solid var(--border); }
+  .log-time { font-family: "IBM Plex Mono", monospace; color: var(--text-dim); flex-shrink: 0; width: 64px; font-size: 0.78rem; }
+  footer { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.78rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  code { font-family: "IBM Plex Mono", monospace; }
+  @media (max-width: 640px) {
+    .timeline { grid-template-columns: repeat(4, 1fr); row-gap: 20px; }
+    header { flex-direction: column; align-items: flex-start; }
+    .deadline-stat { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <p class="eyebrow">CSE715 &middot; Course Project</p>
+      <h1>GNN-BERT Music Context</h1>
+      <p class="subtitle">Hybrid GNN + BERT system for understanding musical context from audio structure and text</p>
+    </div>
+    <div class="deadline-stat">
+      <div class="num" id="days-left">&ndash;</div>
+      <div class="label">days to 11 Sep 2026</div>
+    </div>
+  </header>
+
+  <div class="clock-bar">
+    <span id="connection-status" class="live-dot">connecting&hellip;</span>
+    <span>Your machine &middot; <span id="local-clock" class="mono">&ndash;</span></span>
+    <span>Instance last checked <span id="last-checked" class="mono">&ndash;</span></span>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <h2>Compute Environment</h2>
+      <div class="kv"><span class="k">Provider</span><span class="v">Vast.ai (on-demand)</span></div>
+      <div class="kv"><span class="k">GPU</span><span class="v">RTX 4090 &middot; 24 GB VRAM</span></div>
+      <div class="kv"><span class="k">Disk</span><span class="v">205 GB container</span></div>
+      <div class="kv"><span class="k">SSH reachable</span><span class="v" id="ssh-status"><span class="pill warn">checking</span></span></div>
+      <div class="kv"><span class="k">Rate</span><span class="v">~$0.15&ndash;0.36/hr</span></div>
+      <div class="kv"><span class="k">Backup</span><span class="v"><span class="pill good">Drive connected</span></span></div>
+    </div>
+
+    <div class="card">
+      <h2>Repo &amp; Tests</h2>
+      <div class="kv"><span class="k">Repository</span><span class="v">gnn-bert-music-context</span></div>
+      <div class="kv"><span class="k">Visibility</span><span class="v">Private</span></div>
+      <div class="kv"><span class="k">Latest commit</span><span class="v mono" id="latest-commit">&ndash;</span></div>
+      <div class="kv"><span class="k">Week 1 tests</span><span class="v" id="tests-status"><span class="pill warn">checking</span></span></div>
+      <div class="kv"><span class="k">torch</span><span class="v">2.13.0</span></div>
+      <div class="kv"><span class="k">torch-geometric</span><span class="v">2.8.0</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Blockers</h2>
+      <div class="blocker">
+        <span class="pill blocked">auth scope</span>
+        <div>
+          <strong style="font-size:0.86rem;">GitHub Project board</strong>
+          <p><code>gh</code> token lacks <code>project</code> scope. Needs <code>gh auth refresh -s project,read:project</code>.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-bottom:32px;">
+    <h2>Datasets</h2>
+    <div class="dataset-meta" id="phase-line" style="margin:-4px 0 14px;">&ndash;</div>
+    <div id="datasets-live"></div>
+    <div class="dataset-meta" id="disk-line" style="margin-top:14px;">&ndash;</div>
+  </div>
+
+  <div class="timeline-card">
+    <h2 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700;">7-Week Roadmap</h2>
+    <div class="timeline">
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot active"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 1</span>Scaffold + data</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 2</span>BERT classifier</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 3</span>GNN on graphs</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 4</span>Fusion model</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 5</span>Ablations</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 6</span>Retrieval</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Week 7</span>Report</div></div>
+      <div class="tl-step"><div class="tl-dot-row"><div class="line"></div><div class="tl-dot"></div><div class="line"></div></div><div class="tl-label"><span class="wk">Buffer</span>Submit</div></div>
+    </div>
+  </div>
+
+  <div class="log-card">
+    <h2 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); font-weight:700; margin-bottom:10px;">Session Log <span style="font-weight:400; text-transform:none; letter-spacing:0;">&mdash; auto-updates on change</span></h2>
+    <div id="log-entries">
+      <div class="log-entry"><span class="log-time">&ndash;</span><span>Loading&hellip;</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Polls <code>status.json</code> every 15s &middot; generated by <code>update_status.sh</code> on this machine</span>
+    <span id="footer-clock" class="mono">&ndash;</span>
+  </footer>
+
+</div>
+
+<script>
+  const DEADLINE = new Date("2026-09-11T23:59:59");
+
+  function updateClock() {
+    const now = new Date();
+    const opts = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const str = now.toLocaleString(undefined, opts);
+    document.getElementById('local-clock').textContent = str;
+    document.getElementById('footer-clock').textContent = str;
+
+    const msLeft = DEADLINE - now;
+    const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
+    document.getElementById('days-left').textContent = daysLeft;
+  }
+
+  function fmtBytes(n) {
+    if (!n) return '0 GB';
+    return (n / 1e9).toFixed(1) + ' GB';
+  }
+
+  async function pollStatus() {
+    const dot = document.getElementById('connection-status');
+    try {
+      const res = await fetch('status.json?t=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('bad response');
+      const data = await res.json();
+
+      dot.textContent = 'live';
+      dot.style.color = 'var(--good)';
+
+      const checkedTime = new Date(data.generated_at).toLocaleTimeString();
+      document.getElementById('last-checked').textContent = checkedTime;
+
+      const sshEl = document.getElementById('ssh-status');
+      sshEl.innerHTML = data.ssh_reachable
+        ? '<span class="pill good">reachable</span>'
+        : '<span class="pill bad">unreachable</span>';
+
+      const esc = t => String(t==null?'':t).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+      document.getElementById('phase-line').textContent =
+        (data.phase || 'idle') + (data.job_running ? ' \u2014 job running' : ' \u2014 no job running');
+
+      const wrap = document.getElementById('datasets-live');
+      wrap.innerHTML = (data.datasets || []).map(d => {
+        const pct = Math.max(0, Math.min(100, d.pct || 0));
+        let cls = 'partial', pill = 'warn', label = d.state || 'downloading';
+        if (d.state === 'extracted' || d.state === 'complete') { cls = 'done'; pill = 'good'; }
+        else if (d.state === 'failed') { cls = 'partial'; pill = 'bad'; }
+        else if (!data.job_running && pct < 100) { pill = 'bad'; label = 'stalled'; }
+        const size = d.total_bytes
+          ? fmtBytes(d.bytes) + ' / ' + fmtBytes(d.total_bytes)
+          : fmtBytes(d.bytes || 0);
+        return '<div class="dataset-row">' +
+          '<div class="dataset-top"><span class="dataset-name">' + esc(d.name) + '</span>' +
+          '<span class="pill ' + pill + '">' + esc(label) + '</span></div>' +
+          '<div class="bar-track"><div class="bar-fill ' + cls + '" style="width:' + pct + '%"></div></div>' +
+          '<div class="dataset-meta">' + size + ' (' + pct.toFixed(0) + '%)' +
+          (d.detail ? ' &middot; ' + esc(d.detail) : '') + '</div></div>';
+      }).join('') || '<div class="dataset-meta">no data yet</div>';
+
+      const dk = data.disk || {};
+      const inst = data.instance || {};
+      document.getElementById('disk-line').textContent =
+        'volume ' + (dk.used_gb||0).toFixed(1) + ' / ' + (dk.total_gb||40) + ' GB used' +
+        (inst.id ? '  \u00b7  instance ' + inst.id + '  \u00b7  $' + (inst.rate||0).toFixed(3) + '/hr' +
+                   '  \u00b7  up ' + (inst.uptime_h||0).toFixed(2) + ' h' +
+                   '  \u00b7  credit $' + (inst.credit||0).toFixed(2) : '');
+
+      document.getElementById('latest-commit').textContent = data.latest_commit || '–';
+
+      const testsEl = document.getElementById('tests-status');
+      if (data.tests_summary && data.tests_summary.includes('passed') && !data.tests_summary.includes('failed')) {
+        testsEl.innerHTML = '<span class="pill good">' + data.tests_summary + '</span>';
+      } else {
+        testsEl.innerHTML = '<span class="pill bad">' + (data.tests_summary || 'unknown') + '</span>';
+      }
+
+    } catch (e) {
+      dot.textContent = 'disconnected';
+      dot.style.color = 'var(--bad)';
+    }
+  }
+
+  async function pollEvents() {
+    try {
+      const res = await fetch('events.json?t=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) throw new Error('bad response');
+      const events = await res.json();
+      const container = document.getElementById('log-entries');
+      container.innerHTML = events.slice().reverse().map(e =>
+        '<div class="log-entry"><span class="log-time">' + e.time + '</span><span>' + e.text + '</span></div>'
+      ).join('');
+    } catch (e) {
+      // leave whatever was last rendered
+    }
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+  pollStatus();
+  setInterval(pollStatus, 15000);
+  pollEvents();
+  setInterval(pollEvents, 15000);
+</script>
+
+</body>
+</html>
