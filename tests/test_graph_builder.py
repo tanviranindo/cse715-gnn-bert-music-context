@@ -86,3 +86,32 @@ def test_graph_stats_reports_degree():
     stats = gb.graph_stats(ei, 3)
     assert stats["n_nodes"] == 3 and stats["n_edges"] == ei.shape[1]
     assert stats["avg_degree"] > 0
+
+
+def test_standardize_prevents_a_complete_graph():
+    """Raw MFCC-like features share a large positive mean, so every pair looks
+    similar. Without z-scoring the graph saturates; with it, it stays sparse."""
+    rng = np.random.default_rng(0)
+    # big shared offset + small per-segment variation, like real MFCCs
+    x = 50.0 + rng.normal(scale=0.5, size=(12, 20))
+
+    ei_raw, _ = gb.build_segment_graph(x, tau=0.9, standardize=False)
+    ei_std, _ = gb.build_segment_graph(x, tau=0.35, standardize=True)
+
+    complete = 12 * 11          # directed edges in a complete graph
+    assert ei_raw.shape[1] >= 0.9 * complete, "raw features should saturate"
+    assert ei_std.shape[1] < 0.5 * complete, "z-scoring should keep it sparse"
+
+
+def test_standardize_keeps_the_temporal_chain():
+    rng = np.random.default_rng(1)
+    x = 50.0 + rng.normal(scale=0.5, size=(6, 8))
+    ei, _ = gb.build_segment_graph(x, tau=0.99, standardize=True)
+    edges = set(zip(ei[0].tolist(), ei[1].tolist()))
+    for i in range(5):
+        assert (i, i + 1) in edges, "adjacency must survive any threshold"
+
+
+def test_standardize_is_safe_on_a_single_node():
+    ei, ew = gb.build_segment_graph(np.array([[1.0, 2.0]]), standardize=True)
+    assert ei.shape == (2, 0) and len(ew) == 0

@@ -138,7 +138,42 @@ audio seed, so it is folded into Week 3 alongside Task 2's CNN baseline.
 
 ## Week 3 (Aug 23-27): Task 2 — GNN on music structure graphs
 
-(to be filled in when Week 3 starts — see issue #10)
+**Status: DONE (run 2026-08-30).** Artefacts: `results/metrics_task2.json`,
+25 example graphs in `data/processed/graph_samples/`, logs in `artifacts/logs/`.
+
+Dataset: FMA-small, 7,994 of 8,000 tracks usable (6 corrupt mp3s dropped),
+8 genres balanced at 1,000 each. FMA's official splits were used and their
+artist-disjointness was **verified, not assumed**: 0 leakage in all three
+pairings, unlike MagnaTagATune's.
+
+| model | params | test acc | macro-F1 |
+|---|---|---|---|
+| GraphSAGE | 49,416 | 0.414 | 0.407 |
+| **GAT** | **26,120** | 0.438 | **0.432** |
+| CNN baseline (B2) | 241,992 | **0.443** | 0.408 |
+
+Chance is 0.125 for 8 genres, so all three are ~3.5x chance. The honest
+reading: **the CNN edges out the GNNs on accuracy, but GAT matches it on
+macro-F1 with 9x fewer parameters.** Structure is competitive with, not
+superior to, treating the spectrogram as an image — which is exactly the
+comparison the PDF asks for, and Task 3 exists because neither branch alone
+is enough.
+
+Per-class F1 (GAT) ranges from Hip-Hop 0.664 down to Experimental 0.250;
+"Experimental" is a catch-all genre and behaves like one.
+
+**A bug worth recording.** The first preprocessing pass used `tau=0.9` on raw
+MFCC features and produced graphs with 19.4 nodes and average degree 18.15 —
+essentially complete graphs, on which message passing degenerates into global
+mean pooling. Cause: MFCC[0] encodes loudness and dominates the vector, so
+raw cosine similarity between segments has median 0.9971 and 5th percentile
+0.9509. Fix: z-score features within each track before computing similarity
+(median falls to -0.078, p90 to 0.331) and use tau=0.35, giving average
+degree 3.2 with no isolated nodes. Because the cache stores node features
+separately from edges, rebuilding took 10 s rather than a 60 min
+re-extraction. A regression test now covers it.
+
+Baseline B4 (PCA+MLP on hand-crafted audio features) remains outstanding.
 
 ## Week 4 (Aug 28-31): Task 3 — GNN-BERT fusion (part 1)
 

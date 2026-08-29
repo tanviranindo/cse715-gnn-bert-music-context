@@ -328,5 +328,35 @@
   "time": "00:48",
   "category": "result",
   "text": "Task 1 MusicCaps with aspect words stripped: Micro-F1 0.608 / Macro-F1 0.551 against a lexical baseline of exactly 0.000. This is the honest headline number for Task 1"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "02:05",
+  "category": "data",
+  "text": "FMA-small downloaded and preprocessed: 7994/8000 tracks usable, 8 genres balanced at 1000 each. Graph building took 60 min on 32 cores at 2.1 tracks/s \u2014 about 6x slower than estimated"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "02:10",
+  "category": "bugfix",
+  "text": "Caught a serious graph-construction bug before training: tau=0.9 on raw MFCC features gave 19.4-node graphs with average degree 18.15, i.e. nearly complete graphs where a GNN degenerates to mean pooling. Raw segment cosine similarity has median 0.9971 because MFCC[0] (loudness) dominates the vector"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "02:15",
+  "category": "bugfix",
+  "text": "Fixed by z-scoring features within each track before similarity (median drops to -0.078) and lowering tau to 0.35 -> average degree 3.23, no isolated nodes. Rebuild took 10s because the cache stores features separately from edges, versus a 60 min re-extraction. Regression test added"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "02:30",
+  "category": "result",
+  "text": "Task 2 on FMA-small (chance 0.125): GAT 0.438 acc / 0.432 macro-F1 with 26k params; GraphSAGE 0.414 / 0.407 with 49k; CNN baseline B2 0.443 / 0.408 with 242k. CNN wins accuracy, GAT matches on macro-F1 with 9x fewer parameters"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "02:32",
+  "category": "validation",
+  "text": "FMA official splits verified artist-disjoint (0 leakage all pairings), unlike MagnaTagATune's. 25 example graphs saved, meeting the >=20 submission requirement"
  }
 ]

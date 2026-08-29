@@ -142,7 +142,7 @@ def run_cnn(records_by_split, genres, args, device) -> dict:
     index = {g: i for i, g in enumerate(genres)}
     tensors = {}
     for name, recs in records_by_split.items():
-        X = np.stack([pad_mel(r["mel"], args.mel_width) for r in recs])
+        X = np.stack([pad_mel(np.asarray(r["mel"], dtype=np.float32), args.mel_width) for r in recs])
         Y = np.asarray([index[r["genre"]] for r in recs], dtype=np.int64)
         tensors[name] = torch.utils.data.TensorDataset(
             torch.from_numpy(X).unsqueeze(1), torch.from_numpy(Y)

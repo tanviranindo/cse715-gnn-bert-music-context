@@ -61,6 +61,9 @@ def process_track(record: dict) -> dict | None:
         librosa.feature.melspectrogram(y=y, sr=sr, n_mels=_CFG["n_mels"]),
         ref=np.max,
     )
+    # Truncate and store float16: full float32 mels for 8000 tracks would be
+    # 5.3 GB, which is slow to write and slower to load every training run.
+    mel = mel[:, : _CFG["mel_width"]].astype(np.float16)
     return {
         "track_id": record["track_id"],
         "genre": record["genre"],
@@ -72,7 +75,7 @@ def process_track(record: dict) -> dict | None:
         "chord_nodes": chord_nodes,
         "chord_edge_index": chord_ei,
         "chord_edge_weight": chord_w,
-        "mel": mel.astype(np.float32),
+        "mel": mel,
     }
 
 
@@ -86,6 +89,7 @@ def main() -> None:
     p.add_argument("--duration", type=float, default=30.0)
     p.add_argument("--tau", type=float, default=0.9)
     p.add_argument("--n-mels", type=int, default=128)
+    p.add_argument("--mel-width", type=int, default=640)
     p.add_argument("--workers", type=int, default=0, help="0 = all cores")
     p.add_argument("--limit", type=int, default=0, help="0 = all tracks")
     p.add_argument("--n-examples", type=int, default=25)
@@ -106,6 +110,7 @@ def main() -> None:
         "duration": args.duration,
         "tau": args.tau,
         "n_mels": args.n_mels,
+        "mel_width": args.mel_width,
     }
     workers = args.workers or mp.cpu_count()
     print(f"[proc] {workers} workers, {args.segment_seconds}s segments, tau={args.tau}")

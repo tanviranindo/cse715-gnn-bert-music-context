@@ -1,0 +1,961 @@
+[
+  {
+    "track_id": 149185,
+    "genre": "Electronic",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 60,
+      "avg_degree": 3.158,
+      "density": 0.1754
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 95,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149422,
+    "genre": "Experimental",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 46,
+      "avg_degree": 2.3,
+      "density": 0.1211
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 101,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 148532,
+    "genre": "Folk",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 60,
+      "avg_degree": 3.0,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 247,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149625,
+    "genre": "Hip-Hop",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 48,
+      "avg_degree": 2.526,
+      "density": 0.1404
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 266,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149143,
+    "genre": "Instrumental",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 58,
+      "avg_degree": 3.053,
+      "density": 0.1696
+    },
+    "chord_graph": {
+      "n_nodes": 15,
+      "n_edges": 59,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 148430,
+    "genre": "International",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 98,
+      "avg_degree": 4.9,
+      "density": 0.2579
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 205,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149103,
+    "genre": "Pop",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 46,
+      "avg_degree": 2.421,
+      "density": 0.1345
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 262,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149523,
+    "genre": "Rock",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 50,
+      "avg_degree": 2.5,
+      "density": 0.1316
+    },
+    "chord_graph": {
+      "n_nodes": 18,
+      "n_edges": 83,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 148773,
+    "genre": "Electronic",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 56,
+      "avg_degree": 2.947,
+      "density": 0.1637
+    },
+    "chord_graph": {
+      "n_nodes": 11,
+      "n_edges": 40,
+      "chords": [
+        "A:maj",
+        "B:maj",
+        "C#:maj",
+        "C#:min",
+        "D#:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "G#:maj",
+        "G#:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149842,
+    "genre": "Experimental",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 46,
+      "avg_degree": 2.421,
+      "density": 0.1345
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 159,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 148235,
+    "genre": "Folk",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 58,
+      "avg_degree": 3.053,
+      "density": 0.1696
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 165,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149623,
+    "genre": "Hip-Hop",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 44,
+      "avg_degree": 2.316,
+      "density": 0.1287
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 258,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149142,
+    "genre": "Instrumental",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 48,
+      "avg_degree": 2.526,
+      "density": 0.1404
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 98,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 148429,
+    "genre": "International",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 66,
+      "avg_degree": 3.3,
+      "density": 0.1737
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 175,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149102,
+    "genre": "Pop",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 56,
+      "avg_degree": 2.947,
+      "density": 0.1637
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 240,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149488,
+    "genre": "Rock",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 78,
+      "avg_degree": 3.9,
+      "density": 0.2053
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 52,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 149701,
+    "genre": "Electronic",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 76,
+      "avg_degree": 4.0,
+      "density": 0.2222
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 292,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149778,
+    "genre": "Experimental",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 56,
+      "avg_degree": 2.8,
+      "density": 0.1474
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 269,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 148234,
+    "genre": "Folk",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 60,
+      "avg_degree": 3.158,
+      "density": 0.1754
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 174,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149370,
+    "genre": "Hip-Hop",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 74,
+      "avg_degree": 3.7,
+      "density": 0.1947
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 300,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149141,
+    "genre": "Instrumental",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 56,
+      "avg_degree": 2.8,
+      "density": 0.1474
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 109,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 150080,
+    "genre": "International",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 52,
+      "avg_degree": 2.737,
+      "density": 0.152
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 185,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149101,
+    "genre": "Pop",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 56,
+      "avg_degree": 2.8,
+      "density": 0.1474
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 284,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149452,
+    "genre": "Rock",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 96,
+      "avg_degree": 5.053,
+      "density": 0.2807
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 246,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 149700,
+    "genre": "Electronic",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 62,
+      "avg_degree": 3.263,
+      "density": 0.1813
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 213,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  }
+]

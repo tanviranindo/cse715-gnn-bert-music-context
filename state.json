@@ -15,7 +15,7 @@
       "name": "Task 1 \u2014 BERT tag classifier",
       "difficulty": "Easy",
       "points": 18,
-      "status": "not_started",
+      "status": "done",
       "week": 2
     },
     {
@@ -23,7 +23,7 @@
       "name": "Task 2 \u2014 GraphSAGE/GAT on structure graphs",
       "difficulty": "Medium",
       "points": 22,
-      "status": "not_started",
+      "status": "done",
       "week": 3
     },
     {
@@ -94,23 +94,23 @@
       "week": 2,
       "dates": "Aug 19\u201322",
       "title": "Task 1 \u2014 BERT tag classifier",
-      "status": "upcoming",
+      "status": "done",
       "deliverables": [
         {
           "text": "Fine-tune BERT/DistilBERT multi-label classifier on MagnaTagATune",
-          "done": false
+          "done": true
         },
         {
           "text": "Baselines: B1 (random), B4 (PCA+MLP)",
-          "done": false
+          "done": true
         },
         {
           "text": "Macro/Micro-F1 curves vs epoch",
-          "done": false
+          "done": true
         },
         {
           "text": "5 example predictions saved",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -118,19 +118,19 @@
       "week": 3,
       "dates": "Aug 23\u201327",
       "title": "Task 2 \u2014 GNN on structure graphs",
-      "status": "upcoming",
+      "status": "done",
       "deliverables": [
         {
           "text": "Chord/segment graph builder (\u226520 sample graphs)",
-          "done": false
+          "done": true
         },
         {
           "text": "GraphSAGE/GAT model",
-          "done": false
+          "done": true
         },
         {
           "text": "CNN baseline (B2) on FMA-small subset",
-          "done": false
+          "done": true
         }
       ]
     },
@@ -306,17 +306,13 @@
   "compute": {
     "provider": "Vast.ai",
     "instance": null,
-    "machine": "143795",
-    "gpu": "1x RTX 4080 SUPER 16GB",
-    "cpu": "64 threads / 62 GB RAM",
-    "rate_per_hr": 0.143,
-    "credit_remaining": 6.37,
-    "volume": {
-      "status": "ABANDONED",
-      "note": "Vast local volumes lost data 3/3 times on machine 143795. Re-download each session (~22min/$0.05) and rsync artifacts to the Mac."
-    },
-    "stack": "Python 3.10.12, torch 2.5.1+cu121, librosa 0.11.0, transformers 5.16.1, torch-geometric 2.8.0",
-    "tests": "9 passed",
-    "datasets_on_volume": "FMA-small 8000, MagnaTagATune 25863, DEAM 1802, MusicCaps 5355 rows (17.3GB of 60GB)"
+    "note": "nothing running; volumes abandoned (see infra/vast-connect.md)",
+    "credit_remaining": 6.1,
+    "results": {
+      "task1_musiccaps_stripped": 0.608,
+      "task1_mtat": 0.258,
+      "task2_gat_macro_f1": 0.432,
+      "task2_cnn_acc": 0.443
+    }
   }
 }

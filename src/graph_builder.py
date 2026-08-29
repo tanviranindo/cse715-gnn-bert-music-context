@@ -66,16 +66,34 @@ def cosine_similarity_matrix(x: np.ndarray) -> np.ndarray:
 
 
 def build_segment_graph(
-    features: np.ndarray, tau: float = 0.9, add_adjacency: bool = True
+    features: np.ndarray,
+    tau: float = 0.35,
+    add_adjacency: bool = True,
+    standardize: bool = True,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Segment graph -> (edge_index [2, E], edge_weight [E]).
 
     Edges are undirected and stored in both directions, as PyTorch Geometric
     expects. Self-loops are excluded; GNN layers add their own.
+
+    `standardize` z-scores the features **within the track** before computing
+    similarity, and it matters enormously. Raw MFCC vectors are dominated by
+    MFCC[0] (overall loudness), so every segment points in nearly the same
+    direction: measured over 400 FMA tracks the raw cosine similarity has
+    median 0.9971 and 5th percentile 0.9509. At tau=0.9 that yields a
+    *complete* graph (19.4 nodes, average degree 18.15), on which message
+    passing is just global mean pooling and the GNN is pointless. After
+    z-scoring the median falls to -0.078 and p90 to 0.331, so tau=0.35 keeps
+    roughly the top decile of pairs.
     """
     n = len(features)
     if n == 0:
         return np.zeros((2, 0), dtype=np.int64), np.zeros((0,), dtype=np.float32)
+
+    if standardize and n > 1:
+        centred = features - features.mean(axis=0, keepdims=True)
+        scale = centred.std(axis=0, keepdims=True)
+        features = centred / np.where(scale < 1e-9, 1e-9, scale)
 
     sim = cosine_similarity_matrix(features)
     pairs: dict[tuple[int, int], float] = {}
