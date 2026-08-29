@@ -304,5 +304,29 @@
   "time": "00:25",
   "category": "decision",
   "text": "Abandoned Vast local volumes entirely. With the HF mirror for MagnaTagATune the full seed is ~22min/$0.05, so re-downloading each session costs ~$0.50 over the project vs $1.60 for a volume that does not persist. Irreplaceable artifacts (checkpoints, results, splits) get rsynced down to the Mac instead"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:30",
+  "category": "blocker",
+  "text": "RTX 5060 Ti (Blackwell sm_120) failed with 'no kernel image available' \u2014 the vastai/pytorch image ships torch 2.5.1+cu121 which tops out at sm_90. torch.cuda.is_available() returned True and gave no warning; only the first forward pass failed. Switched to an RTX 4070 Ti SUPER (sm_89)"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:45",
+  "category": "result",
+  "text": "Task 1 MagnaTagATune: test Micro-F1 0.258 / Macro-F1 0.182 vs random-prevalence 0.111 / 0.061, on artist-grouped splits with 0 leakage"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:47",
+  "category": "result",
+  "text": "Task 1 MusicCaps raw captions: Micro-F1 0.687 / Macro-F1 0.646 \u2014 but the lexical-match baseline alone scores 0.582 / 0.560, so only ~0.105 is language understanding"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "00:48",
+  "category": "result",
+  "text": "Task 1 MusicCaps with aspect words stripped: Micro-F1 0.608 / Macro-F1 0.551 against a lexical baseline of exactly 0.000. This is the honest headline number for Task 1"
  }
 ]

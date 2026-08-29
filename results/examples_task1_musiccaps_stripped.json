@@ -1,0 +1,214 @@
+[
+  {
+    "clip_id": "d61plJ66vE8",
+    "text": "The recording features a fruity male vocal singing over steel drums melody, electric guitar melody, brass stabs, and snare hits, energetic crash cymbal, , shimmering shakers and sustained organ keys c",
+    "true": [
+      "exciting",
+      "groovy bass",
+      "happy",
+      "low quality",
+      "punchy kick",
+      "punchy snare"
+    ],
+    "predicted": [
+      {
+        "tag": "groovy bass",
+        "p": 0.946
+      },
+      {
+        "tag": "shimmering hi hats",
+        "p": 0.938
+      },
+      {
+        "tag": "punchy kick",
+        "p": 0.938
+      },
+      {
+        "tag": "low quality",
+        "p": 0.929
+      },
+      {
+        "tag": "punchy snare",
+        "p": 0.924
+      },
+      {
+        "tag": "fun",
+        "p": 0.78
+      },
+      {
+        "tag": "flat male vocal",
+        "p": 0.762
+      },
+      {
+        "tag": "happy",
+        "p": 0.743
+      }
+    ]
+  },
+  {
+    "clip_id": "A2WdjyKQ57A",
+    "text": "This is the of a classical music piece. The piece is being performed with a harpsichord. It is in the minor key. The piece is medieval sounding. It could fit perfectly in the soundtrack of a historica",
+    "true": [
+      "live performance"
+    ],
+    "predicted": [
+      {
+        "tag": "instrumental",
+        "p": 0.789
+      },
+      {
+        "tag": "live performance",
+        "p": 0.696
+      },
+      {
+        "tag": "percussion",
+        "p": 0.516
+      },
+      {
+        "tag": "slow tempo",
+        "p": 0.473
+      },
+      {
+        "tag": "piano",
+        "p": 0.415
+      },
+      {
+        "tag": "emotional",
+        "p": 0.386
+      },
+      {
+        "tag": "amateur recording",
+        "p": 0.33
+      },
+      {
+        "tag": "acoustic guitar",
+        "p": 0.315
+      }
+    ]
+  },
+  {
+    "clip_id": "M5sptjrboqA",
+    "text": "This is an amateur DJ set performance with a turntable scratched over an electronic music piece with eurobeat characteristics. The track has a repeating fuzzy bass with a repeating loud electronic dru",
+    "true": [
+      "electronic drums"
+    ],
+    "predicted": [
+      {
+        "tag": "electronic drums",
+        "p": 0.933
+      },
+      {
+        "tag": "loud",
+        "p": 0.617
+      },
+      {
+        "tag": "upbeat",
+        "p": 0.596
+      },
+      {
+        "tag": "groovy",
+        "p": 0.593
+      },
+      {
+        "tag": "energetic",
+        "p": 0.562
+      },
+      {
+        "tag": "bass",
+        "p": 0.51
+      },
+      {
+        "tag": "rock",
+        "p": 0.435
+      },
+      {
+        "tag": "pop",
+        "p": 0.434
+      }
+    ]
+  },
+  {
+    "clip_id": "6TSluKI0X54",
+    "text": "This clip features a home recording of a musical piece using low quality gear. The clip is of a and the sound is captured on the video capturing device and not through a mixer. The bass is playing ham",
+    "true": [
+      "bass guitar"
+    ],
+    "predicted": [
+      {
+        "tag": "no voices",
+        "p": 0.873
+      },
+      {
+        "tag": "male voice",
+        "p": 0.829
+      },
+      {
+        "tag": "instrumental",
+        "p": 0.798
+      },
+      {
+        "tag": "moderate tempo",
+        "p": 0.754
+      },
+      {
+        "tag": "percussion",
+        "p": 0.704
+      },
+      {
+        "tag": "electric guitar",
+        "p": 0.575
+      },
+      {
+        "tag": "piano",
+        "p": 0.541
+      },
+      {
+        "tag": "slow tempo",
+        "p": 0.525
+      }
+    ]
+  },
+  {
+    "clip_id": "t8os583-_JM",
+    "text": "The recording features a cover of a latin urban song that consists of a groovy bass guitar, acoustic rhythm guitar, hand tapping and electric guitar solo playing over it in the first half of the loop,",
+    "true": [
+      "energetic",
+      "low quality",
+      "passionate"
+    ],
+    "predicted": [
+      {
+        "tag": "low quality",
+        "p": 0.924
+      },
+      {
+        "tag": "exciting",
+        "p": 0.868
+      },
+      {
+        "tag": "passionate",
+        "p": 0.837
+      },
+      {
+        "tag": "punchy snare",
+        "p": 0.773
+      },
+      {
+        "tag": "fun",
+        "p": 0.77
+      },
+      {
+        "tag": "energetic",
+        "p": 0.77
+      },
+      {
+        "tag": "shimmering hi hats",
+        "p": 0.767
+      },
+      {
+        "tag": "punchy kick",
+        "p": 0.756
+      }
+    ]
+  }
+]

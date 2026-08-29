@@ -1,0 +1,214 @@
+[
+  {
+    "clip_id": "d61plJ66vE8",
+    "text": "The low quality recording features a fruity male vocal singing over steel drums melody, electric guitar melody, brass stabs, punchy kick and snare hits, energetic crash cymbal, groovy bass, shimmering",
+    "true": [
+      "exciting",
+      "groovy bass",
+      "happy",
+      "low quality",
+      "punchy kick",
+      "punchy snare"
+    ],
+    "predicted": [
+      {
+        "tag": "exciting",
+        "p": 0.941
+      },
+      {
+        "tag": "shimmering hi hats",
+        "p": 0.938
+      },
+      {
+        "tag": "low quality",
+        "p": 0.936
+      },
+      {
+        "tag": "groovy bass",
+        "p": 0.924
+      },
+      {
+        "tag": "punchy kick",
+        "p": 0.923
+      },
+      {
+        "tag": "punchy snare",
+        "p": 0.914
+      },
+      {
+        "tag": "fun",
+        "p": 0.887
+      },
+      {
+        "tag": "energetic",
+        "p": 0.867
+      }
+    ]
+  },
+  {
+    "clip_id": "A2WdjyKQ57A",
+    "text": "This is the live performance of a classical music piece. The piece is being performed with a harpsichord. It is in the minor key. The piece is medieval sounding. It could fit perfectly in the soundtra",
+    "true": [
+      "live performance"
+    ],
+    "predicted": [
+      {
+        "tag": "live performance",
+        "p": 0.929
+      },
+      {
+        "tag": "instrumental",
+        "p": 0.723
+      },
+      {
+        "tag": "percussion",
+        "p": 0.608
+      },
+      {
+        "tag": "piano",
+        "p": 0.438
+      },
+      {
+        "tag": "amateur recording",
+        "p": 0.334
+      },
+      {
+        "tag": "emotional",
+        "p": 0.312
+      },
+      {
+        "tag": "slow tempo",
+        "p": 0.296
+      },
+      {
+        "tag": "low quality",
+        "p": 0.273
+      }
+    ]
+  },
+  {
+    "clip_id": "M5sptjrboqA",
+    "text": "This is an amateur DJ set performance with a turntable scratched over an electronic music piece with eurobeat characteristics. The track has a repeating fuzzy bass with a repeating loud electronic dru",
+    "true": [
+      "electronic drums"
+    ],
+    "predicted": [
+      {
+        "tag": "electronic drums",
+        "p": 0.937
+      },
+      {
+        "tag": "loud",
+        "p": 0.776
+      },
+      {
+        "tag": "bass",
+        "p": 0.646
+      },
+      {
+        "tag": "amateur recording",
+        "p": 0.527
+      },
+      {
+        "tag": "energetic",
+        "p": 0.5
+      },
+      {
+        "tag": "male vocal",
+        "p": 0.487
+      },
+      {
+        "tag": "groovy",
+        "p": 0.454
+      },
+      {
+        "tag": "upbeat",
+        "p": 0.451
+      }
+    ]
+  },
+  {
+    "clip_id": "6TSluKI0X54",
+    "text": "This clip features a home recording of a musical piece using low quality gear. The clip is of a bass guitar and the sound is captured on the video capturing device and not through a mixer. The bass is",
+    "true": [
+      "bass guitar"
+    ],
+    "predicted": [
+      {
+        "tag": "no voices",
+        "p": 0.927
+      },
+      {
+        "tag": "moderate tempo",
+        "p": 0.839
+      },
+      {
+        "tag": "instrumental",
+        "p": 0.807
+      },
+      {
+        "tag": "percussion",
+        "p": 0.692
+      },
+      {
+        "tag": "male voice",
+        "p": 0.635
+      },
+      {
+        "tag": "bass",
+        "p": 0.604
+      },
+      {
+        "tag": "slow tempo",
+        "p": 0.521
+      },
+      {
+        "tag": "amateur recording",
+        "p": 0.482
+      }
+    ]
+  },
+  {
+    "clip_id": "t8os583-_JM",
+    "text": "The low quality recording features a cover of a latin urban song that consists of a groovy bass guitar, acoustic rhythm guitar, hand tapping and electric guitar solo playing over it in the first half ",
+    "true": [
+      "energetic",
+      "low quality",
+      "passionate"
+    ],
+    "predicted": [
+      {
+        "tag": "low quality",
+        "p": 0.891
+      },
+      {
+        "tag": "passionate",
+        "p": 0.857
+      },
+      {
+        "tag": "energetic",
+        "p": 0.723
+      },
+      {
+        "tag": "rock",
+        "p": 0.71
+      },
+      {
+        "tag": "groovy bass",
+        "p": 0.695
+      },
+      {
+        "tag": "noisy",
+        "p": 0.521
+      },
+      {
+        "tag": "emotional",
+        "p": 0.506
+      },
+      {
+        "tag": "exciting",
+        "p": 0.5
+      }
+    ]
+  }
+]

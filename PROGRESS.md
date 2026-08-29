@@ -103,7 +103,38 @@ Remaining credit after setup: **$6.86**.
 
 ## Week 2 (Aug 19-22): Task 1 — BERT tag classifier
 
-(to be filled in when Week 2 starts — see issue #9)
+**Status: DONE (run 2026-08-30).** Both PDF-sanctioned dataset variants built
+and evaluated. Artefacts: `results/metrics_task1_*.json`,
+`results/examples_task1_*.json`, logs in `artifacts/logs/`.
+
+| variant | Micro-F1 | Macro-F1 | best baseline |
+|---|---|---|---|
+| MagnaTagATune, metadata text, artist-grouped split | 0.258 | 0.182 | random-prevalence 0.111 / 0.061 |
+| MusicCaps caption -> aspect | **0.687** | **0.646** | lexical match 0.582 / 0.560 |
+| MusicCaps, aspect words stripped from caption | 0.608 | 0.551 | lexical match 0.000 / 0.000 |
+
+Reading these honestly:
+
+- **MusicCaps stripped is the headline number.** 0.608 Micro-F1 against a
+  lexical baseline of exactly 0.000 — the aspect words are deleted from the
+  input, so every point is inference from surrounding context.
+- On raw captions BERT scores 0.687 but a pure substring matcher already gets
+  0.582, so **only ~0.105 of that is language understanding**. Reporting the
+  raw number alone would have overstated the result by ~5x.
+- MagnaTagATune is much harder (0.258) and that is expected, not a failure:
+  the text is track-level metadata while clips are 29 s segments, so 96.8% of
+  clips share their input with another clip. Oracle ceiling for ANY text-only
+  model on this corpus is Micro-F1 0.673 / Macro-F1 0.575.
+- Splits are artist-grouped with **0 leakage**. The official MTT split shares
+  45 artists between train and test (61.6% of test clips) and was rejected;
+  the PDF asks for both official splits and no artist leakage, which conflict.
+
+**This is the quantitative case for Task 3.** The text branch is capped by
+inputs it cannot distinguish; the GNN branch sees each clip's own audio. The
+fusion is not decoration, it is the fix for a measured ceiling.
+
+Baseline B4 (PCA+MLP on audio features) is still outstanding — it needs the
+audio seed, so it is folded into Week 3 alongside Task 2's CNN baseline.
 
 ## Week 3 (Aug 23-27): Task 2 — GNN on music structure graphs
 

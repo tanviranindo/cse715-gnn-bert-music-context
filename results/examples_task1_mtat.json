@@ -1,0 +1,217 @@
+[
+  {
+    "clip_id": "14",
+    "text": "Contimune | LVX Nova",
+    "true": [
+      "techno"
+    ],
+    "predicted": [
+      {
+        "tag": "weird",
+        "p": 0.835
+      },
+      {
+        "tag": "electronic",
+        "p": 0.746
+      },
+      {
+        "tag": "beat",
+        "p": 0.686
+      },
+      {
+        "tag": "synth",
+        "p": 0.68
+      },
+      {
+        "tag": "drum",
+        "p": 0.653
+      },
+      {
+        "tag": "no vocal",
+        "p": 0.626
+      },
+      {
+        "tag": "techno",
+        "p": 0.623
+      },
+      {
+        "tag": "ambient",
+        "p": 0.601
+      }
+    ]
+  },
+  {
+    "clip_id": "21",
+    "text": "Contimune | LVX Nova",
+    "true": [
+      "electronic",
+      "fast",
+      "rock"
+    ],
+    "predicted": [
+      {
+        "tag": "weird",
+        "p": 0.835
+      },
+      {
+        "tag": "electronic",
+        "p": 0.746
+      },
+      {
+        "tag": "beat",
+        "p": 0.686
+      },
+      {
+        "tag": "synth",
+        "p": 0.68
+      },
+      {
+        "tag": "drum",
+        "p": 0.653
+      },
+      {
+        "tag": "no vocal",
+        "p": 0.626
+      },
+      {
+        "tag": "techno",
+        "p": 0.623
+      },
+      {
+        "tag": "ambient",
+        "p": 0.601
+      }
+    ]
+  },
+  {
+    "clip_id": "23",
+    "text": "Contimune | LVX Nova",
+    "true": [
+      "fast"
+    ],
+    "predicted": [
+      {
+        "tag": "weird",
+        "p": 0.835
+      },
+      {
+        "tag": "electronic",
+        "p": 0.746
+      },
+      {
+        "tag": "beat",
+        "p": 0.686
+      },
+      {
+        "tag": "synth",
+        "p": 0.68
+      },
+      {
+        "tag": "drum",
+        "p": 0.653
+      },
+      {
+        "tag": "no vocal",
+        "p": 0.626
+      },
+      {
+        "tag": "techno",
+        "p": 0.623
+      },
+      {
+        "tag": "ambient",
+        "p": 0.601
+      }
+    ]
+  },
+  {
+    "clip_id": "90",
+    "text": "My mistress hath a pritty thing (Tobias Hume) | Gambomania",
+    "true": [
+      "cello",
+      "classical",
+      "fast",
+      "solo",
+      "string",
+      "violin"
+    ],
+    "predicted": [
+      {
+        "tag": "male vocal",
+        "p": 0.922
+      },
+      {
+        "tag": "rock",
+        "p": 0.909
+      },
+      {
+        "tag": "male vocals",
+        "p": 0.899
+      },
+      {
+        "tag": "vocal",
+        "p": 0.849
+      },
+      {
+        "tag": "loud",
+        "p": 0.835
+      },
+      {
+        "tag": "pop",
+        "p": 0.807
+      },
+      {
+        "tag": "drum",
+        "p": 0.739
+      },
+      {
+        "tag": "guitar",
+        "p": 0.652
+      }
+    ]
+  },
+  {
+    "clip_id": "91",
+    "text": "My mistress hath a pritty thing (Tobias Hume) | Gambomania",
+    "true": [
+      "cello",
+      "classical",
+      "string",
+      "violin"
+    ],
+    "predicted": [
+      {
+        "tag": "male vocal",
+        "p": 0.922
+      },
+      {
+        "tag": "rock",
+        "p": 0.909
+      },
+      {
+        "tag": "male vocals",
+        "p": 0.899
+      },
+      {
+        "tag": "vocal",
+        "p": 0.849
+      },
+      {
+        "tag": "loud",
+        "p": 0.835
+      },
+      {
+        "tag": "pop",
+        "p": 0.807
+      },
+      {
+        "tag": "drum",
+        "p": 0.739
+      },
+      {
+        "tag": "guitar",
+        "p": 0.652
+      }
+    ]
+  }
+]
