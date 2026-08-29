@@ -99,3 +99,56 @@ def baseline_majority(y_true_train: list[list[int]], n: int) -> list[list[int]]:
     m = len(y_true_train)
     const = [1 if sum(r[i] for r in y_true_train) * 2 >= m else 0 for i in range(k)]
     return [list(const) for _ in range(n)]
+
+
+# ------------------------------------------------- multiclass (Task 2 genre)
+
+def accuracy(y_true: list[int], y_pred: list[int]) -> float:
+    if not y_true:
+        return 0.0
+    return sum(a == b for a, b in zip(y_true, y_pred)) / len(y_true)
+
+
+def multiclass_f1(
+    y_true: list[int], y_pred: list[int], n_classes: int, average: str = "macro"
+) -> float:
+    """Macro or micro F1 for single-label multiclass.
+
+    Note micro-F1 equals accuracy when every sample has exactly one predicted
+    and one true label, so macro is the informative number for genre.
+    """
+    tp = [0] * n_classes
+    fp = [0] * n_classes
+    fn = [0] * n_classes
+    for t, p in zip(y_true, y_pred):
+        if t == p:
+            tp[t] += 1
+        else:
+            fp[p] += 1
+            fn[t] += 1
+    if average == "micro":
+        return f1(sum(tp), sum(fp), sum(fn))
+    return sum(f1(tp[k], fp[k], fn[k]) for k in range(n_classes)) / n_classes
+
+
+def per_class_f1(
+    y_true: list[int], y_pred: list[int], classes: list[str]
+) -> dict[str, float]:
+    n = len(classes)
+    tp = [0] * n
+    fp = [0] * n
+    fn = [0] * n
+    for t, p in zip(y_true, y_pred):
+        if t == p:
+            tp[t] += 1
+        else:
+            fp[p] += 1
+            fn[t] += 1
+    return {classes[k]: f1(tp[k], fp[k], fn[k]) for k in range(n)}
+
+
+def confusion_matrix(y_true: list[int], y_pred: list[int], n_classes: int) -> list[list[int]]:
+    m = [[0] * n_classes for _ in range(n_classes)]
+    for t, p in zip(y_true, y_pred):
+        m[t][p] += 1
+    return m

@@ -1,5 +1,7 @@
 """Task 1 metrics: hand-checked values, not just self-consistency."""
 
+import pytest
+
 from src import evaluate as ev
 
 
@@ -64,3 +66,34 @@ def test_per_tag_f1_exposes_the_dead_tag():
     y_pred = [[1, 0], [1, 0]]
     scores = ev.per_tag_f1(y_true, y_pred, ["good", "dead"])
     assert scores["good"] == 1.0 and scores["dead"] == 0.0
+
+
+def test_accuracy_counts_exact_matches():
+    assert ev.accuracy([0, 1, 2], [0, 1, 2]) == 1.0
+    assert ev.accuracy([0, 1, 2], [0, 1, 0]) == pytest.approx(2 / 3)
+    assert ev.accuracy([], []) == 0.0
+
+
+def test_multiclass_micro_f1_equals_accuracy():
+    y_true = [0, 1, 2, 1]
+    y_pred = [0, 1, 1, 1]
+    assert ev.multiclass_f1(y_true, y_pred, 3, "micro") == pytest.approx(
+        ev.accuracy(y_true, y_pred)
+    )
+
+
+def test_multiclass_macro_f1_penalises_an_ignored_class():
+    # class 2 is never predicted, so its F1 is 0 and drags macro down
+    y_true = [0, 1, 2]
+    y_pred = [0, 1, 1]
+    assert ev.multiclass_f1(y_true, y_pred, 3) < ev.accuracy(y_true, y_pred)
+
+
+def test_per_class_f1_names_the_classes():
+    scores = ev.per_class_f1([0, 1], [0, 0], ["rock", "folk"])
+    assert scores["rock"] > 0 and scores["folk"] == 0.0
+
+
+def test_confusion_matrix_places_counts_correctly():
+    m = ev.confusion_matrix([0, 0, 1], [0, 1, 1], 2)
+    assert m == [[1, 1], [0, 1]]
