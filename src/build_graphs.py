@@ -46,17 +46,26 @@ def process_track(record: dict) -> dict | None:
     """Load one clip, emit its segment graph, chord graph and mel spectrogram."""
     import librosa
 
-    if _CFG["dataset"] in ("mtat", "deam"):
-        path = Path(_CFG["audio_root"]) / record["mp3_path"]
+    if record.get("audio_bytes") is not None:
+        import io
+        try:
+            y, sr = librosa.load(io.BytesIO(record["audio_bytes"]),
+                                 sr=_CFG["sample_rate"], mono=True,
+                                 duration=_CFG["duration"])
+        except Exception:
+            return None
     else:
-        path = fma_data.track_audio_path(_CFG["audio_root"], record["track_id"])
-    if not path.exists():
-        return None
-    try:
-        y, sr = librosa.load(path, sr=_CFG["sample_rate"], mono=True,
-                             duration=_CFG["duration"])
-    except Exception:
-        return None                       # FMA ships a handful of corrupt mp3s
+        if _CFG["dataset"] in ("mtat", "deam"):
+            path = Path(_CFG["audio_root"]) / record["mp3_path"]
+        else:
+            path = fma_data.track_audio_path(_CFG["audio_root"], record["track_id"])
+        if not path.exists():
+            return None
+        try:
+            y, sr = librosa.load(path, sr=_CFG["sample_rate"], mono=True,
+                                 duration=_CFG["duration"])
+        except Exception:
+            return None                   # FMA ships a handful of corrupt mp3s
     if y.size < _CFG["sample_rate"]:
         return None
 
@@ -76,6 +85,7 @@ def process_track(record: dict) -> dict | None:
     # Truncate and store float16: full float32 mels for 8000 tracks would be
     # 5.3 GB, which is slow to write and slower to load every training run.
     mel = mel[:, : _CFG["mel_width"]].astype(np.float16)
+    record.pop("audio_bytes", None)
     return {
         "track_id": record["track_id"],
         "genre": record["genre"],
@@ -83,6 +93,7 @@ def process_track(record: dict) -> dict | None:
         "split": record["split"],
         "text": record.get("text", ""),
         "labels": record.get("labels", set()),
+        "ytid": record.get("ytid", ""),
         **({"valence_z": record["valence_z"], "arousal_z": record["arousal_z"],
             "valence": record["valence"], "arousal": record["arousal"]}
            if "valence_z" in record else {}),
@@ -98,7 +109,7 @@ def process_track(record: dict) -> dict | None:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--dataset", choices=["fma", "mtat", "deam"], default="fma")
+    p.add_argument("--dataset", choices=["fma", "mtat", "deam", "musiccaps"], default="fma")
     p.add_argument("--audio-root", default="/data/raw/fma_small",
                    help="fma: fma_small dir | mtat: magnatagatune/audio dir")
     p.add_argument("--tracks-csv", default="/data/raw/fma_metadata/tracks.csv",
@@ -107,6 +118,8 @@ def main() -> None:
                    help="mtat only: holds annotations_final.csv + clip_info_final.csv")
     p.add_argument("--deam-annotations", default="/data/raw/deam/annotations")
     p.add_argument("--deam-metadata", default="/data/raw/deam/metadata")
+    p.add_argument("--musiccaps-dir", default="/data/raw/musiccaps",
+                   help="musiccaps only: dir of parquet shards with audio+caption")
     p.add_argument("--n-tags", type=int, default=50, help="mtat only")
     p.add_argument("--out", default="/data/processed")
     p.add_argument("--sample-rate", type=int, default=22050)
@@ -145,6 +158,43 @@ def main() -> None:
             for r in mrecs
         ]
         print(f"[data] {len(records)} MagnaTagATune clips | {len(vocab)} tags")
+    if args.dataset == "musiccaps":
+        # MusicCaps audio ships inside parquet shards (the HF mirror), not as
+        # files. Shards are processed one at a time so the raw audio of the
+        # whole corpus is never resident at once.
+        import glob
+        import pyarrow.parquet as pq
+        shards = sorted(glob.glob(str(Path(args.musiccaps_dir) / "**" / "*.parquet"),
+                                  recursive=True))
+        print(f"[data] {len(shards)} MusicCaps parquet shards")
+        records = []
+        for shard in shards:
+            table = pq.read_table(shard).to_pylist()
+            for row in table:
+                audio = row.get("audio")
+                blob = audio.get("bytes") if isinstance(audio, dict) else audio
+                if not blob:
+                    continue
+                aspects = row.get("aspect_list") or []
+                if isinstance(aspects, str):
+                    import ast as _ast
+                    try:
+                        aspects = _ast.literal_eval(aspects)
+                    except (ValueError, SyntaxError):
+                        aspects = []
+                records.append({
+                    "track_id": abs(hash(row.get("youtube_id", ""))) % (10 ** 9),
+                    "genre": "", "artist": row.get("youtube_id", ""),
+                    "split": "", "mp3_path": "",
+                    "text": row.get("caption", "") or "",
+                    # aspects are the zero-shot ground truth, NOT training
+                    # supervision: the contrastive objective never sees them.
+                    "labels": {str(a).strip() for a in aspects if str(a).strip()},
+                    "audio_bytes": blob,
+                    "ytid": row.get("youtube_id", ""),
+                })
+        vocab = []
+        print(f"[data] {len(records)} MusicCaps clips with audio + caption")
     if args.dataset == "deam":
         from src import deam_data
         drecs = deam_data.build_dataset(args.deam_annotations, args.deam_metadata)
@@ -193,7 +243,8 @@ def main() -> None:
 
     out_dir = Path(args.out)
     (out_dir / "graph_samples").mkdir(parents=True, exist_ok=True)
-    cache_stem = {"fma": "fma_small", "mtat": "mtat", "deam": "deam"}[args.dataset]
+    cache_stem = {"fma": "fma_small", "mtat": "mtat", "deam": "deam",
+                  "musiccaps": "musiccaps"}[args.dataset]
     torch.save({"config": vars(args), "vocab": vocab, "records": out_records},
                out_dir / f"{cache_stem}_graphs.pt")
 
