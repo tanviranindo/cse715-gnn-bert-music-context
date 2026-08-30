@@ -358,5 +358,47 @@
   "time": "02:32",
   "category": "validation",
   "text": "FMA official splits verified artist-disjoint (0 leakage all pairings), unlike MagnaTagATune's. 25 example graphs saved, meeting the >=20 submission requirement"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "12:14",
+  "category": "result",
+  "text": "Preprocessing is 84x faster after the BLAS thread fix: 177 tracks/s vs 2.1 yesterday. All 21,315 MagnaTagATune clips built in 2.0 min instead of the estimated 3.4 hours"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "12:20",
+  "category": "bugfix",
+  "text": "Caught a second graph bug before training: build_graphs still passed --tau 0.9, which after z-scoring yields avg degree 1.90 \u2014 a bare temporal chain with zero similarity edges. Default lowered to 0.35, giving avg degree 3.01"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "18:41",
+  "category": "result",
+  "text": "Task 3 ablation on MagnaTagATune top-50: BERT-only 0.1864 macro-F1, GNN-only 0.1141, concat 0.1748, cross-attention 0.1817. Fusion beats BERT on micro-F1 (+0.012) and AUC-PR (+0.008) but not macro-F1 (-0.005). The central claim is NOT demonstrated by these numbers"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "21:45",
+  "category": "validation",
+  "text": "Diagnosed why: cross-attention collapsed to uniform averaging. Max/min attention weight ratio across top-8 tokens is 1.03-1.11, entropy at 65-88% of uniform. The graph query does not discriminate between caption tokens, so the model reduces to early concat"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "21:50",
+  "category": "decision",
+  "text": "Deferred the DEAM emotion term: it downloaded at 196 KB/s on that host and waiting ~70 min on a $0.46/hr box was bad economics. Loader, masked loss and graph builder are implemented and tested; only the run remains"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "21:55",
+  "category": "blocker",
+  "text": "Two hosts failed before a working one: 35360012 accepted the SSH key but rejected auth, and host 296571 sat in 'loading' for 25 min pulling the image (twice). Cost ~$0.09 wasted"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "22:00",
+  "category": "decision",
+  "text": "Cost lesson: rented a $0.46/hr 64-core RTX 4090 sized for a 3.4h preprocessing job that turned out to take 2 min. Should have re-estimated after seeing 177 tracks/s and moved to a ~$0.15/hr box. Task 3 cost $1.91 against a $0.69 estimate"
  }
 ]

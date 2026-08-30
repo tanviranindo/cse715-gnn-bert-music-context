@@ -112,7 +112,9 @@ def main() -> None:
     p.add_argument("--sample-rate", type=int, default=22050)
     p.add_argument("--segment-seconds", type=float, default=1.5)
     p.add_argument("--duration", type=float, default=30.0)
-    p.add_argument("--tau", type=float, default=0.9)
+    p.add_argument("--tau", type=float, default=0.35,
+                   help="cosine threshold AFTER per-track z-scoring; 0.9 was "
+                        "correct for raw features and yields a bare chain here")
     p.add_argument("--n-mels", type=int, default=128)
     p.add_argument("--mel-width", type=int, default=640)
     p.add_argument("--workers", type=int, default=0, help="0 = all cores")

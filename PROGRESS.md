@@ -175,9 +175,53 @@ re-extraction. A regression test now covers it.
 
 Baseline B4 (PCA+MLP on hand-crafted audio features) remains outstanding.
 
-## Week 4 (Aug 28-31): Task 3 — GNN-BERT fusion (part 1)
+## Week 4 (Aug 28-31): Task 3 — GNN-BERT fusion
 
-(to be filled in when Week 4 starts — see issue #11)
+**Status: ablation DONE, emotion term OUTSTANDING (run 2026-08-30).**
+Artefacts: `results/metrics_task3.json`, `results/case_studies_task3.json`,
+`results/tsne_task3.json`, `results/plots/tsne_task3.png`.
+
+Dataset: MagnaTagATune top-50, 21,315 clips, artist-grouped splits
+(train 14,972 / val 3,129 / test 3,214), 0 leakage.
+
+| mode | params | macro-F1 | micro-F1 | AUC-PR |
+|---|---|---|---|---|
+| BERT-only | 66,402,868 | **0.1864** | 0.3110 | 0.1697 |
+| GNN-only | 31,796 | 0.1141 | 0.2358 | 0.1026 |
+| early concat | 66,434,612 | 0.1748 | 0.3176 | **0.1836** |
+| cross-attention | 66,834,740 | 0.1817 | **0.3230** | 0.1779 |
+
+**The honest result: fusion does not clearly beat BERT alone.** Against
+BERT-only, cross-attention is +0.012 micro-F1 and +0.008 AUC-PR but
+**-0.005 macro-F1**. Early concat is +0.014 AUC-PR but -0.012 macro-F1.
+These are small margins and the project's central claim is not demonstrated
+by them.
+
+**Why — measured, not guessed.** The cross-attention has collapsed to
+uniform averaging. Across the case studies the max/min attention weight
+ratio over the top-8 tokens is 1.03-1.11, and entropy sits at 65-88% of the
+uniform maximum. The graph vector is not discriminating between caption
+tokens, so `A H_text` degenerates to a mean over the text and the model
+reduces to something close to early concat.
+
+Two plausible causes, both testable:
+1. **The query is weak.** GNN-only reaches only 0.114 macro-F1 on 19-node
+   segment graphs, so `g` carries little signal to query with.
+2. **The text tower dominates.** 66.4M BERT parameters against 31.8k GNN
+   parameters, trained jointly at a single lr=2e-5 tuned for BERT. The graph
+   branch is plausibly undertrained rather than uninformative.
+
+Next steps before writing this up as final: train with `--freeze-bert` so the
+graph branch must contribute, try a higher separate lr for the GNN, and
+enrich node features. Do not report the current numbers as a refutation of
+fusion — they are a result about *this* configuration.
+
+**Outstanding:** the DEAM valence/arousal auxiliary term. The loader,
+masked multi-task loss and graph builder are all implemented and tested
+(`src/deam_data.py`, `fusion_model.multitask_loss`); only the run is missing.
+DEAM downloaded at 196 KB/s on that host, and waiting ~70 min on a $0.46/hr
+box was poor economics, so it is deferred to a cheap box. The PDF marks
+valence/arousal "(optional)" for Task 3.
 
 ## Week 5 (Sep 1-4): Task 3 — ablations, t-SNE, case studies
 

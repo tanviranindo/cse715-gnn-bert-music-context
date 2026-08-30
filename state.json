@@ -31,7 +31,7 @@
       "name": "Task 3 \u2014 GNN-BERT cross-attention fusion",
       "difficulty": "Hard",
       "points": 22,
-      "status": "not_started",
+      "status": "in_progress",
       "week": 4
     },
     {
@@ -306,13 +306,16 @@
   "compute": {
     "provider": "Vast.ai",
     "instance": null,
-    "note": "nothing running; volumes abandoned (see infra/vast-connect.md)",
-    "credit_remaining": 6.1,
+    "note": "nothing running; volumes abandoned; DEAM emotion run outstanding",
+    "credit_remaining": 4.14,
     "results": {
       "task1_musiccaps_stripped": 0.608,
       "task1_mtat": 0.258,
       "task2_gat_macro_f1": 0.432,
-      "task2_cnn_acc": 0.443
+      "task2_cnn_acc": 0.443,
+      "task3_bert_macro_f1": 0.1864,
+      "task3_crossattn_macro_f1": 0.1817,
+      "task3_crossattn_micro_f1": 0.323
     }
   }
 }

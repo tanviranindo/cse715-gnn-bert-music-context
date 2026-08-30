@@ -1,0 +1,89 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[data] mtat=21315 deam=0 tags=50
+[data] splits: train=14972 val=3129 test=3214
+[data] emotion-supervised in train: 0
+
+=== bert ===
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 6029.33it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  [bert epoch 1] loss 0.2452 macroF1 0.0220 microF1 0.1028 (14.2s)
+  [bert epoch 2] loss 0.1682 macroF1 0.0599 microF1 0.1843 (14.0s)
+  [bert epoch 3] loss 0.1492 macroF1 0.0729 microF1 0.2212 (14.0s)
+  [bert epoch 4] loss 0.1402 macroF1 0.0759 microF1 0.2028 (14.0s)
+  [bert epoch 5] loss 0.1347 macroF1 0.0830 microF1 0.2240 (14.0s)
+  [bert epoch 6] loss 0.1306 macroF1 0.0844 microF1 0.2353 (14.0s)
+  [bert epoch 7] loss 0.1272 macroF1 0.0965 microF1 0.2542 (14.0s)
+  [bert epoch 8] loss 0.1246 macroF1 0.1060 microF1 0.2529 (14.0s)
+
+=== gnn ===
+  [gnn epoch 1] loss 0.6136 macroF1 0.0438 microF1 0.0859 (3.9s)
+  [gnn epoch 2] loss 0.4709 macroF1 0.0099 microF1 0.0314 (3.8s)
+  [gnn epoch 3] loss 0.3743 macroF1 0.0067 microF1 0.0137 (3.8s)
+  [gnn epoch 4] loss 0.3114 macroF1 0.0000 microF1 0.0000 (3.9s)
+  [gnn epoch 5] loss 0.2717 macroF1 0.0000 microF1 0.0000 (3.8s)
+  [gnn epoch 6] loss 0.2472 macroF1 0.0000 microF1 0.0000 (3.8s)
+  [gnn epoch 7] loss 0.2317 macroF1 0.0000 microF1 0.0000 (3.8s)
+  [gnn epoch 8] loss 0.2215 macroF1 0.0026 microF1 0.0065 (3.8s)
+
+=== concat ===
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 5815.89it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  [concat epoch 1] loss 0.2443 macroF1 0.0222 microF1 0.1005 (15.4s)
+  [concat epoch 2] loss 0.1680 macroF1 0.0578 microF1 0.1783 (15.4s)
+  [concat epoch 3] loss 0.1492 macroF1 0.0850 microF1 0.2156 (15.4s)
+  [concat epoch 4] loss 0.1397 macroF1 0.0881 microF1 0.2365 (15.4s)
+  [concat epoch 5] loss 0.1339 macroF1 0.1165 microF1 0.2596 (15.4s)
+  [concat epoch 6] loss 0.1297 macroF1 0.1322 microF1 0.2919 (15.4s)
+  [concat epoch 7] loss 0.1264 macroF1 0.0969 microF1 0.2473 (15.5s)
+  [concat epoch 8] loss 0.1237 macroF1 0.1117 microF1 0.2652 (15.7s)
+
+=== crossattn ===
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 5928.09it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  [crossattn epoch 1] loss 0.2629 macroF1 0.0148 microF1 0.0904 (15.9s)
+  [crossattn epoch 2] loss 0.1752 macroF1 0.0435 microF1 0.1581 (15.8s)
+  [crossattn epoch 3] loss 0.1563 macroF1 0.0834 microF1 0.2227 (15.9s)
+  [crossattn epoch 4] loss 0.1466 macroF1 0.0915 microF1 0.2392 (16.0s)
+  [crossattn epoch 5] loss 0.1402 macroF1 0.1136 microF1 0.2687 (16.0s)
+  [crossattn epoch 6] loss 0.1352 macroF1 0.1061 microF1 0.2699 (16.0s)
+  [crossattn epoch 7] loss 0.1319 macroF1 0.1163 microF1 0.2686 (16.0s)
+  [crossattn epoch 8] loss 0.1292 macroF1 0.1180 microF1 0.2891 (15.9s)
+
+=== Task 3 ablation ===
+mode              params  macro-F1  micro-F1   AUC-PR  val MAE  aro MAE
+bert          66,402,868    0.1864    0.3110   0.1697      nan      nan
+gnn               31,796    0.1141    0.2358   0.1026      nan      nan
+concat        66,434,612    0.1748    0.3176   0.1836      nan      nan
+crossattn     66,834,740    0.1817    0.3230   0.1779      nan      nan
+[out ] results/metrics_task3.json
+EXIT=0

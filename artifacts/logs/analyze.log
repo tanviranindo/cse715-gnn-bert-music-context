@@ -1,0 +1,22 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 6679.15it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+[tsne] 1500 points, z dim 384 -> plots/tsne_task3.png
+[case] 3 case studies -> case_studies_task3.json
+  clip 177: '7 Nine Skank | Stereo Mash Up'
+     attends to: ['7', '|', 'ska', '##h', 'up']
+  clip 1188: 'Dawn of The Gods (part 1) | Maya - The Great Kat'
+     attends to: ['part', '1', '(', ')', 'gods']
+  clip 2532: 'Mad bull | Are you for real'
+     attends to: ['|', 'bull', 'mad', 'are', 'you']
+EXIT=0

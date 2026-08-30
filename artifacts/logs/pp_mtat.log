@@ -1,0 +1,49 @@
+[data] 21318 MagnaTagATune clips | 50 tags
+[proc] 64 workers, 1.5s segments, tau=0.9
+  500/21318  ok=500  59.6 tracks/s  eta 5.8m
+  1000/21318  ok=1000  114.3 tracks/s  eta 3.0m
+  1500/21318  ok=1500  108.4 tracks/s  eta 3.0m
+  2000/21318  ok=2000  139.0 tracks/s  eta 2.3m
+  2500/21318  ok=2500  129.8 tracks/s  eta 2.4m
+  3000/21318  ok=3000  150.0 tracks/s  eta 2.0m
+  3500/21318  ok=3500  142.2 tracks/s  eta 2.1m
+  4000/21318  ok=4000  156.3 tracks/s  eta 1.8m
+  4500/21318  ok=4500  150.3 tracks/s  eta 1.9m
+  5000/21318  ok=5000  160.1 tracks/s  eta 1.7m
+  5500/21318  ok=5500  155.8 tracks/s  eta 1.7m
+  6000/21318  ok=6000  163.1 tracks/s  eta 1.6m
+  6500/21318  ok=6500  159.9 tracks/s  eta 1.5m
+  7000/21318  ok=7000  165.2 tracks/s  eta 1.4m
+  7500/21318  ok=7500  163.2 tracks/s  eta 1.4m
+  8000/21318  ok=8000  167.0 tracks/s  eta 1.3m
+  8500/21318  ok=8500  165.4 tracks/s  eta 1.3m
+  9000/21318  ok=9000  168.2 tracks/s  eta 1.2m
+  9500/21318  ok=9500  167.4 tracks/s  eta 1.2m
+  10000/21318  ok=10000  169.7 tracks/s  eta 1.1m
+  10500/21318  ok=10500  169.0 tracks/s  eta 1.1m
+  11000/21318  ok=11000  170.2 tracks/s  eta 1.0m
+  11500/21318  ok=11500  170.5 tracks/s  eta 1.0m
+  12000/21318  ok=12000  170.9 tracks/s  eta 0.9m
+  12500/21318  ok=12500  171.7 tracks/s  eta 0.9m
+  13000/21318  ok=13000  171.7 tracks/s  eta 0.8m
+  13500/21318  ok=13499  173.1 tracks/s  eta 0.8m
+  14000/21318  ok=13999  172.3 tracks/s  eta 0.7m
+  14500/21318  ok=14499  173.8 tracks/s  eta 0.7m
+  15000/21318  ok=14999  172.7 tracks/s  eta 0.6m
+  15500/21318  ok=15499  174.7 tracks/s  eta 0.6m
+  16000/21318  ok=15999  173.4 tracks/s  eta 0.5m
+  16500/21318  ok=16499  175.2 tracks/s  eta 0.5m
+  17000/21318  ok=16999  173.9 tracks/s  eta 0.4m
+  17500/21318  ok=17499  175.8 tracks/s  eta 0.4m
+  18000/21318  ok=17999  174.6 tracks/s  eta 0.3m
+  18500/21318  ok=18499  176.2 tracks/s  eta 0.3m
+  19000/21318  ok=18999  175.0 tracks/s  eta 0.2m
+  19500/21318  ok=19499  176.7 tracks/s  eta 0.2m
+  20000/21318  ok=19999  175.6 tracks/s  eta 0.1m
+  20500/21318  ok=20498  176.9 tracks/s  eta 0.1m
+  21000/21318  ok=20998  177.1 tracks/s  eta 0.0m
+[proc] 21315/21318 usable in 2.0 min
+[stat] segment graphs: 19.0 nodes, avg degree 1.90
+[stat] chord graphs:   21.6 unique chords
+[out ] /data/processed/mtat_graphs.pt  +  25 examples
+EXIT=0
