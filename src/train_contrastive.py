@@ -80,7 +80,11 @@ def main() -> None:
             G.append(g.cpu()); T.append(t.cpu())
         return torch.cat(G), torch.cat(T)
 
-    history = []
+    # Track the best epoch by validation caption->audio R@10. The contrastive
+    # objective overfits well before the loss plateaus: on a first run the
+    # train loss fell 3.87 -> 0.41 while val R@10 peaked at epoch 6 and then
+    # declined, so reporting the final epoch understates the model.
+    history, best = [], (-1.0, None, 0)
     for epoch in range(1, args.epochs + 1):
         model.train()
         started, total, steps = time.time(), 0.0, 0
@@ -101,17 +105,26 @@ def main() -> None:
                         "val_c2a_R@1": r["R@1"], "val_c2a_R@10": r["R@10"],
                         "temperature": float(model.temperature),
                         "seconds": round(time.time() - started, 1)})
+        if r["R@10"] > best[0]:
+            best = (r["R@10"],
+                    {k: v.detach().clone() for k, v in model.state_dict().items()},
+                    epoch)
         print(f"  [epoch {epoch}] loss {history[-1]['loss']:.4f} "
               f"c2a R@1 {r['R@1']:.4f} R@10 {r['R@10']:.4f} "
               f"tau {float(model.temperature):.4f} ({history[-1]['seconds']}s)",
               flush=True)
 
+    if best[1] is not None:
+        model.load_state_dict(best[1])
+        print(f"[best] restored epoch {best[2]} (val c2a R@10 {best[0]:.4f})")
     G, T = embed(loaders["test"])
     results = {
         "config": vars(args),
         "split_sizes": {k: len(v) for k, v in splits.items()},
         "gallery_size": len(G),
         "history": history,
+        "best_epoch": best[2],
+        "best_val_c2a_R@10": best[0],
         "caption_to_audio": contrastive.recall_at_k(T, G),
         "audio_to_caption": contrastive.recall_at_k(G, T),
         "median_rank_caption_to_audio": contrastive.median_rank(T, G),

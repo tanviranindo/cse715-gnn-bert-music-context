@@ -1,0 +1,32 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[data] mtat=21315 deam=1802 tags=50
+[data] splits: train=16276 val=3380 test=3461
+[data] emotion-supervised in train: 1304
+
+=== crossattn ===
+Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 4798.10it/s]
+[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
+Key                     | Status     |  | 
+------------------------+------------+--+-
+vocab_projector.bias    | UNEXPECTED |  | 
+vocab_layer_norm.bias   | UNEXPECTED |  | 
+vocab_layer_norm.weight | UNEXPECTED |  | 
+vocab_transform.bias    | UNEXPECTED |  | 
+vocab_transform.weight  | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  [crossattn epoch 1] loss 2.1220 macroF1 0.0000 microF1 0.0000 (59.3s)
+  [crossattn epoch 2] loss 1.5441 macroF1 0.0000 microF1 0.0000 (59.1s)
+  [crossattn epoch 3] loss 1.2694 macroF1 0.0000 microF1 0.0000 (59.2s)
+  [crossattn epoch 4] loss 1.0471 macroF1 0.0004 microF1 0.0008 (59.4s)
+  [crossattn epoch 5] loss 0.8226 macroF1 0.0110 microF1 0.0606 (59.2s)
+  [crossattn epoch 6] loss 0.7200 macroF1 0.0136 microF1 0.0832 (59.3s)
+  [crossattn epoch 7] loss 0.5831 macroF1 0.0140 microF1 0.0834 (59.3s)
+  [crossattn epoch 8] loss 0.5325 macroF1 0.0161 microF1 0.0971 (59.3s)
+
+=== Task 3 ablation ===
+mode              params  macro-F1  micro-F1   AUC-PR  val MAE  aro MAE
+crossattn     66,834,740    0.1160    0.2787   0.1324    0.710    0.721
+[out ] results/metrics_task3.json
+T3EDONE

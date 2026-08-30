@@ -236,3 +236,32 @@ valence/arousal "(optional)" for Task 3.
 (to be filled in when Week 7 starts — see issue #14)
 
 ## Buffer (Sep 11): Submission only
+### Task 3 multi-task with DEAM (run 2026-08-31)
+
+The auxiliary valence/arousal term now runs, using masked alternating batches
+per spec S2.1: 21,315 MagnaTagATune clips plus 1,802 DEAM songs, 1,304 of
+them emotion-supervised in train. Artefacts:
+`results/metrics_task3_multitask.json`.
+
+| cross-attention | tags only | + DEAM | delta |
+|---|---|---|---|
+| macro-F1 | 0.1817 | 0.1160 | **-0.0657** |
+| micro-F1 | 0.3230 | 0.2787 | -0.0443 |
+| AUC-PR | 0.1779 | 0.1324 | -0.0455 |
+
+| emotion head | MAE (z) | MAE (1-9 scale) | R2 |
+|---|---|---|---|
+| valence | 0.710 | 0.83 | **+0.181** |
+| arousal | 0.721 | 0.92 | **+0.085** |
+
+**The emotion heads work but the multi-task loss costs tag performance.**
+Both R2 values are positive, so the model beats predicting the mean on
+held-out songs, and MAE of 0.83-0.92 on a 1-9 scale is usable. But tag
+macro-F1 drops by 0.066 — a 36% relative fall. The MagnaTagATune training
+data is identical between the two runs, so this is attributable to the
+auxiliary term competing for shared capacity rather than to a data change.
+
+Report both. The PDF marks valence/arousal "(optional)" for Task 3, and the
+honest framing is that the auxiliary term buys emotion regression at a
+measurable cost to tagging, not that it is free.
+

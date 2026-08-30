@@ -78,13 +78,17 @@ def process_track(record: dict) -> dict | None:
     chords = gb.estimate_chords(chroma)
     chord_nodes, chord_ei, chord_w = gb.build_chord_graph(chords)
 
-    mel = librosa.power_to_db(
-        librosa.feature.melspectrogram(y=y, sr=sr, n_mels=_CFG["n_mels"]),
-        ref=np.max,
-    )
-    # Truncate and store float16: full float32 mels for 8000 tracks would be
-    # 5.3 GB, which is slow to write and slower to load every training run.
-    mel = mel[:, : _CFG["mel_width"]].astype(np.float16)
+    # mel is only consumed by Task 2's CNN baseline. For 21315 MTAT clips it
+    # is 3.49 GB of a 3.6 GB cache, and serialising that killed the writer on
+    # a 31 GB box, so Tasks 3 and 4 skip it.
+    if _CFG["store_mel"]:
+        mel = librosa.power_to_db(
+            librosa.feature.melspectrogram(y=y, sr=sr, n_mels=_CFG["n_mels"]),
+            ref=np.max,
+        )
+        mel = mel[:, : _CFG["mel_width"]].astype(np.float16)
+    else:
+        mel = np.zeros((0, 0), dtype=np.float16)
     record.pop("audio_bytes", None)
     return {
         "track_id": record["track_id"],
@@ -130,6 +134,8 @@ def main() -> None:
                         "correct for raw features and yields a bare chain here")
     p.add_argument("--n-mels", type=int, default=128)
     p.add_argument("--mel-width", type=int, default=640)
+    p.add_argument("--no-mel", action="store_true",
+                   help="skip log-mel; only Task 2's CNN baseline needs it")
     p.add_argument("--workers", type=int, default=0, help="0 = all cores")
     p.add_argument("--limit", type=int, default=0, help="0 = all tracks")
     p.add_argument("--n-examples", type=int, default=25)
@@ -144,7 +150,7 @@ def main() -> None:
         print(f"[data] {len(records)} FMA-small tracks")
         print(f"[data] genres: {fma_data.class_balance(records)}")
         vocab = fma_data.genre_vocabulary(records)
-    else:
+    elif args.dataset == "mtat":
         from src import mtat_data
         vocab, mrecs = mtat_data.build_dataset(
             Path(args.mtat_dir) / "annotations_final.csv",
@@ -222,6 +228,7 @@ def main() -> None:
         "tau": args.tau,
         "n_mels": args.n_mels,
         "mel_width": args.mel_width,
+        "store_mel": not args.no_mel,
     }
     workers = args.workers or mp.cpu_count()
     print(f"[proc] {workers} workers, {args.segment_seconds}s segments, tau={args.tau}")

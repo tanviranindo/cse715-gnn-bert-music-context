@@ -400,5 +400,59 @@
   "time": "22:00",
   "category": "decision",
   "text": "Cost lesson: rented a $0.46/hr 64-core RTX 4090 sized for a 3.4h preprocessing job that turned out to take 2 min. Should have re-estimated after seeing 177 tracks/s and moved to a ~$0.15/hr box. Task 3 cost $1.91 against a $0.69 estimate"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "16:13",
+  "category": "data",
+  "text": "MusicCaps graphs rebuilt at 0.5s segments: its clips are 10s so 1.5s gave only 6.0 nodes, too few for message passing. Now 20.0 nodes, avg degree 2.96, matching Task 2's graphs"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "16:40",
+  "category": "result",
+  "text": "Task 4 retrieval on MusicCaps (gallery 536): caption->audio R@1 0.0168 R@10 0.1269, audio->caption R@1 0.0224 R@10 0.1325. That is 9.0x random at R@1 and 6.8x at R@10; median rank 68 of 536"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "16:42",
+  "category": "bugfix",
+  "text": "Task 4 first run reported the final epoch: train loss fell 3.87->0.41 while val R@10 peaked at epoch 6 then declined. Added best-checkpoint selection on val R@10; restored epoch 9 and R@10 improved 0.119->0.127"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "16:45",
+  "category": "result",
+  "text": "Zero-shot tagging from the contrastive space: micro-F1 0.1171 with NO tag supervision, against 0.6083 for Task 1's supervised model on the same corpus. Alignment alone recovers about a fifth of supervised performance"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "16:55",
+  "category": "bugfix",
+  "text": "MTAT cache write died silently leaving a 0-byte .pt: mel was 3.49GB of a 3.6GB cache and serialising it exceeded memory on a 31GB box. Added --no-mel since only Task 2's CNN baseline consumes mel"
+ },
+ {
+  "date": "2026-08-30",
+  "time": "17:00",
+  "category": "decision",
+  "text": "Right-sized this session after the Task 3 overspend: RTX 3060 at $0.066/hr instead of $0.46/hr. Whole Task 4 session cost about $0.08"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "00:10",
+  "category": "result",
+  "text": "Task 3 multi-task with DEAM: emotion heads work (valence R2 +0.181, arousal R2 +0.085; MAE 0.83/0.92 on the 1-9 scale) but tag macro-F1 falls 0.1817 -> 0.1160, a 36% relative drop. MTAT training data is identical between runs, so the auxiliary term is competing for shared capacity"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "00:15",
+  "category": "bugfix",
+  "text": "An rsync from the box overwrote the local 4-arm ablation with the box's crossattn-only metrics_task3.json. Recovered from git; the multi-task run is now kept separately as metrics_task3_multitask.json"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "00:20",
+  "category": "compute",
+  "text": "All four tasks now have results. Instance destroyed; nothing running. Credit $3.73"
  }
 ]
