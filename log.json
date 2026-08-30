@@ -478,5 +478,23 @@
   "time": "04:05",
   "category": "docs",
   "text": "Closed a missed deliverable: spec S4.1 requires Macro-F1/Micro-F1 curves vs training epochs for Task 1. Data existed but was never plotted. Now results/plots/training_curves.png, also showing Task 4's loss/R@10 divergence"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "04:30",
+  "category": "docs",
+  "text": "Wrote notebooks/eda.ipynb (17 cells) and notebooks/demo_context.ipynb (24 cells), completing the spec's required repo structure. Both execute end-to-end under nbconvert; EDA needs only ~35MB of metadata and no audio"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "04:35",
+  "category": "bugfix",
+  "text": "Executing the notebooks caught two defects I would have shipped otherwise: ipynb source lines lacked trailing newlines so every cell collapsed onto one line and failed to parse, and a loop variable 'c' over case studies shadowed the Task 3 results dict used several cells later"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "04:40",
+  "category": "docs",
+  "text": "Made the EDA graph-saturation demo faithful: the first synthetic stand-in had no repeated structure, so z-scoring produced a bare chain (1.89) rather than the real 3.01. Now simulates song form with recurring sections, giving raw 18.00 vs z-scored 4.84 and mirroring the real 18.15 -> 3.01"
  }
 ]

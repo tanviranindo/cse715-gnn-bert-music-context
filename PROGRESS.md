@@ -255,9 +255,22 @@ training epochs" for Task 1, which had data but no plot. Now
 `results/plots/training_curves.png`, which additionally shows Task 4's InfoNCE
 loss falling monotonically while validation R@10 peaks at epoch 6 and degrades.
 
+**Notebooks: DONE (2026-08-31).** Both required by the spec's repo structure,
+both executed end-to-end with `nbconvert` rather than assumed to work.
+
+- `notebooks/eda.ipynb` (17 cells) reproduces the three dataset findings from
+  scratch: the 61.6% artist leak, the 0.673 oracle ceiling, and the 52.1%
+  verbatim-aspect overlap, plus a faithful demonstration of the graph
+  saturation problem. Downloads ~35 MB of metadata on demand; needs no audio.
+- `notebooks/demo_context.ipynb` (24 cells) walks all four tasks from the
+  committed artefacts, including the attention-collapse measurement and a
+  cross-task summary against baselines. Runs in seconds, no GPU.
+
+Executing them caught two real defects: cell sources lacked trailing newlines
+so every cell collapsed to one line, and a loop variable `c` shadowed the Task 3
+results dict several cells later.
+
 **Still outstanding for submission:**
-- `notebooks/demo_context.ipynb` (demo notebook, spec S3 structure)
-- `notebooks/eda.ipynb`
 - The two Task 3 follow-up runs (--freeze-bert, separate --gnn-lr) that the
   report names as the first experiments to try next. Two attempts were lost to
   an oversubscribed host (load average 19.9 with our workers starved to 28s of

@@ -22,3 +22,13 @@ status.json
 # Model checkpoints pulled down from rented instances
 artifacts/checkpoints/*
 !artifacts/checkpoints/.gitkeep
+
+# Notebook execution scratch (EDA downloads ~35 MB of metadata on demand)
+notebooks/_eda_cache/
+notebooks/_exec_*.ipynb
+.ipynb_checkpoints/
+
+# LaTeX build products
+report/*.aux
+report/*.log
+report/*.out
