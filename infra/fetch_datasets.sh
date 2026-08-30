@@ -55,6 +55,11 @@ get https://cvml.unige.ch/databases/DEAM/DEAM_audio.zip "$RAW/deam/DEAM_audio.zi
   || say "NOTE  DEAM needs manual fetch from https://cvml.unige.ch/databases/DEAM/"
 get https://cvml.unige.ch/databases/DEAM/DEAM_Annotations.zip "$RAW/deam/DEAM_Annotations.zip" \
   || say "NOTE  DEAM annotations need manual fetch"
+# metadata.zip is a SEPARATE download and is easy to miss. Task 3 needs it:
+# DEAM_Annotations.zip has valence/arousal only, no genre/artist/title, and
+# spec S2.1 needs a metadata-derived pseudo-caption for the BERT branch.
+get https://cvml.unige.ch/databases/DEAM/metadata.zip "$RAW/deam/metadata.zip" \
+  || say "NOTE  DEAM metadata.zip missing - S2.1 fallback would apply"
 
 say "=== MusicCaps (pre-scraped mirror; YouTube blocks datacenter IPs) ==="
 mkdir -p "$RAW/musiccaps"

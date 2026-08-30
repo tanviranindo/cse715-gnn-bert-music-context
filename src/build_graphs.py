@@ -46,7 +46,7 @@ def process_track(record: dict) -> dict | None:
     """Load one clip, emit its segment graph, chord graph and mel spectrogram."""
     import librosa
 
-    if _CFG["dataset"] == "mtat":
+    if _CFG["dataset"] in ("mtat", "deam"):
         path = Path(_CFG["audio_root"]) / record["mp3_path"]
     else:
         path = fma_data.track_audio_path(_CFG["audio_root"], record["track_id"])
@@ -83,6 +83,9 @@ def process_track(record: dict) -> dict | None:
         "split": record["split"],
         "text": record.get("text", ""),
         "labels": record.get("labels", set()),
+        **({"valence_z": record["valence_z"], "arousal_z": record["arousal_z"],
+            "valence": record["valence"], "arousal": record["arousal"]}
+           if "valence_z" in record else {}),
         "x": feats,
         "edge_index": edge_index,
         "edge_weight": edge_weight,
@@ -95,13 +98,15 @@ def process_track(record: dict) -> dict | None:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--dataset", choices=["fma", "mtat"], default="fma")
+    p.add_argument("--dataset", choices=["fma", "mtat", "deam"], default="fma")
     p.add_argument("--audio-root", default="/data/raw/fma_small",
                    help="fma: fma_small dir | mtat: magnatagatune/audio dir")
     p.add_argument("--tracks-csv", default="/data/raw/fma_metadata/tracks.csv",
                    help="fma only")
     p.add_argument("--mtat-dir", default="/data/raw/magnatagatune",
                    help="mtat only: holds annotations_final.csv + clip_info_final.csv")
+    p.add_argument("--deam-annotations", default="/data/raw/deam/annotations")
+    p.add_argument("--deam-metadata", default="/data/raw/deam/metadata")
     p.add_argument("--n-tags", type=int, default=50, help="mtat only")
     p.add_argument("--out", default="/data/processed")
     p.add_argument("--sample-rate", type=int, default=22050)
@@ -138,6 +143,21 @@ def main() -> None:
             for r in mrecs
         ]
         print(f"[data] {len(records)} MagnaTagATune clips | {len(vocab)} tags")
+    if args.dataset == "deam":
+        from src import deam_data
+        drecs = deam_data.build_dataset(args.deam_annotations, args.deam_metadata)
+        drecs, stats = deam_data.standardise_targets(drecs)
+        print(f"[data] valence/arousal z-scored with {stats}")
+        records = [
+            {"track_id": int(r["clip_id"]), "genre": "", "artist": r["artist"],
+             "split": "", "mp3_path": f"{r['clip_id']}.mp3", "text": r["text"],
+             "labels": set(), "valence_z": r["valence_z"],
+             "arousal_z": r["arousal_z"], "valence": r["valence"],
+             "arousal": r["arousal"]}
+            for r in drecs
+        ]
+        vocab = []
+        print(f"[data] {len(records)} DEAM songs with pseudo-captions")
     if args.limit:
         records = records[: args.limit]
 
@@ -171,7 +191,7 @@ def main() -> None:
 
     out_dir = Path(args.out)
     (out_dir / "graph_samples").mkdir(parents=True, exist_ok=True)
-    cache_stem = "fma_small" if args.dataset == "fma" else "mtat"
+    cache_stem = {"fma": "fma_small", "mtat": "mtat", "deam": "deam"}[args.dataset]
     torch.save({"config": vars(args), "vocab": vocab, "records": out_records},
                out_dir / f"{cache_stem}_graphs.pt")
 

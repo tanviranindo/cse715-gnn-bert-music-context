@@ -40,6 +40,10 @@ say "=== DEAM ==="
 D="$RAW/deam"
 [ ! -d "$D/audio" ] && mkdir -p "$D/audio" && unzip -q "$D/DEAM_audio.zip" -d "$D/audio" 2>>"$LOG"
 [ ! -d "$D/annotations" ] && mkdir -p "$D/annotations" && unzip -q "$D/DEAM_Annotations.zip" -d "$D/annotations" 2>>"$LOG"
+if [ ! -d "$D/metadata" ] && [ -s "$D/metadata.zip" ]; then
+  unzip -q "$D/metadata.zip" -d "$D/" 2>>"$LOG"
+  say "deam metadata: $(ls "$D"/metadata/metadata_*.csv 2>/dev/null | wc -l) yearly files"
+fi
 n=$(find "$D/audio" -name '*.mp3' 2>/dev/null | wc -l); say "deam: $n mp3 (expect ~1802)"
 [ "$n" -gt 1500 ] && rm -f "$D/DEAM_audio.zip" && say "deleted DEAM_audio.zip"
 

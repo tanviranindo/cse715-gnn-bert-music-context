@@ -97,3 +97,44 @@ def test_per_class_f1_names_the_classes():
 def test_confusion_matrix_places_counts_correctly():
     m = ev.confusion_matrix([0, 0, 1], [0, 1, 1], 2)
     assert m == [[1, 1], [0, 1]]
+
+
+def test_average_precision_is_one_for_a_perfect_ranking():
+    assert ev.average_precision([1, 1, 0, 0], [0.9, 0.8, 0.2, 0.1]) == 1.0
+
+
+def test_average_precision_is_lower_for_a_bad_ranking():
+    good = ev.average_precision([1, 0, 0], [0.9, 0.5, 0.1])
+    bad = ev.average_precision([1, 0, 0], [0.1, 0.5, 0.9])
+    assert good > bad
+
+
+def test_average_precision_hand_computed():
+    # ranked: pos, neg, pos -> (1/1 + 2/3) / 2
+    got = ev.average_precision([1, 0, 1], [0.9, 0.8, 0.7])
+    assert got == pytest.approx((1.0 + 2 / 3) / 2)
+
+
+def test_average_precision_without_positives_is_zero():
+    assert ev.average_precision([0, 0], [0.5, 0.4]) == 0.0
+
+
+def test_macro_auc_pr_skips_tags_with_no_positives():
+    y = [[1, 0], [0, 0]]          # tag1 never positive
+    p = [[0.9, 0.5], [0.1, 0.4]]
+    assert ev.macro_auc_pr(y, p) == pytest.approx(1.0)
+
+
+def test_regression_metrics_on_a_perfect_fit():
+    m = ev.regression_metrics([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])
+    assert m["mae"] == 0.0 and m["r2"] == pytest.approx(1.0)
+
+
+def test_r2_is_zero_when_predicting_the_mean():
+    m = ev.regression_metrics([1.0, 2.0, 3.0], [2.0, 2.0, 2.0])
+    assert m["r2"] == pytest.approx(0.0)
+    assert m["mae"] == pytest.approx(2 / 3)
+
+
+def test_r2_goes_negative_for_worse_than_mean():
+    assert ev.regression_metrics([1.0, 2.0, 3.0], [9.0, 9.0, 9.0])["r2"] < 0

@@ -152,3 +152,52 @@ def confusion_matrix(y_true: list[int], y_pred: list[int], n_classes: int) -> li
     for t, p in zip(y_true, y_pred):
         m[t][p] += 1
     return m
+
+
+# ------------------------------------------- ranking metrics (Task 3 AUC-PR)
+
+def average_precision(y_true: list[int], scores: list[float]) -> float:
+    """Area under the precision-recall curve for one tag, by interpolation
+    over the ranked list (the standard 'average precision' definition).
+
+    Reported instead of ROC-AUC for multi-label tagging because the positive
+    class is rare (2-25% prevalence here) and ROC-AUC is optimistic under
+    class imbalance.
+    """
+    pairs = sorted(zip(scores, y_true), key=lambda p: -p[0])
+    n_pos = sum(y_true)
+    if n_pos == 0:
+        return 0.0
+    tp = 0
+    total = 0.0
+    for i, (_, label) in enumerate(pairs, start=1):
+        if label:
+            tp += 1
+            total += tp / i
+    return total / n_pos
+
+
+def macro_auc_pr(y_true: list[list[int]], probs: list[list[float]]) -> float:
+    """Mean average precision across tags. Tags with no positives are skipped."""
+    if not y_true:
+        return 0.0
+    n_tags = len(y_true[0])
+    scores = []
+    for k in range(n_tags):
+        column = [row[k] for row in y_true]
+        if sum(column) == 0:
+            continue
+        scores.append(average_precision(column, [row[k] for row in probs]))
+    return sum(scores) / len(scores) if scores else 0.0
+
+
+def regression_metrics(y_true: list[float], y_pred: list[float]) -> dict[str, float]:
+    """MAE and R^2 for the valence/arousal heads."""
+    if not y_true:
+        return {"mae": 0.0, "r2": 0.0}
+    n = len(y_true)
+    mae = sum(abs(a - b) for a, b in zip(y_true, y_pred)) / n
+    mean = sum(y_true) / n
+    ss_res = sum((a - b) ** 2 for a, b in zip(y_true, y_pred))
+    ss_tot = sum((a - mean) ** 2 for a in y_true)
+    return {"mae": mae, "r2": 1 - ss_res / ss_tot if ss_tot else 0.0}
