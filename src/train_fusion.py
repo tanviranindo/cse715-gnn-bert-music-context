@@ -75,6 +75,37 @@ def artist_split(items, seed=42, fracs=(0.7, 0.15)):
 
 
 @torch.no_grad()
+def attention_entropy(model, loader, device, max_batches: int = 20) -> dict:
+    """How peaked is the cross-attention, as a fraction of the uniform maximum?
+
+    1.0 means the graph query gives every caption token equal weight, i.e. the
+    fusion has degenerated into averaging the text and cross-attention buys
+    nothing over early concat. The first ablation measured 0.65-0.88 here.
+    """
+    if model.mode != "crossattn":
+        return {}
+    model.eval()
+    ratios, peaks = [], []
+    for i, batch in enumerate(loader):
+        if i >= max_batches:
+            break
+        batch = batch.to(device)
+        _, _, attn = model(batch.x, batch.edge_index, batch.batch,
+                           batch.input_ids, batch.attention_mask)
+        mask = batch.attention_mask.float()
+        n_real = mask.sum(dim=1).clamp(min=1)
+        a = attn.clamp(min=1e-12)
+        ent = -(a * a.log() * mask).sum(dim=1)
+        ratios.extend((ent / n_real.log().clamp(min=1e-9)).cpu().tolist())
+        peaks.extend((attn.max(dim=1).values * n_real).cpu().tolist())
+    n = max(len(ratios), 1)
+    return {
+        "entropy_vs_uniform": sum(ratios) / n,
+        "peak_over_uniform": sum(peaks) / max(len(peaks), 1),
+    }
+
+
+@torch.no_grad()
 def evaluate_split(model, loader, device, mode):
     model.eval()
     tag_true, tag_prob, em_true, em_pred = [], [], [], []
@@ -111,8 +142,22 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
         attn_dim=args.attn_dim, dropout=args.dropout,
         freeze_bert=args.freeze_bert,
     ).to(device)
-    params = [p for p in model.parameters() if p.requires_grad]
-    opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=1e-4)
+    # Separate learning rates. BERT has 66.4M parameters against the GNN's
+    # 31.8k, and a single lr=2e-5 tuned for fine-tuning BERT leaves the graph
+    # branch badly undertrained — a likely cause of the cross-attention
+    # collapsing to uniform weights in the first ablation.
+    bert_params, other_params = [], []
+    for name, q in model.named_parameters():
+        if not q.requires_grad:
+            continue
+        (bert_params if name.startswith("text_encoder") else other_params).append(q)
+    groups = []
+    if bert_params:
+        groups.append({"params": bert_params, "lr": args.lr})
+    if other_params:
+        groups.append({"params": other_params, "lr": args.gnn_lr or args.lr})
+    params = bert_params + other_params
+    opt = torch.optim.AdamW(groups, lr=args.lr, weight_decay=1e-4)
 
     history = []
     for epoch in range(1, args.epochs + 1):
@@ -168,6 +213,11 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
     if et:
         result["valence"] = ev.regression_metrics([a[0] for a in et], [b[0] for b in ep])
         result["arousal"] = ev.regression_metrics([a[1] for a in et], [b[1] for b in ep])
+    att = attention_entropy(model, loaders["test"], device)
+    if att:
+        result["attention"] = att
+        print(f"  [{mode}] attention entropy {att['entropy_vs_uniform']:.3f} of "
+              f"uniform, peak {att['peak_over_uniform']:.2f}x uniform")
     return model, result
 
 
@@ -190,6 +240,9 @@ def main() -> None:
     p.add_argument("--beta", type=float, default=1.0)
     p.add_argument("--max-length", type=int, default=64)
     p.add_argument("--freeze-bert", action="store_true")
+    p.add_argument("--gnn-lr", type=float, default=None,
+                   help="separate lr for the graph branch, fusion and heads; "
+                        "defaults to --lr")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
