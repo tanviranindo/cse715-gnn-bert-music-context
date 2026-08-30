@@ -15,9 +15,18 @@ CPU-bound and single-threaded; on 32 cores this is the difference between
 import argparse
 import json
 import multiprocessing as mp
+import os
 import time
 import warnings
 from pathlib import Path
+
+# Each worker process otherwise spawns its own BLAS/OpenMP thread pool. With
+# 32 workers on 32 cores that is ~1000 threads contending, and measured
+# throughput was 2.1 tracks/s where ~3 s/track of real work was expected.
+# These must be set before numpy/librosa import in the worker.
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+           "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+    os.environ.setdefault(_v, "1")
 
 import numpy as np
 
@@ -37,7 +46,10 @@ def process_track(record: dict) -> dict | None:
     """Load one clip, emit its segment graph, chord graph and mel spectrogram."""
     import librosa
 
-    path = fma_data.track_audio_path(_CFG["fma_root"], record["track_id"])
+    if _CFG["dataset"] == "mtat":
+        path = Path(_CFG["audio_root"]) / record["mp3_path"]
+    else:
+        path = fma_data.track_audio_path(_CFG["audio_root"], record["track_id"])
     if not path.exists():
         return None
     try:
@@ -69,6 +81,8 @@ def process_track(record: dict) -> dict | None:
         "genre": record["genre"],
         "artist": record["artist"],
         "split": record["split"],
+        "text": record.get("text", ""),
+        "labels": record.get("labels", set()),
         "x": feats,
         "edge_index": edge_index,
         "edge_weight": edge_weight,
@@ -81,8 +95,14 @@ def process_track(record: dict) -> dict | None:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--fma-root", default="/data/raw/fma_small")
-    p.add_argument("--tracks-csv", default="/data/raw/fma_metadata/tracks.csv")
+    p.add_argument("--dataset", choices=["fma", "mtat"], default="fma")
+    p.add_argument("--audio-root", default="/data/raw/fma_small",
+                   help="fma: fma_small dir | mtat: magnatagatune/audio dir")
+    p.add_argument("--tracks-csv", default="/data/raw/fma_metadata/tracks.csv",
+                   help="fma only")
+    p.add_argument("--mtat-dir", default="/data/raw/magnatagatune",
+                   help="mtat only: holds annotations_final.csv + clip_info_final.csv")
+    p.add_argument("--n-tags", type=int, default=50, help="mtat only")
     p.add_argument("--out", default="/data/processed")
     p.add_argument("--sample-rate", type=int, default=22050)
     p.add_argument("--segment-seconds", type=float, default=1.5)
@@ -97,14 +117,33 @@ def main() -> None:
 
     import torch
 
-    records = fma_data.load_tracks(args.tracks_csv, subset="small")
+    if args.dataset == "fma":
+        records = fma_data.load_tracks(args.tracks_csv, subset="small")
+        for r in records:
+            r["labels"] = {r["genre"]}
+        print(f"[data] {len(records)} FMA-small tracks")
+        print(f"[data] genres: {fma_data.class_balance(records)}")
+        vocab = fma_data.genre_vocabulary(records)
+    else:
+        from src import mtat_data
+        vocab, mrecs = mtat_data.build_dataset(
+            Path(args.mtat_dir) / "annotations_final.csv",
+            Path(args.mtat_dir) / "clip_info_final.csv",
+            n_tags=args.n_tags,
+        )
+        records = [
+            {"track_id": int(r["clip_id"]), "genre": sorted(r["labels"])[0],
+             "artist": r["artist"], "split": "", "mp3_path": r["mp3_path"],
+             "text": r["text"], "labels": r["labels"]}
+            for r in mrecs
+        ]
+        print(f"[data] {len(records)} MagnaTagATune clips | {len(vocab)} tags")
     if args.limit:
         records = records[: args.limit]
-    print(f"[data] {len(records)} FMA-small tracks")
-    print(f"[data] genres: {fma_data.class_balance(records)}")
 
     cfg = {
-        "fma_root": args.fma_root,
+        "dataset": args.dataset,
+        "audio_root": args.audio_root,
         "sample_rate": args.sample_rate,
         "segment_seconds": args.segment_seconds,
         "duration": args.duration,
@@ -132,7 +171,9 @@ def main() -> None:
 
     out_dir = Path(args.out)
     (out_dir / "graph_samples").mkdir(parents=True, exist_ok=True)
-    torch.save({"config": vars(args), "records": out_records}, out_dir / "fma_small_graphs.pt")
+    cache_stem = "fma_small" if args.dataset == "fma" else "mtat"
+    torch.save({"config": vars(args), "vocab": vocab, "records": out_records},
+               out_dir / f"{cache_stem}_graphs.pt")
 
     # >=20 standalone example graphs (spec S6 hard requirement), spread
     # across genres so the sample is not all one class.
@@ -177,7 +218,7 @@ def main() -> None:
     print(f"[stat] segment graphs: {np.mean(nodes):.1f} nodes, "
           f"avg degree {np.mean(degs):.2f}")
     print(f"[stat] chord graphs:   {np.mean(chord_nodes):.1f} unique chords")
-    print(f"[out ] {out_dir}/fma_small_graphs.pt  +  {len(examples)} examples")
+    print(f"[out ] {out_dir}/{cache_stem}_graphs.pt  +  {len(examples)} examples")
 
 
 if __name__ == "__main__":

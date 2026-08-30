@@ -23,9 +23,21 @@ not used and no extra download is needed.
 
 ## DEAM
 
-1. Download audio + annotations from
-   https://cvml.unige.ch/databases/DEAM/
+1. Download **three** files from https://cvml.unige.ch/databases/DEAM/
+   - `DEAM_audio.zip` (1.3 GB)
+   - `DEAM_Annotations.zip` (4.6 MB) — valence/arousal only
+   - `metadata.zip` (345 KB) — **easy to miss, and Task 3 needs it**
 2. Extract into `data/raw/deam/`
+
+`DEAM_Annotations.zip` contains *no* genre, artist or title. Spec S2.1 needs
+a metadata-derived pseudo-caption for the BERT branch, and that metadata
+lives only in the separate `metadata.zip`. Without it, S2.1's documented
+fallback applies (emotion head on the graph vector alone). With it, 1802/1802
+songs get a usable caption and 1744 (96.8%) carry a genre.
+
+Note the three yearly metadata files use different column names
+(`song_id`/`Id`/`id`, `Song title`/`Track`/`title`, ...) and contain stray
+tabs; `src/deam_data.load_metadata` normalises them.
 
 DEAM is disjoint from FMA/MagnaTagATune — no track carries both tag labels
 and valence/arousal targets. Task 3 handles this with masked alternating
