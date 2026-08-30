@@ -468,5 +468,30 @@
   "time": "23:07",
   "iso": "2026-08-30T17:07:09Z",
   "text": "instance reachable again"
+ },
+ {
+  "time": "02:55",
+  "iso": "2026-08-30T20:55:29Z",
+  "text": "MagnaTagATune: extracted -> pending"
+ },
+ {
+  "time": "02:55",
+  "iso": "2026-08-30T20:55:29Z",
+  "text": "DEAM: extracted -> pending"
+ },
+ {
+  "time": "02:55",
+  "iso": "2026-08-30T20:55:29Z",
+  "text": "MusicCaps: extracted -> pending"
+ },
+ {
+  "time": "02:55",
+  "iso": "2026-08-30T20:55:29Z",
+  "text": "phase: downloading -> no instance running"
+ },
+ {
+  "time": "02:55",
+  "iso": "2026-08-30T20:55:29Z",
+  "text": "instance unreachable"
  }
 ]
