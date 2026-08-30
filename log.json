@@ -454,5 +454,29 @@
   "time": "00:20",
   "category": "compute",
   "text": "All four tasks now have results. Instance destroyed; nothing running. Credit $3.73"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "03:40",
+  "category": "blocker",
+  "text": "Two attempts at the Task 3 follow-up experiments died on an oversubscribed host: load average 19.9 with our workers accumulating only 28s/2s/1s of CPU. My first 'deadlock' diagnosis was probably wrong - it was CPU starvation by other tenants, not a segfault. Stopped after the second attempt as planned and moved to the report"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "04:00",
+  "category": "docs",
+  "text": "Report written: report/final_report.pdf, 6 pages two-column, 7 tables, 2 figures, 10 references. Numbers generated programmatically from results/*.json so the paper cannot drift from the artefacts"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "04:02",
+  "category": "bugfix",
+  "text": "Caught an unclosed LaTeX math mode ($13\\% ...) that was blowing two lines 177pt and 303pt past the column. Overfull boxes down from 10 to 2 minor"
+ },
+ {
+  "date": "2026-08-31",
+  "time": "04:05",
+  "category": "docs",
+  "text": "Closed a missed deliverable: spec S4.1 requires Macro-F1/Micro-F1 curves vs training epochs for Task 1. Data existed but was never plotted. Now results/plots/training_curves.png, also showing Task 4's loss/R@10 divergence"
  }
 ]

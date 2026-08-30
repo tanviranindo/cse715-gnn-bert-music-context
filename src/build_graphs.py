@@ -235,8 +235,12 @@ def main() -> None:
 
     started = time.time()
     out_records = []
-    with mp.Pool(workers, initializer=_init, initargs=(cfg,)) as pool:
-        for i, res in enumerate(pool.imap_unordered(process_track, records, chunksize=16), 1):
+    # maxtasksperchild recycles workers so a leaked/segfaulting decoder cannot
+    # wedge the pool permanently. A run on 2026-08-31 deadlocked at 10500/21318
+    # with every worker's CPU time frozen; recycling avoids that class of hang.
+    with mp.Pool(workers, initializer=_init, initargs=(cfg,),
+                 maxtasksperchild=200) as pool:
+        for i, res in enumerate(pool.imap_unordered(process_track, records, chunksize=4), 1):
             if res is not None:
                 out_records.append(res)
             if i % 500 == 0:

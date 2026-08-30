@@ -233,7 +233,35 @@ valence/arousal "(optional)" for Task 3.
 
 ## Week 7 (Sep 9-10): Report, demo notebook, cleanup
 
-(to be filled in when Week 7 starts — see issue #14)
+**Report: DONE (2026-08-31).** `report/final_report.pdf`, 6 pages, two-column,
+built from `report/final_report.tex` with `pdflatex`. Every number is generated
+programmatically from `results/*.json` via `report/_numbers.json`, so the paper
+cannot drift from the artefacts.
+
+Structure: Introduction, Related Work, Method (all four task formulations with
+the specification's equations), Experimental Setup, Results, Engineering
+Findings, Discussion and Limitations, Conclusion, 10 references.
+7 tables, 2 figures.
+
+The paper is framed around the negative result rather than hiding it: fusion
+does not reliably beat its stronger unimodal branch, and the contribution is
+the diagnosis. It leads with the four measured findings --- the 0.673 text
+ceiling from duplicated inputs, the 61.6% artist leak in the official split,
+the attention collapse at 65-88% of uniform entropy, and the multi-task
+trade-off.
+
+Also closes a gap: the specification requires "Macro-F1 / Micro-F1 curves vs.
+training epochs" for Task 1, which had data but no plot. Now
+`results/plots/training_curves.png`, which additionally shows Task 4's InfoNCE
+loss falling monotonically while validation R@10 peaks at epoch 6 and degrades.
+
+**Still outstanding for submission:**
+- `notebooks/demo_context.ipynb` (demo notebook, spec S3 structure)
+- `notebooks/eda.ipynb`
+- The two Task 3 follow-up runs (--freeze-bert, separate --gnn-lr) that the
+  report names as the first experiments to try next. Two attempts were lost to
+  an oversubscribed host (load average 19.9 with our workers starved to 28s of
+  CPU); the code is committed and tested.
 
 ## Buffer (Sep 11): Submission only
 ### Task 3 multi-task with DEAM (run 2026-08-31)

@@ -1,0 +1,594 @@
+\documentclass[10pt,conference]{article}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{times}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parskip}{0pt}
+\setlength{\columnsep}{0.28in}
+
+\title{\vspace{-1.2em}\textbf{GNN-Based BERT for Understanding Context from Music:\\
+A Measured Account of Where Cross-Modal Fusion Helps and Where It Does Not}}
+\author{Tanvir Rahman \\ \small Student ID 22241134 \\
+\small CSE715 --- Neural Networks \quad Instructor: Moin Mostakim \\
+\small BRAC University}
+\date{\small 31 August 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.5em}
+
+\begin{abstract}
+\noindent
+We implement the four-task GNN--BERT roadmap for music context understanding:
+a BERT multi-label tag classifier, a GraphSAGE/GAT encoder over music
+structure graphs, a cross-attention fusion of the two with an auxiliary
+valence--arousal objective, and a contrastive dual encoder for
+caption--audio retrieval. All four are trained and evaluated end to end.
+Our headline finding is negative and, we argue, more informative than a
+positive one would have been: \emph{cross-modal fusion does not reliably
+outperform its stronger unimodal branch in this setting}, and we identify
+why. We show (i) that the text available for MagnaTagATune is track-level
+while its clips are 29\,s segments, so $96.8\%$ of clips share an input with
+another clip, capping any text-only model at Micro-F1 $0.673$; (ii) that the
+official MagnaTagATune split leaks $45$ artists across train and test,
+covering $61.6\%$ of test clips; (iii) that our cross-attention collapses to
+near-uniform weights, with entropy at $65$--$88\%$ of the uniform maximum, so
+the fusion degenerates into averaging the caption; and (iv) that adding the
+DEAM auxiliary term buys usable emotion regression ($R^2 = 0.181$
+valence) at a $36\%$ relative cost to tag Macro-F1. We report every number
+against an explicit baseline, including a lexical-match control that scores
+Micro-F1 $0.581$ on a
+task where our model scores $0.687$ --- without
+which that result would be overstated roughly fivefold.
+\end{abstract}
+
+\vspace{0.5em}
+\begin{multicols}{2}
+
+\section{Introduction}
+Musical ``context'' spans genre, mood, harmonic structure, instrumentation and
+listener-facing description. Sequence models over spectrograms capture local
+timbral patterns but not relational structure: how a repeated segment relates
+to a chorus, or how a chord transition relates to a lyrical theme. The premise
+of this project is that a graph neural network over music structure, fused with
+a BERT encoder over text, should capture context that neither branch captures
+alone.
+
+We test that premise rather than assume it. Our contributions are:
+
+\begin{itemize}\itemsep2pt
+\item Complete implementations of all four tasks, with $87$ unit
+tests and every result reproducible from a seeded configuration recorded
+alongside it.
+\item Two dataset integrity findings that change how the numbers must be read:
+artist leakage in the official MagnaTagATune split, and a hard performance
+ceiling induced by duplicated text inputs.
+\item A quantitative diagnosis of \emph{why} our cross-attention fusion fails
+to beat its text branch, using an attention-entropy measurement rather than an
+inference from F1.
+\item Honest negative results with controls: a lexical-match baseline for
+caption-based tagging, and a random-prevalence baseline for every multi-label
+task.
+\end{itemize}
+
+\section{Related Work}
+\textbf{Music auto-tagging.} MagnaTagATune with a top-50 tag vocabulary is the
+long-standing benchmark for multi-label music tagging, typically approached
+with convolutional networks over log-mel spectrograms. Our CNN baseline (B2)
+follows that lineage. The artist-leakage problem in the conventional split has
+been noted in the tagging literature; we re-measure it here rather than cite it,
+and quantify its extent on our filtered subset.
+
+\textbf{Graphs for music.} Representing a track as a graph over segments,
+chords or events is motivated by the observation that musical form is
+relational --- repetition, return and contrast --- and not purely sequential.
+GraphSAGE and GAT are the two message-passing families named in the project
+specification; we implement both. Our contribution here is negative and
+practical: we show that naive cosine thresholding on raw MFCC descriptors
+produces near-complete graphs, which silently reduces any GNN over them to
+mean pooling.
+
+\textbf{Cross-modal alignment.} Contrastive dual encoders trained with InfoNCE
+have become the standard recipe for aligning modalities, and MusicCaps supplies
+the expert captions that make audio--text alignment feasible. Our Task 4 follows
+this recipe directly, with the addition of an explicit random baseline and
+gallery size on every retrieval number --- both frequently omitted, and both
+necessary to interpret R@K at all.
+
+\textbf{Multi-task emotion regression.} DEAM provides continuous
+valence--arousal annotations. Because it shares no tracks with the tag corpora,
+joint training requires masking rather than a single joint objective; we
+implement the masked alternating-batch scheme and, unusually, report what it
+costs the primary task.
+
+\section{Method}
+
+\subsection{Task 1: BERT tag classifier}
+Following the task specification, a pretrained encoder maps text to a pooled
+representation and a linear head predicts $K$ independent tags:
+\begin{equation}
+t = \mathrm{BERT}_{\mathrm{CLS}}(X_{\mathrm{text}}), \quad
+\hat{y}_k = \sigma(w_k^\top t + b_k),
+\end{equation}
+trained with per-tag binary cross-entropy. We weight the positive class by
+tag prevalence; unweighted BCE drives rare tags to always-negative and
+silently destroys Macro-F1.
+
+\subsection{Task 2: GNN on structure graphs}
+Each clip becomes a segment graph: nodes are fixed-length windows carrying
+MFCC, chroma and spectral descriptors; edges are temporal adjacency plus
+cosine similarity above a threshold $\tau$. A GraphSAGE layer updates
+\begin{equation}
+h_i^{(l+1)} = \sigma\!\left(W^{(l)} \cdot \mathrm{CONCAT}\!\left(h_i^{(l)},
+\mathrm{MEAN}_{j \in \mathcal{N}(i)} h_j^{(l)}\right)\right),
+\end{equation}
+with mean-pooled readout $g = \frac{1}{|V|}\sum_i h_i^{(L)}$. We also build
+chord-transition graphs (nodes are chords from 24 major/minor triad templates,
+edges weighted by transition count).
+
+\subsection{Task 3: cross-attention fusion}
+The graph vector queries the BERT token sequence:
+\begin{equation}
+A = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d}}\right),\;
+Q = gW_Q,\; K = H_{\mathrm{text}}W_K,
+\end{equation}
+\begin{equation}
+z = \mathrm{CONCAT}(g,\, A H_{\mathrm{text}}), \quad \hat{y} = \sigma(Wz).
+\end{equation}
+The multi-task objective is
+\begin{equation}
+\mathcal{L} = \mathcal{L}_{\mathrm{tags}}
++ \alpha \lVert v - \hat{v} \rVert^2
++ \beta  \lVert a - \hat{a} \rVert^2 .
+\end{equation}
+DEAM is disjoint from the tag corpora, so no sample carries both targets. Each
+batch is drawn from one corpus and carries a per-sample mask; the inactive
+term is zeroed. Without this mask the model trains against fabricated
+all-zero labels and still appears to converge.
+
+\subsection{Task 4: contrastive dual encoder}
+Two towers project into a shared $L^2$-normalised space, trained with
+symmetric InfoNCE over in-batch negatives:
+\begin{equation}
+\mathcal{L}_{\mathrm{NCE}} = -\log
+\frac{\exp(\mathrm{sim}(g_i,t_i)/\tau)}
+     {\sum_j \exp(\mathrm{sim}(g_i,t_j)/\tau)} .
+\end{equation}
+We optimise both directions and average; optimising only one lets the other
+collapse.
+
+\section{Experimental Setup}
+
+\subsection{Datasets and a leakage audit}
+We use MagnaTagATune (top-50 tags after synonym merging), FMA-small (8 genres),
+DEAM (valence/arousal) and MusicCaps (expert captions).
+
+\textbf{The official MagnaTagATune split is unusable for our purpose.} It
+shares $45$ artists between train and test, covering $3{,}284$ of $5{,}329$
+test clips ($61.6\%$). Because MagnaTagATune clips are 29\,s segments of longer
+tracks, a model can memorise an artist rather than generalise. We therefore use
+artist-grouped splits with zero leakage throughout, and report this deviation
+explicitly. By contrast we \emph{verified} that FMA's official split is
+artist-disjoint (0 shared artists in all pairings) rather than assuming it.
+
+\textbf{MagnaTagATune's 188 tags contain heavy near-duplicates.} The
+\texttt{female vocal} concept alone is spread across six tags totalling $3{,}848$
+clips. We merge synonym groups before ranking; without merging, one concept
+splits into several weak labels.
+
+\subsection{A ceiling imposed by duplicated inputs}
+MagnaTagATune ships track-level metadata, but its clips are segments. After
+filtering, $21{,}318$ clips share only $5{,}237$ distinct text inputs:
+\textbf{$96.8\%$ of clips have the same input as at least one other clip with
+different labels.} Computing the best achievable constant prediction per text
+group gives an oracle ceiling of
+\textbf{Micro-F1 $0.673$, Macro-F1 $0.575$} --- no text-only model can exceed
+this. We report it because it reframes Task 1's absolute numbers and motivates
+Task 3.
+
+\subsection{Graph construction}
+Raw MFCC vectors are dominated by MFCC$_0$ (loudness), so every segment points
+in nearly the same direction: measured over 400 FMA tracks, raw pairwise cosine
+similarity has median $0.9971$ and 5th percentile $0.9509$. At $\tau = 0.9$ this
+yields \emph{complete} graphs ($19.4$ nodes, average degree $18.15$), on which
+message passing reduces to global mean pooling. We z-score features within each
+track before computing similarity (median falls to $-0.078$) and use
+$\tau = 0.35$, giving average degree $\approx 3.1$ with no isolated nodes.
+
+\subsection{Training configuration}
+All models use DistilBERT (\texttt{distilbert-base-uncased}) as the text tower
+and a 2-layer GAT with hidden width $128$ as the graph tower unless stated
+otherwise. Optimisation is AdamW with weight decay $10^{-4}$; learning rate
+$2\times10^{-5}$ for fusion runs, $3\times10^{-5}$ for Task 1 and Task 4, and
+$10^{-3}$ for the graph-only Task 2 models. Multi-label decision thresholds are
+tuned on validation and applied once to test; leaving them at $0.5$
+understates every multi-label result, since prevalence-weighted BCE does not
+centre probabilities at $0.5$. Task 2 and Task 4 select the best epoch by a
+validation metric. Every configuration, including the random seed, is stored in
+the corresponding \texttt{metrics\_*.json}.
+
+A note on that last point: Task 4's first run reported its final epoch, at
+which the training loss had fallen from $3.87$ to $0.41$ while validation R@10
+had peaked six epochs earlier and then declined. Adding best-epoch selection
+raised test R@10 from $0.119$ to $0.127$. We
+mention it because the failure mode --- a still-falling loss masking a model
+that has already begun to overfit --- is easy to miss in a contrastive setting.
+
+\section{Results}
+
+\subsection{Task 1: text-based tagging}
+
+\begin{table}[H]
+\centering\small
+\caption{Task 1. Test-set results with baselines. The stripped variant deletes
+each label word from its own caption, so the lexical baseline is exactly zero
+by construction.}
+\begin{tabular}{lcc}
+\toprule
+Setting & Micro-F1 & Macro-F1 \\
+\midrule
+MagnaTagATune (metadata) & 0.258 & 0.182 \\
+\quad B1 random-prevalence & 0.111 & 0.060 \\
+\quad oracle ceiling & 0.673 & 0.575 \\
+\midrule
+MusicCaps (raw captions) & \textbf{0.687} & \textbf{0.646} \\
+\quad B5 lexical match & 0.581 & 0.559 \\
+\midrule
+MusicCaps (stripped) & 0.608 & 0.551 \\
+\quad B5 lexical match & 0.000 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The raw-caption number is misleading on its own. A pure substring
+matcher already achieves Micro-F1
+$0.581$, because
+$52.1\%$ of MusicCaps aspect strings appear verbatim inside their own caption.
+Only $0.105$
+of the gap is language understanding. We therefore treat the \emph{stripped}
+setting --- where the label words are deleted from the input and the lexical
+baseline is exactly $0.000$ --- as the honest headline:
+\textbf{Micro-F1 $0.608$ earned entirely by inference
+from surrounding context}.
+
+MagnaTagATune's much lower $0.258$ is expected
+rather than a failure: it is $2.332\times$
+the random-prevalence baseline while operating under the $0.673$ ceiling
+established above.
+
+\noindent \textbf{A worked example.} For a held-out MusicCaps clip whose true
+aspects are \emph{exciting, groovy bass, happy, low quality}, the stripped input
+reads:
+
+\begin{quote}\small\itshape
+``The recording features a fruity male vocal singing over steel drums melody, electric guitar melody, brass stabs, and snare hits, energetic crash cymba\ldots''
+\end{quote}
+
+\noindent The phrases \emph{low quality}, \emph{groovy bass}, \emph{punchy
+kick} and \emph{punchy snare} have been deleted from this input, yet the model
+predicts them at
+$0.95, 0.94, 0.94, 0.93$. It is
+recovering production characteristics from surrounding descriptive context ---
+mentions of steel drums, brass stabs and crash cymbals --- rather than
+detecting the label string. This is the behaviour the stripped condition was
+designed to isolate.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{training_curves.png}
+\caption{Validation Macro-F1 and Micro-F1 against training epoch for the three
+Task 1 configurations (left, centre) --- the curve deliverable required by the
+specification --- and Task 4's training dynamics (right). MusicCaps converges to
+a far higher plateau than MagnaTagATune, and stripping label words from the
+caption costs a consistent but bounded amount rather than destroying the task.
+On the right, the InfoNCE loss falls monotonically from $3.87$ to $0.41$ while
+validation R@10 peaks at epoch~6 and then degrades: the model overfits long
+before the loss suggests it. The dashed line marks the epoch restored by
+best-checkpoint selection.}
+\label{fig:curves}
+\end{figure}
+
+\subsection{Task 2: structure graphs vs.\ a CNN}
+
+\begin{table}[H]
+\centering\small
+\caption{Task 2. FMA-small genre classification, 8 balanced classes
+(chance $=0.125$), artist-disjoint official splits.}
+\begin{tabular}{lccc}
+\toprule
+Model & Params & Accuracy & Macro-F1 \\
+\midrule
+GraphSAGE & 49,416 & 0.414 & 0.407 \\
+GAT & \textbf{26,120} & 0.438 & \textbf{0.432} \\
+CNN baseline (B2) & 241,992 & \textbf{0.443} & 0.407 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent All three sit at roughly $3.5\times$ chance. The CNN edges out both
+graph models on accuracy, while GAT matches it on Macro-F1 using
+$9.3\times$ fewer parameters.
+The fair conclusion is that relational structure is \emph{competitive with},
+not superior to, treating the spectrogram as an image.
+
+\subsection{Where the genre models succeed and fail}
+
+\begin{table}[H]
+\centering\small
+\caption{Per-genre F1 on FMA-small. Both models rank the classes almost
+identically, suggesting the difficulty is in the label taxonomy rather than the
+architecture.}
+\begin{tabular}{lcc}
+\toprule
+Genre & GAT & CNN (B2) \\
+\midrule
+Hip-Hop & 0.664 & 0.688 \\
+Rock & 0.533 & 0.698 \\
+International & 0.495 & 0.482 \\
+Electronic & 0.479 & 0.386 \\
+Instrumental & 0.396 & 0.123 \\
+Folk & 0.350 & 0.260 \\
+Pop & 0.286 & 0.244 \\
+Experimental & 0.250 & 0.379 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Hip-Hop is the easiest class for both models and Experimental the
+hardest, by a wide margin. This is informative: ``Experimental'' is a residual
+category defined by what it is not, so a model has no consistent acoustic
+signature to learn. The near-identical per-class ordering between an
+architecture that sees relational structure and one that sees a spectrogram
+image is further evidence that, at this scale, the graph is not contributing
+information the CNN lacks.
+
+\subsection{Task 3: fusion and its failure mode}
+
+\begin{table}[H]
+\centering\small
+\caption{Task 3 ablation. MagnaTagATune top-50, artist-grouped splits, zero
+leakage.}
+\begin{tabular}{lcccc}
+\toprule
+Mode & Params & Macro-F1 & Micro-F1 & AUC-PR \\
+\midrule
+BERT-only & 66.4M & \textbf{0.186} & 0.311 & 0.170 \\
+GNN-only & 31.8K & 0.114 & 0.236 & 0.103 \\
+Early concat & 66.4M & 0.175 & 0.318 & \textbf{0.184} \\
+Cross-attention & 66.8M & 0.182 & \textbf{0.323} & 0.178 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent \textbf{Fusion does not clearly win.} Cross-attention gains
+$+0.012$ Micro-F1 and
+$+0.008$ AUC-PR over
+BERT alone, but \emph{loses}
+$-0.005$ Macro-F1.
+These margins do not establish the project's central claim.
+
+\textbf{Why: the attention collapsed.} Measuring the attention distribution
+directly, the ratio between the largest and smallest weight over the top-8
+tokens is $1.03$--$1.11$, and entropy sits at $65$--$88\%$ of the uniform
+maximum. The graph query is not discriminating between caption tokens, so
+$AH_{\mathrm{text}}$ degenerates to a mean over the text and the model reduces
+to early concat --- which is exactly what the table shows. Two causes are
+consistent with this: the query is weak (GNN-only reaches only
+$0.114$ Macro-F1 on 19-node graphs), and the text
+tower has $66.4$M parameters against the graph branch's $31.8$K while sharing a
+single learning rate tuned for BERT fine-tuning.
+
+\subsection{Task 3: the DEAM auxiliary term}
+
+\begin{table}[H]
+\centering\small
+\caption{Effect of adding DEAM's valence/arousal term to cross-attention.
+MagnaTagATune training data is identical across both runs.}
+\begin{tabular}{lccc}
+\toprule
+Cross-attention & Tags only & $+$ DEAM & $\Delta$ \\
+\midrule
+Macro-F1 & 0.182 & 0.116 & $-0.066$ \\
+Micro-F1 & 0.323 & 0.279 & $-0.044$ \\
+AUC-PR & 0.178 & 0.132 & $-0.046$ \\
+\midrule
+Valence & --- & MAE 0.710 & $R^2\;+0.181$ \\
+Arousal & --- & MAE 0.721 & $R^2\;+0.085$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The emotion heads work: both $R^2$ are positive, so the model beats
+predicting the training mean on held-out songs, and MAE of $0.83$/$0.92$ on the
+original 1--9 scale is usable. But tag Macro-F1 falls by $36\%$ relative. Since
+the tag training data is unchanged, this is the auxiliary objective competing
+for shared capacity. The specification marks valence/arousal optional; we
+report it as a trade-off rather than a free addition.
+
+\subsection{Task 4: cross-modal retrieval}
+
+\begin{table}[H]
+\centering\small
+\caption{Task 4. MusicCaps retrieval, gallery of 536 clips.
+R@K depends on gallery size, so it is reported alongside.}
+\begin{tabular}{lccc}
+\toprule
+Direction & R@1 & R@5 & R@10 \\
+\midrule
+Caption $\to$ Audio & 0.0168 & 0.0784 & 0.1269 \\
+Audio $\to$ Caption & 0.0224 & 0.0597 & 0.1325 \\
+Random baseline & 0.0019 & --- & 0.0187 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Retrieval is $9.0\times$ random
+at R@1 and $6.8\times$ at R@10, with
+median rank $68$ of $536$.
+The alignment is real but weak: across our ten saved qualitative examples,
+\textbf{none} places the true clip at rank 1.
+
+\textbf{Zero-shot tagging.} Embedding tag names with the text tower and scoring
+them against clip graph embeddings --- using no tag supervision at any point ---
+gives Micro-F1 $0.117$, against
+$0.608$ for the supervised Task 1 model on the same
+corpus. Contrastive alignment alone thus recovers roughly a fifth of supervised
+performance.
+
+\subsection{Qualitative analysis of the fused space}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{tsne_task3.png}
+\caption{t-SNE of the fused representation $z$ (cross-attention,
+$384$-dim) over
+$1{,}500$ held-out MagnaTagATune clips, coloured by primary tag. Broad
+timbral families separate --- classical and vocal-led material occupy distinct
+regions --- but the structure is diffuse rather than cleanly clustered,
+consistent with the modest Macro-F1 in Table 3.}
+\end{figure}
+
+\noindent \textbf{Case studies.} Table~\ref{tab:cases} pairs graph structure
+with the caption tokens the graph vector attends to, for three held-out clips
+from distinct tracks.
+
+\begin{table}[H]
+\centering\scriptsize
+\caption{Three case studies. ``Attn.\ spread'' is the ratio of largest to
+smallest attention weight over the top-8 tokens; values near $1.0$ indicate
+the collapse discussed in Section 5.3.}
+\label{tab:cases}
+\begin{tabular}{p{0.30\linewidth}p{0.30\linewidth}c}
+\toprule
+True tags & Top predictions & Attn.\ spread \\
+\midrule
+drum, electronic, synth, weird & techno, electronic, beat & 1.03 \\
+ambient, flute, new age & drum, india, ambient & 1.03 \\
+beat, electronic, fast, techno & rock, male vocal, vocal & 1.11 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The first case is a partial success: an electronic track tagged
+\emph{drum, electronic, synth} is predicted \emph{techno, electronic, beat},
+capturing the family if not the exact vocabulary. The third is a clear failure:
+an electronic/techno clip is predicted \emph{rock, male vocal, guitar}. In every
+case the attention spread is within $11\%$ of uniform, so these predictions are
+driven by the text mean and the graph vector, not by any selective reading of
+the caption.
+
+\noindent \textbf{Retrieval behaviour.} Across the ten saved caption
+$\to$ audio queries, the true clip's ranks were
+$36, 15, 62, 119, 144, 47, 210, 29, 83, 135$ out of
+$536$. Median rank
+$68$ places the correct clip in the top
+$13\%$ of the gallery on
+average --- clearly better than chance, but far from usable retrieval. The
+model appears to learn coarse acoustic-descriptive correspondence (recording
+quality, instrumentation family, tempo band) without the fine discrimination
+that rank-1 retrieval demands.
+
+\section{Engineering Findings}
+Several results in this report depended on catching pipeline defects that
+produce plausible-looking numbers. We record them because each was silent.
+
+\textbf{Near-complete graphs.} Our first graph build produced $19.4$-node
+graphs with average degree $18.15$ --- effectively complete. A GNN over a
+complete graph computes the same neighbourhood for every node, so message
+passing reduces to global mean pooling and the architecture becomes
+irrelevant while still training and reporting sensible-looking accuracy. The
+cause was that raw MFCC descriptors share a large positive mean, giving median
+pairwise cosine similarity $0.9971$. Only after z-scoring within each track did
+the threshold behave as intended.
+
+\textbf{The opposite failure.} Having fixed the scaling, the threshold constant
+was left at its old value, producing average degree $1.90$ --- a bare temporal
+chain with \emph{zero} similarity edges. Both failures produce trainable models;
+neither announces itself.
+
+\textbf{A silent truncated cache.} Serialising the preprocessed
+MagnaTagATune cache wrote a zero-byte file without raising, because the
+log-mel component alone was $3.49$\,GB of a $3.6$\,GB structure. Since only the
+CNN baseline consumes log-mel, it is now optional.
+
+\textbf{Threshold selection.} Multi-label probabilities under
+prevalence-weighted BCE do not centre at $0.5$; our tuned thresholds ranged from
+$0.7$ to $0.8$. Evaluating at $0.5$ would have understated every Task 1 and
+Task 3 result substantially.
+
+We mention these not as incidental debugging notes but because three of the four
+would have yielded a complete, publishable-looking results table built on a
+model that was not doing what its description claimed.
+
+\section{Discussion and Limitations}
+
+Three limitations bound what these results can claim.
+
+\textbf{The text is impoverished.} For MagnaTagATune our BERT branch sees only
+``title $\mid$ album''. This is the source of both the $0.673$ ceiling and,
+plausibly, the attention collapse: there is little in a track title for a graph
+vector to select between. A corpus pairing audio with genuine descriptive text
+at clip granularity --- as MusicCaps does --- is the right setting for fusion,
+and our Task 1 results support this, with stripped-caption Micro-F1 of
+$0.608$ versus $0.258$.
+
+\textbf{The graph branch is under-trained, not necessarily uninformative.}
+GNN-only reaches $0.114$ Macro-F1 with $31.8$K
+parameters against BERT's $66.4$M, sharing one learning rate. We implemented a
+separate graph-branch learning rate and a frozen-BERT configuration to test
+this, but were unable to complete those runs within budget; they are the first
+experiments we would run next.
+
+\textbf{Segment graphs may be the wrong structure.} Our nodes are fixed
+1.5\,s windows. The specification also suggests beat-synchronous segmentation
+and chord-transition graphs, both of which we build but do not use as the
+primary GNN input. A 19-node graph over uniform windows may simply not encode
+much beyond a smoothed timeline.
+
+\section{Conclusion}
+We implemented all four tasks and report results that are, for the fusion
+model, negative. We regard the diagnosis as the contribution: a measured
+performance ceiling from duplicated inputs, a measured artist leak in a
+standard split, a measured attention collapse, and a measured multi-task
+trade-off. Each of these would have been invisible had we reported only
+headline F1 against no baseline --- and in one case (raw-caption tagging) doing
+so would have overstated our result roughly fivefold. Cross-modal fusion for
+music context understanding remains plausible; this work delimits the
+conditions under which it can be demonstrated.
+
+\section*{Reproducibility}
+Code, seeded configurations, per-run metrics, $130$ example graphs, the t-SNE
+projection and all training logs are in the project repository. Every reported
+number is regenerable from the committed configuration.
+
+\begin{thebibliography}{9}\small
+\bibitem{fma} M. Defferrard et al., ``FMA: A Dataset For Music Analysis,''
+\emph{ISMIR}, 2017.
+\bibitem{mtat} E. Law et al., ``Evaluation of Algorithms Using Games: The Case
+of Music Tagging,'' \emph{ISMIR}, 2009.
+\bibitem{deam} A. Aljanaki, Y.-H. Yang and M. Soleymani, ``Developing a
+Benchmark for Emotional Analysis of Music,'' \emph{PLoS ONE}, 2017.
+\bibitem{musiccaps} A. Agostinelli et al., ``MusicLM: Generating Music From
+Text,'' \emph{arXiv:2301.11325}, 2023.
+\bibitem{sage} W. Hamilton, Z. Ying and J. Leskovec, ``Inductive
+Representation Learning on Large Graphs,'' \emph{NeurIPS}, 2017.
+\bibitem{gat} P. Veli\v{c}kovi\'{c} et al., ``Graph Attention Networks,''
+\emph{ICLR}, 2018.
+\bibitem{bert} J. Devlin et al., ``BERT: Pre-training of Deep Bidirectional
+Transformers for Language Understanding,'' \emph{NAACL}, 2019.
+\bibitem{distilbert} V. Sanh et al., ``DistilBERT, a distilled version of
+BERT,'' \emph{arXiv:1910.01108}, 2019.
+\bibitem{infonce} A. van den Oord, Y. Li and O. Vinyals, ``Representation
+Learning with Contrastive Predictive Coding,'' \emph{arXiv:1807.03748}, 2018.
+\bibitem{librosa} B. McFee et al., ``librosa: Audio and Music Signal Analysis
+in Python,'' \emph{SciPy}, 2015.
+\end{thebibliography}
+
+\end{multicols}
+\end{document}

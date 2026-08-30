@@ -306,8 +306,8 @@
   "compute": {
     "provider": "Vast.ai",
     "instance": null,
-    "note": "all four tasks have results; nothing running; report remains",
-    "credit_remaining": 3.73,
+    "note": "all 4 tasks done; report written; demo notebook outstanding",
+    "credit_remaining": 3.667,
     "results": {
       "task1_musiccaps_stripped": 0.608,
       "task1_mtat": 0.258,
