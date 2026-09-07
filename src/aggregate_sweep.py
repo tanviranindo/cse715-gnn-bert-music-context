@@ -10,13 +10,13 @@ import math
 import pathlib
 import sys
 
-ROOT = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "results/_sweep")
+DEFAULT_ROOT = pathlib.Path("results/_sweep")
 SEEDS = [42, 1, 2, 3, 4]
 METRICS = ["test_macro_f1", "test_micro_f1", "test_auc_pr"]
 
 
-def load(arm, seed):
-    p = ROOT / ("%s_s%d" % (arm, seed)) / "metrics_task3.json"
+def load(arm, seed, root=DEFAULT_ROOT):
+    p = pathlib.Path(root) / ("%s_s%d" % (arm, seed)) / "metrics_task3.json"
     if not p.exists():
         return None
     return json.loads(p.read_text())["runs"]["crossattn"]
@@ -79,42 +79,67 @@ def _cf(a, b, x, itmax=200, eps=3e-16):
     return h
 
 
-rows = {a: {m: [] for m in METRICS} for a in ("shared", "gnnlr")}
-have = []
-for seed in SEEDS:
-    s, g = load("shared", seed), load("gnnlr", seed)
-    if not s or not g:
-        print("  (missing seed %d: shared=%s gnnlr=%s)" % (seed, bool(s), bool(g)))
-        continue
-    have.append(seed)
+def summarize(root=DEFAULT_ROOT, verbose=False):
+    """Paired per-seed comparison of the two Task 3 arms.
+
+    Returns a plain dict so callers (aggregate_metrics.py) get the same numbers
+    the CLI prints, rather than re-deriving the statistics.
+    """
+    rows = {a: {m: [] for m in METRICS} for a in ("shared", "gnnlr")}
+    have = []
+    for seed in SEEDS:
+        s, g = load("shared", seed, root), load("gnnlr", seed, root)
+        if not s or not g:
+            if verbose:
+                print("  (missing seed %d: shared=%s gnnlr=%s)" % (seed, bool(s), bool(g)))
+            continue
+        have.append(seed)
+        for m in METRICS:
+            rows["shared"][m].append(s[m])
+            rows["gnnlr"][m].append(g[m])
+
+    out = {"seeds": have, "n": len(have), "metrics": {}}
     for m in METRICS:
-        rows["shared"][m].append(s[m])
-        rows["gnnlr"][m].append(g[m])
+        a, b = rows["shared"][m], rows["gnnlr"][m]
+        if not a:
+            continue
+        ma, sa = mean_sd(a)
+        mb, sb = mean_sd(b)
+        diffs = [y - x for x, y in zip(a, b)]
+        md, sd = mean_sd(diffs)
+        n = len(diffs)
+        p_value = None
+        if n > 1 and sd > 0:
+            t = md / (sd / math.sqrt(n))
+            p_value = 2 * t_cdf_upper(abs(t), n - 1)
+        out["metrics"][m.replace("test_", "")] = {
+            "shared_lr_mean": ma, "shared_lr_sd": sa,
+            "gnn_lr_mean": mb, "gnn_lr_sd": sb,
+            "paired_delta_mean": md, "paired_delta_sd": sd,
+            "p_value": p_value,
+            "per_seed_delta": diffs,
+        }
+    return out
 
-print("seeds with both arms: %s (n=%d)\n" % (have, len(have)))
-print("%-14s %-22s %-22s %s" % ("metric", "shared lr (2e-5)", "separate GNN lr 1e-3", "paired diff"))
-print("-" * 88)
-for m in METRICS:
-    a, b = rows["shared"][m], rows["gnnlr"][m]
-    if not a:
-        continue
-    ma, sa = mean_sd(a)
-    mb, sb = mean_sd(b)
-    diffs = [y - x for x, y in zip(a, b)]
-    md, sd = mean_sd(diffs)
-    n = len(diffs)
-    if n > 1 and sd > 0:
-        t = md / (sd / math.sqrt(n))
-        p = 2 * t_cdf_upper(abs(t), n - 1)
-        sig = "p=%.4f" % p
-    else:
-        sig = "n/a"
-    print("%-14s %.4f +/- %.4f      %.4f +/- %.4f      %+.4f +/- %.4f  %s"
-          % (m.replace("test_", ""), ma, sa, mb, sb, md, sd, sig))
 
-print("\nper-seed macro-F1:")
-for i, seed in enumerate(have):
-    print("  seed %-3d shared=%.4f  gnnlr=%.4f  diff=%+.4f"
-          % (seed, rows["shared"]["test_macro_f1"][i],
-             rows["gnnlr"]["test_macro_f1"][i],
-             rows["gnnlr"]["test_macro_f1"][i] - rows["shared"]["test_macro_f1"][i]))
+def main(root=DEFAULT_ROOT):
+    r = summarize(root, verbose=True)
+    print("seeds with both arms: %s (n=%d)\n" % (r["seeds"], r["n"]))
+    print("%-14s %-22s %-22s %s" % ("metric", "shared lr (2e-5)", "separate GNN lr 1e-3", "paired diff"))
+    print("-" * 88)
+    for name, v in r["metrics"].items():
+        sig = "p=%.4f" % v["p_value"] if v["p_value"] is not None else "n/a"
+        print("%-14s %.4f +/- %.4f      %.4f +/- %.4f      %+.4f +/- %.4f  %s"
+              % (name, v["shared_lr_mean"], v["shared_lr_sd"],
+                 v["gnn_lr_mean"], v["gnn_lr_sd"],
+                 v["paired_delta_mean"], v["paired_delta_sd"], sig))
+
+    print("\nper-seed macro-F1:")
+    macro = r["metrics"].get("macro_f1")
+    if macro:
+        for seed, d in zip(r["seeds"], macro["per_seed_delta"]):
+            print("  seed %-3d diff=%+.4f" % (seed, d))
+
+
+if __name__ == "__main__":
+    main(pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_ROOT)

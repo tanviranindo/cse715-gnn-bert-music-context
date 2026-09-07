@@ -448,3 +448,57 @@ validated against known t critical values: t=2.776/df=4 -> p=0.0500,
 t=4.604/df=4 -> p=0.0100).
 
 Instance destroyed after pulling artifacts. Still not submitted.
+
+
+## Submission hardening (2026-09-07, second pass)
+
+A requirement-by-requirement audit against the brief, then closing what could be
+closed locally. Everything below was verified by opening the artifact, not by
+trusting this log.
+
+**Gaps that were real, and are now closed:**
+
+- **`results/metrics.json` was an empty `{}`** — still the scaffold commit,
+  despite the spec (S6) saying every quantitative result lands there and the PDF
+  naming the path in its submission tree. Now generated across all four tasks by
+  `src/aggregate_metrics.py`, including the seed sweep's paired p-values.
+  `src/aggregate_sweep.py` was refactored (`summarize()` + `main()` behind an
+  `__main__` guard) so the aggregate imports the same statistics rather than
+  re-deriving them; CLI output is unchanged.
+- **README was 36 lines** with no run commands. Now carries the four results
+  tables, the full command sequence, the layout and a known-gaps section.
+- **Attention visualisation (PDF S4.1, optional)** now exists:
+  `src/attention_viz.py` reloads the Task 1 checkpoint and reports final-layer
+  [CLS] attention for the five committed examples. It turned out to *show* the
+  duplicated-input ceiling rather than merely restate it — clips 14, 21 and 23
+  produce byte-identical attention because their text input is the same string,
+  yet carry different ground-truth tags. Figure added to the report.
+- **No architecture diagram.** The category rubric names "diagrams" explicitly.
+  Added a TikZ system overview (Figure 1) showing all four tasks inside one
+  architecture, with the ablation cut drawn on it.
+- **The report claimed 87 unit tests; there are 92.** Corrected, after running
+  the suite locally for the first time: `92 passed` on Python 3.14 with torch
+  2.9.1 / transformers 5.16.1.
+
+**A defect found while wiring the human evaluation:**
+
+`build_graphs.py` derived MusicCaps `track_id` from `abs(hash(ytid))`, and
+Python salts `hash()` per process. The ids in committed artifacts are therefore
+not reproducible and cannot be traced back to the clip they name — which is
+exactly what a listening study needs. Replaced with `zlib.crc32`, and
+`train_contrastive.py` now carries `ytid` into the retrieval examples so each
+retrieved clip resolves to its source audio.
+
+**Still open, and why:**
+
+- **Task 4 human evaluation.** The instrument is built —
+  `python src/human_eval.py build` emits a self-contained rating sheet covering
+  all 30 retrieved clips, and `score` aggregates returned rater files into
+  `results/metrics_task4_human.json` with per-rank means and a rating-vs-model-score
+  correlation. It refuses to run below five raters and fabricates nothing. What
+  remains is five actual listeners; that cannot come from this repository.
+  The committed examples predate the `ytid` field, so the sheet is in
+  caption-only mode until Task 4 is re-run.
+- **Chord-transition graphs as a GNN input** (PDF S3.3). The builder exists; the
+  run needs audio, and the local `data/raw` is now metadata-only.
+- DEAM multi-task re-run — still blocked, source metadata unavailable.
