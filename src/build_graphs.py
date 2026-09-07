@@ -19,6 +19,7 @@ import multiprocessing as mp
 import os
 import time
 import warnings
+import zlib
 from pathlib import Path
 
 # Each worker process otherwise spawns its own BLAS/OpenMP thread pool. With
@@ -36,6 +37,17 @@ from src import fma_data, graph_builder as gb
 warnings.filterwarnings("ignore")
 
 _CFG: dict = {}
+
+
+def _stable_id(key: str) -> int:
+    """Deterministic integer id for a string key.
+
+    `hash()` is salted per process (PYTHONHASHSEED), so ids derived from it
+    differ between runs and cannot be traced back to the clip they name --- which
+    silently broke the link from committed retrieval examples to their source
+    audio. CRC32 is stable across processes and machines.
+    """
+    return zlib.crc32(key.encode("utf-8")) % (10 ** 9)
 
 
 def _init(cfg: dict) -> None:
@@ -250,7 +262,7 @@ def main() -> None:
                     except (ValueError, SyntaxError):
                         aspects = []
                 records.append({
-                    "track_id": abs(hash(row.get("youtube_id", ""))) % (10 ** 9),
+                    "track_id": _stable_id(row.get("youtube_id", "")),
                     "genre": "", "artist": row.get("youtube_id", ""),
                     "split": "", "mp3_path": "",
                     "text": row.get("caption", "") or "",
