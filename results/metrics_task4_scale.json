@@ -1,0 +1,87 @@
+{
+  "note": "Task 4 retrieval against training-set size. Only the train split is subsampled; val, test and the gallery are held fixed so R@K is comparable across points. Single seed per point.",
+  "gallery_size": 2773,
+  "points": [
+    {
+      "fraction": 0.25,
+      "n_train": 549,
+      "gallery": 2773,
+      "c2a": {
+        "R@1": 0.001803101389668882,
+        "R@5": 0.006851784884929657,
+        "R@10": 0.015506671741604805
+      },
+      "a2c": {
+        "R@1": 0.0010818608570843935,
+        "R@5": 0.009015507064759731,
+        "R@10": 0.01622791215777397
+      },
+      "random_R@10": 0.003606202668589975
+    },
+    {
+      "fraction": 0.5,
+      "n_train": 1098,
+      "gallery": 2773,
+      "c2a": {
+        "R@1": 0.0014424810651689768,
+        "R@5": 0.010457987897098064,
+        "R@10": 0.02055535465478897
+      },
+      "a2c": {
+        "R@1": 0.002163721714168787,
+        "R@5": 0.010097367689013481,
+        "R@10": 0.021637216210365295
+      },
+      "random_R@10": 0.003606202668589975
+    },
+    {
+      "fraction": 0.75,
+      "n_train": 1646,
+      "gallery": 2773,
+      "c2a": {
+        "R@1": 0.003966822754591703,
+        "R@5": 0.019473494961857796,
+        "R@10": 0.03245582431554794
+      },
+      "a2c": {
+        "R@1": 0.003245582338422537,
+        "R@5": 0.014424811117351055,
+        "R@10": 0.027407139539718628
+      },
+      "random_R@10": 0.003606202668589975
+    },
+    {
+      "fraction": 1.0,
+      "n_train": 2195,
+      "gallery": 2773,
+      "c2a": {
+        "R@1": 0.005769924260675907,
+        "R@5": 0.017309773713350296,
+        "R@10": 0.033898305147886276
+      },
+      "a2c": {
+        "R@1": 0.005409304052591324,
+        "R@5": 0.01839163340628147,
+        "R@10": 0.03173458203673363
+      },
+      "random_R@10": 0.003606202668589975
+    }
+  ],
+  "log_linear_fit_R@10_vs_ln_n": {
+    "slope_per_ln_unit": 0.01433,
+    "gain_per_doubling": 0.00993,
+    "intercept": -0.07614,
+    "r_squared": 0.9141
+  },
+  "extrapolation": {
+    "target_R@10": 0.1,
+    "pairs_required": 218766,
+    "multiple_of_available": 99.7,
+    "caveat": "A log-linear extrapolation over one order of magnitude is indicative, not a prediction; it is reported to characterise the regime, not to forecast a specific corpus size."
+  },
+  "saturation_check": {
+    "gain_50_to_75": 0.0119,
+    "gain_75_to_100": 0.00144,
+    "reading": "possible flattening in the last interval, but single-seed noise is the same order as this difference"
+  }
+}

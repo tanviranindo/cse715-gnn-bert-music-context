@@ -40,6 +40,14 @@ def main() -> None:
     p.add_argument("--freeze-bert", action="store_true")
     p.add_argument("--n-examples", type=int, default=10)
     p.add_argument("--n-zeroshot-tags", type=int, default=50)
+    p.add_argument("--train-frac", type=float, default=1.0,
+                   help="fraction of the TRAIN split to use; val/test/gallery "
+                        "stay fixed so R@K remains comparable across runs")
+    p.add_argument("--gnn-lr", type=float, default=None,
+                   help="separate learning rate for the graph tower "
+                        "(Task 3 found this decisive; None = share --lr)")
+    p.add_argument("--metrics-suffix", default="",
+                   help="appended to metrics/example filenames, for ablation runs")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
@@ -80,6 +88,18 @@ def main() -> None:
                   "val": items[int(0.8 * n): int(0.9 * n)],
                   "test": items[int(0.9 * n):]}
         split_kind = "random_synthetic"
+    # Data-scale ablation. MusicCaps' official partition leaves only ~2.2k
+    # training pairs, which is small for a contrastive objective. Subsampling the
+    # TRAIN split only -- val and test, and therefore the gallery, stay fixed --
+    # makes R@K comparable across fractions and answers whether retrieval is
+    # limited by the model or simply by how little paired data survives the
+    # official split.
+    if args.train_frac < 1.0:
+        keep = max(2, int(round(args.train_frac * len(splits["train"]))))
+        splits["train"] = splits["train"][:keep]
+        print(f"[data] train subsampled to {args.train_frac:.0%} = {keep} pairs "
+              f"(val/test/gallery unchanged)")
+
     print(f"[data] {len(items)} clips | split={split_kind} | "
           + " ".join(f"{k}={len(v)}" for k, v in splits.items()))
 
@@ -90,8 +110,25 @@ def main() -> None:
         hidden_dim=args.hidden, n_layers=args.layers, conv=args.conv,
         temperature=args.temperature, freeze_bert=args.freeze_bert,
     ).to(device)
-    params = [q for q in model.parameters() if q.requires_grad]
-    opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=1e-4)
+    # Task 3 established that a single learning rate tuned for BERT leaves the
+    # 31.8k-parameter graph branch badly undertrained, and that giving it its own
+    # rate was the largest single effect in the project (+0.067 Macro-F1 over five
+    # paired seeds). The two towers here have the same imbalance, so the same
+    # remedy is worth testing rather than assuming it transfers.
+    bert_params, other_params = [], []
+    for name, q in model.named_parameters():
+        if not q.requires_grad:
+            continue
+        (bert_params if name.startswith("text_encoder") else other_params).append(q)
+    groups = []
+    if bert_params:
+        groups.append({"params": bert_params, "lr": args.lr})
+    if other_params:
+        groups.append({"params": other_params, "lr": args.gnn_lr or args.lr})
+    params = bert_params + other_params
+    opt = torch.optim.AdamW(groups, lr=args.lr, weight_decay=1e-4)
+    if args.gnn_lr:
+        print("[opt ] BERT tower lr=%g | graph tower lr=%g" % (args.lr, args.gnn_lr))
 
     @torch.no_grad()
     def embed(loader):
@@ -159,7 +196,7 @@ def main() -> None:
 
     out = Path(args.out_dir)
     (out / "retrieval_examples").mkdir(parents=True, exist_ok=True)
-    (out / "metrics_task4.json").write_text(json.dumps(results, indent=2))
+    (out / ("metrics_task4%s.json" % args.metrics_suffix)).write_text(json.dumps(results, indent=2))
 
     # 10 qualitative caption -> top-3 clip retrievals
     sims = T @ G.t()
@@ -167,16 +204,20 @@ def main() -> None:
     examples = []
     for i in range(min(args.n_examples, len(test))):
         top = sims[i].topk(3).indices.tolist()
+        # ytid is carried through so a listening study can resolve each
+        # retrieved clip back to its source audio; clip_id alone is a hash.
         examples.append({
             "query_caption": test[i].text[:220],
             "true_clip": test[i].clip_id,
+            "true_ytid": getattr(test[i], "ytid", ""),
             "rank_of_true": int((sims[i] > sims[i, i]).sum()) + 1,
             "top3": [{"clip_id": test[j].clip_id,
+                      "ytid": getattr(test[j], "ytid", ""),
                       "caption": test[j].text[:160],
                       "score": round(float(sims[i, j]), 4),
                       "is_correct": bool(j == i)} for j in top],
         })
-    (out / "retrieval_examples" / "task4_examples.json").write_text(
+    (out / "retrieval_examples" / ("task4_examples%s.json" % args.metrics_suffix)).write_text(
         json.dumps(examples, indent=2))
 
     # zero-shot tagging: embed tag names, score clips, no tag supervision used
