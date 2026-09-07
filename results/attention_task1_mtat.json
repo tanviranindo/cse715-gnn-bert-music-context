@@ -1,0 +1,431 @@
+{
+  "note": "Final-layer [CLS] attention averaged over heads, for the five committed Task 1 example predictions. Special tokens are retained because they carry real mass and hiding them would overstate the content words.",
+  "dataset": "mtat",
+  "model": "distilbert-base-uncased",
+  "threshold": 0.7,
+  "examples": [
+    {
+      "clip_id": "14",
+      "text": "Contimune | LVX Nova",
+      "true": [
+        "techno"
+      ],
+      "predicted": [
+        {
+          "tag": "electronic",
+          "p": 0.816
+        },
+        {
+          "tag": "techno",
+          "p": 0.813
+        },
+        {
+          "tag": "synth",
+          "p": 0.761
+        },
+        {
+          "tag": "weird",
+          "p": 0.753
+        },
+        {
+          "tag": "beat",
+          "p": 0.716
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "con",
+        "##ti",
+        "##mun",
+        "##e",
+        "|",
+        "l",
+        "##v",
+        "##x",
+        "nova",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.1465,
+        0.0588,
+        0.02047,
+        0.02193,
+        0.09781,
+        0.2341,
+        0.03073,
+        0.03275,
+        0.05657,
+        0.20089,
+        0.09943
+      ],
+      "top_tokens": [
+        {
+          "token": "|",
+          "weight": 0.2341
+        },
+        {
+          "token": "nova",
+          "weight": 0.20089
+        },
+        {
+          "token": "[CLS]",
+          "weight": 0.1465
+        },
+        {
+          "token": "[SEP]",
+          "weight": 0.09943
+        },
+        {
+          "token": "##e",
+          "weight": 0.09781
+        }
+      ]
+    },
+    {
+      "clip_id": "21",
+      "text": "Contimune | LVX Nova",
+      "true": [
+        "electronic",
+        "fast",
+        "rock"
+      ],
+      "predicted": [
+        {
+          "tag": "electronic",
+          "p": 0.816
+        },
+        {
+          "tag": "techno",
+          "p": 0.813
+        },
+        {
+          "tag": "synth",
+          "p": 0.761
+        },
+        {
+          "tag": "weird",
+          "p": 0.753
+        },
+        {
+          "tag": "beat",
+          "p": 0.716
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "con",
+        "##ti",
+        "##mun",
+        "##e",
+        "|",
+        "l",
+        "##v",
+        "##x",
+        "nova",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.1465,
+        0.0588,
+        0.02047,
+        0.02193,
+        0.09781,
+        0.2341,
+        0.03073,
+        0.03275,
+        0.05657,
+        0.20089,
+        0.09943
+      ],
+      "top_tokens": [
+        {
+          "token": "|",
+          "weight": 0.2341
+        },
+        {
+          "token": "nova",
+          "weight": 0.20089
+        },
+        {
+          "token": "[CLS]",
+          "weight": 0.1465
+        },
+        {
+          "token": "[SEP]",
+          "weight": 0.09943
+        },
+        {
+          "token": "##e",
+          "weight": 0.09781
+        }
+      ]
+    },
+    {
+      "clip_id": "23",
+      "text": "Contimune | LVX Nova",
+      "true": [
+        "fast"
+      ],
+      "predicted": [
+        {
+          "tag": "electronic",
+          "p": 0.816
+        },
+        {
+          "tag": "techno",
+          "p": 0.813
+        },
+        {
+          "tag": "synth",
+          "p": 0.761
+        },
+        {
+          "tag": "weird",
+          "p": 0.753
+        },
+        {
+          "tag": "beat",
+          "p": 0.716
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "con",
+        "##ti",
+        "##mun",
+        "##e",
+        "|",
+        "l",
+        "##v",
+        "##x",
+        "nova",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.1465,
+        0.0588,
+        0.02047,
+        0.02193,
+        0.09781,
+        0.2341,
+        0.03073,
+        0.03275,
+        0.05657,
+        0.20089,
+        0.09943
+      ],
+      "top_tokens": [
+        {
+          "token": "|",
+          "weight": 0.2341
+        },
+        {
+          "token": "nova",
+          "weight": 0.20089
+        },
+        {
+          "token": "[CLS]",
+          "weight": 0.1465
+        },
+        {
+          "token": "[SEP]",
+          "weight": 0.09943
+        },
+        {
+          "token": "##e",
+          "weight": 0.09781
+        }
+      ]
+    },
+    {
+      "clip_id": "90",
+      "text": "My mistress hath a pritty thing (Tobias Hume) | Gambomania",
+      "true": [
+        "cello",
+        "classical",
+        "fast",
+        "solo",
+        "string",
+        "violin"
+      ],
+      "predicted": [
+        {
+          "tag": "pop",
+          "p": 0.882
+        },
+        {
+          "tag": "vocal",
+          "p": 0.879
+        },
+        {
+          "tag": "rock",
+          "p": 0.868
+        },
+        {
+          "tag": "male vocal",
+          "p": 0.843
+        },
+        {
+          "tag": "drum",
+          "p": 0.718
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "my",
+        "mistress",
+        "hat",
+        "##h",
+        "a",
+        "pri",
+        "##tty",
+        "thing",
+        "(",
+        "tobias",
+        "hume",
+        ")",
+        "|",
+        "ga",
+        "##mbo",
+        "##mania",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.06159,
+        0.02287,
+        0.01563,
+        0.01768,
+        0.03661,
+        0.0223,
+        0.01098,
+        0.01872,
+        0.0438,
+        0.0708,
+        0.02654,
+        0.02079,
+        0.05828,
+        0.29507,
+        0.04485,
+        0.05233,
+        0.12682,
+        0.05433
+      ],
+      "top_tokens": [
+        {
+          "token": "|",
+          "weight": 0.29507
+        },
+        {
+          "token": "##mania",
+          "weight": 0.12682
+        },
+        {
+          "token": "(",
+          "weight": 0.0708
+        },
+        {
+          "token": "[CLS]",
+          "weight": 0.06159
+        },
+        {
+          "token": ")",
+          "weight": 0.05828
+        }
+      ]
+    },
+    {
+      "clip_id": "91",
+      "text": "My mistress hath a pritty thing (Tobias Hume) | Gambomania",
+      "true": [
+        "cello",
+        "classical",
+        "string",
+        "violin"
+      ],
+      "predicted": [
+        {
+          "tag": "pop",
+          "p": 0.882
+        },
+        {
+          "tag": "vocal",
+          "p": 0.879
+        },
+        {
+          "tag": "rock",
+          "p": 0.868
+        },
+        {
+          "tag": "male vocal",
+          "p": 0.843
+        },
+        {
+          "tag": "drum",
+          "p": 0.718
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "my",
+        "mistress",
+        "hat",
+        "##h",
+        "a",
+        "pri",
+        "##tty",
+        "thing",
+        "(",
+        "tobias",
+        "hume",
+        ")",
+        "|",
+        "ga",
+        "##mbo",
+        "##mania",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.06159,
+        0.02287,
+        0.01563,
+        0.01768,
+        0.03661,
+        0.0223,
+        0.01098,
+        0.01872,
+        0.0438,
+        0.0708,
+        0.02654,
+        0.02079,
+        0.05828,
+        0.29507,
+        0.04485,
+        0.05233,
+        0.12682,
+        0.05433
+      ],
+      "top_tokens": [
+        {
+          "token": "|",
+          "weight": 0.29507
+        },
+        {
+          "token": "##mania",
+          "weight": 0.12682
+        },
+        {
+          "token": "(",
+          "weight": 0.0708
+        },
+        {
+          "token": "[CLS]",
+          "weight": 0.06159
+        },
+        {
+          "token": ")",
+          "weight": 0.05828
+        }
+      ]
+    }
+  ]
+}

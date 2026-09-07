@@ -1,0 +1,733 @@
+{
+  "note": "Final-layer [CLS] attention averaged over heads, for the five committed Task 1 example predictions. Special tokens are retained because they carry real mass and hiding them would overstate the content words.",
+  "dataset": "musiccaps",
+  "model": "distilbert-base-uncased",
+  "threshold": 0.75,
+  "examples": [
+    {
+      "clip_id": "-0Gj8-vB1q4",
+      "text": "The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at",
+      "true": [
+        "low quality"
+      ],
+      "predicted": [
+        {
+          "tag": "low quality",
+          "p": 0.895
+        },
+        {
+          "tag": "passionate",
+          "p": 0.778
+        },
+        {
+          "tag": "noisy",
+          "p": 0.778
+        },
+        {
+          "tag": "emotional",
+          "p": 0.774
+        },
+        {
+          "tag": "flat male vocal",
+          "p": 0.637
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "the",
+        "low",
+        "quality",
+        "recording",
+        "features",
+        "a",
+        "ballad",
+        "song",
+        "that",
+        "contains",
+        "sustained",
+        "strings",
+        ",",
+        "mel",
+        "##low",
+        "piano",
+        "melody",
+        "and",
+        "soft",
+        "female",
+        "vocal",
+        "singing",
+        "over",
+        "it",
+        ".",
+        "it",
+        "sounds",
+        "sad",
+        "and",
+        "soul",
+        "##ful",
+        ",",
+        "like",
+        "something",
+        "you",
+        "would",
+        "hear",
+        "at",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.03708,
+        0.05621,
+        0.03777,
+        0.07303,
+        0.11256,
+        0.03987,
+        0.02063,
+        0.01473,
+        0.03185,
+        0.00933,
+        0.01837,
+        0.01134,
+        0.01408,
+        0.01804,
+        0.01483,
+        0.02435,
+        0.01894,
+        0.01239,
+        0.02449,
+        0.02054,
+        0.01625,
+        0.01867,
+        0.0052,
+        0.00169,
+        0.00617,
+        0.01925,
+        0.03603,
+        0.06424,
+        0.04371,
+        0.03847,
+        0.02325,
+        0.02774,
+        0.00755,
+        0.01425,
+        0.00573,
+        0.01389,
+        0.00398,
+        0.00629,
+        0.01286,
+        0.02432
+      ],
+      "top_tokens": [
+        {
+          "token": "recording",
+          "weight": 0.11256
+        },
+        {
+          "token": "quality",
+          "weight": 0.07303
+        },
+        {
+          "token": "sounds",
+          "weight": 0.06424
+        },
+        {
+          "token": "the",
+          "weight": 0.05621
+        },
+        {
+          "token": "sad",
+          "weight": 0.04371
+        }
+      ]
+    },
+    {
+      "clip_id": "-0vPFx-wRRI",
+      "text": "a male voice is singing a melody with changing tempos while snipping his fingers rhythmically. The recording sounds like it has been recorded in an empty room. This song may be playing, practicing sni",
+      "true": [
+        "amateur recording"
+      ],
+      "predicted": [
+        {
+          "tag": "amateur recording",
+          "p": 0.883
+        },
+        {
+          "tag": "uptempo",
+          "p": 0.812
+        },
+        {
+          "tag": "e-guitar",
+          "p": 0.705
+        },
+        {
+          "tag": "medium tempo",
+          "p": 0.626
+        },
+        {
+          "tag": "e-bass",
+          "p": 0.619
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "a",
+        "male",
+        "voice",
+        "is",
+        "singing",
+        "a",
+        "melody",
+        "with",
+        "changing",
+        "tempo",
+        "##s",
+        "while",
+        "s",
+        "##ni",
+        "##pping",
+        "his",
+        "fingers",
+        "rhythmic",
+        "##ally",
+        ".",
+        "the",
+        "recording",
+        "sounds",
+        "like",
+        "it",
+        "has",
+        "been",
+        "recorded",
+        "in",
+        "an",
+        "empty",
+        "room",
+        ".",
+        "this",
+        "song",
+        "may",
+        "be",
+        "playing",
+        ",",
+        "practicing",
+        "s",
+        "##ni",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.02929,
+        0.04529,
+        0.04024,
+        0.02256,
+        0.05584,
+        0.01302,
+        0.01262,
+        0.0119,
+        0.00805,
+        0.00671,
+        0.00517,
+        0.00403,
+        0.01875,
+        0.0023,
+        0.00634,
+        0.00418,
+        0.01219,
+        0.00545,
+        0.00336,
+        0.00551,
+        0.10324,
+        0.01943,
+        0.03609,
+        0.01526,
+        0.01257,
+        0.00811,
+        0.00962,
+        0.00653,
+        0.00882,
+        0.00583,
+        0.00696,
+        0.00384,
+        0.00307,
+        0.11296,
+        0.02978,
+        0.03836,
+        0.04051,
+        0.03938,
+        0.01135,
+        0.02975,
+        0.0267,
+        0.01013,
+        0.03466,
+        0.07425
+      ],
+      "top_tokens": [
+        {
+          "token": ".",
+          "weight": 0.11296
+        },
+        {
+          "token": ".",
+          "weight": 0.10324
+        },
+        {
+          "token": "[SEP]",
+          "weight": 0.07425
+        },
+        {
+          "token": "is",
+          "weight": 0.05584
+        },
+        {
+          "token": "a",
+          "weight": 0.04529
+        }
+      ]
+    },
+    {
+      "clip_id": "-0xzrMun0Rs",
+      "text": "This song contains digital drums playing a simple groove along with two guitars. One strumming chords along with the snare the other one playing a melody on top. An e-bass is playing the footnote whil",
+      "true": [
+        "acoustic guitar",
+        "e-bass",
+        "medium tempo",
+        "piano"
+      ],
+      "predicted": [
+        {
+          "tag": "e-bass",
+          "p": 0.945
+        },
+        {
+          "tag": "acoustic drums",
+          "p": 0.918
+        },
+        {
+          "tag": "e-guitar",
+          "p": 0.912
+        },
+        {
+          "tag": "piano",
+          "p": 0.809
+        },
+        {
+          "tag": "uptempo",
+          "p": 0.799
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "this",
+        "song",
+        "contains",
+        "digital",
+        "drums",
+        "playing",
+        "a",
+        "simple",
+        "groove",
+        "along",
+        "with",
+        "two",
+        "guitars",
+        ".",
+        "one",
+        "st",
+        "##rum",
+        "##ming",
+        "chords",
+        "along",
+        "with",
+        "the",
+        "s",
+        "##nare",
+        "the",
+        "other",
+        "one",
+        "playing",
+        "a",
+        "melody",
+        "on",
+        "top",
+        ".",
+        "an",
+        "e",
+        "-",
+        "bass",
+        "is",
+        "playing",
+        "the",
+        "foot",
+        "##note",
+        "w",
+        "##hil",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.05764,
+        0.05494,
+        0.08702,
+        0.11248,
+        0.0154,
+        0.01569,
+        0.01508,
+        0.015,
+        0.00958,
+        0.00131,
+        0.01886,
+        0.01146,
+        0.01328,
+        0.00248,
+        0.01621,
+        0.00743,
+        0.00228,
+        0.00155,
+        0.00598,
+        0.00203,
+        0.00566,
+        0.0048,
+        0.00703,
+        0.0008,
+        0.00556,
+        0.01685,
+        0.00432,
+        0.00641,
+        0.00853,
+        0.00503,
+        0.00135,
+        0.00226,
+        0.00377,
+        0.06955,
+        0.0819,
+        0.01385,
+        0.01578,
+        0.0124,
+        0.12325,
+        0.01057,
+        0.00911,
+        0.00068,
+        0.00228,
+        0.00488,
+        0.02945,
+        0.0882
+      ],
+      "top_tokens": [
+        {
+          "token": "is",
+          "weight": 0.12325
+        },
+        {
+          "token": "contains",
+          "weight": 0.11248
+        },
+        {
+          "token": "[SEP]",
+          "weight": 0.0882
+        },
+        {
+          "token": "song",
+          "weight": 0.08702
+        },
+        {
+          "token": "an",
+          "weight": 0.0819
+        }
+      ]
+    },
+    {
+      "clip_id": "-1OlgJWehn8",
+      "text": "This clip is three tracks playing consecutively. The first one is an electric guitar lead harmony with a groovy bass line, followed by white noise and then a female vocalisation to a vivacious melody ",
+      "true": [
+        "bass guitar",
+        "instrumental",
+        "keyboard harmony"
+      ],
+      "predicted": [
+        {
+          "tag": "groovy",
+          "p": 0.816
+        },
+        {
+          "tag": "energetic",
+          "p": 0.785
+        },
+        {
+          "tag": "rock",
+          "p": 0.768
+        },
+        {
+          "tag": "groovy bass",
+          "p": 0.726
+        },
+        {
+          "tag": "punchy kick",
+          "p": 0.619
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "this",
+        "clip",
+        "is",
+        "three",
+        "tracks",
+        "playing",
+        "consecutive",
+        "##ly",
+        ".",
+        "the",
+        "first",
+        "one",
+        "is",
+        "an",
+        "electric",
+        "guitar",
+        "lead",
+        "harmony",
+        "with",
+        "a",
+        "gr",
+        "##oo",
+        "##vy",
+        "bass",
+        "line",
+        ",",
+        "followed",
+        "by",
+        "white",
+        "noise",
+        "and",
+        "then",
+        "a",
+        "female",
+        "vocal",
+        "##isation",
+        "to",
+        "a",
+        "viva",
+        "##cious",
+        "melody",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.08094,
+        0.05389,
+        0.08713,
+        0.14643,
+        0.02577,
+        0.07013,
+        0.02851,
+        0.0291,
+        0.02777,
+        0.01066,
+        0.03381,
+        0.01329,
+        0.01027,
+        0.09082,
+        0.04278,
+        0.00216,
+        0.00155,
+        0.00287,
+        0.01215,
+        0.01134,
+        0.01851,
+        0.00221,
+        0.00672,
+        0.00666,
+        0.00264,
+        0.0017,
+        0.00789,
+        0.00916,
+        0.00782,
+        0.00847,
+        0.0053,
+        0.01481,
+        0.01487,
+        0.01562,
+        0.00768,
+        0.00246,
+        0.00545,
+        0.00686,
+        0.01327,
+        0.00303,
+        0.00976,
+        0.02234,
+        0.0254
+      ],
+      "top_tokens": [
+        {
+          "token": "is",
+          "weight": 0.14643
+        },
+        {
+          "token": "is",
+          "weight": 0.09082
+        },
+        {
+          "token": "clip",
+          "weight": 0.08713
+        },
+        {
+          "token": "[CLS]",
+          "weight": 0.08094
+        },
+        {
+          "token": "tracks",
+          "weight": 0.07013
+        }
+      ]
+    },
+    {
+      "clip_id": "-1UWSisR2zo",
+      "text": "A male singer sings this groovy melody. The song is a techno dance song with a groovy bass line, strong drumming rhythm and a keyboard accompaniment. The song is so groovy and serves as a dance track ",
+      "true": [
+        "live performance",
+        "male singer",
+        "medium tempo",
+        "poor audio quality"
+      ],
+      "predicted": [
+        {
+          "tag": "male singer",
+          "p": 0.901
+        },
+        {
+          "tag": "poor audio quality",
+          "p": 0.87
+        },
+        {
+          "tag": "exciting",
+          "p": 0.743
+        },
+        {
+          "tag": "romantic",
+          "p": 0.711
+        },
+        {
+          "tag": "groovy",
+          "p": 0.662
+        }
+      ],
+      "tokens": [
+        "[CLS]",
+        "a",
+        "male",
+        "singer",
+        "sings",
+        "this",
+        "gr",
+        "##oo",
+        "##vy",
+        "melody",
+        ".",
+        "the",
+        "song",
+        "is",
+        "a",
+        "techno",
+        "dance",
+        "song",
+        "with",
+        "a",
+        "gr",
+        "##oo",
+        "##vy",
+        "bass",
+        "line",
+        ",",
+        "strong",
+        "drumming",
+        "rhythm",
+        "and",
+        "a",
+        "keyboard",
+        "accompaniment",
+        ".",
+        "the",
+        "song",
+        "is",
+        "so",
+        "gr",
+        "##oo",
+        "##vy",
+        "and",
+        "serves",
+        "as",
+        "a",
+        "dance",
+        "track",
+        "[SEP]"
+      ],
+      "cls_attention": [
+        0.04162,
+        0.05578,
+        0.05741,
+        0.04788,
+        0.0202,
+        0.0156,
+        0.00161,
+        0.0031,
+        0.00454,
+        0.00807,
+        0.01068,
+        0.06183,
+        0.06527,
+        0.1454,
+        0.04267,
+        0.01258,
+        0.0077,
+        0.02578,
+        0.0151,
+        0.00936,
+        0.00149,
+        0.00296,
+        0.00507,
+        0.00304,
+        0.00163,
+        0.01159,
+        0.00893,
+        0.00186,
+        0.00359,
+        0.0062,
+        0.00468,
+        0.00212,
+        0.00209,
+        0.01228,
+        0.04044,
+        0.03365,
+        0.04115,
+        0.0309,
+        0.00238,
+        0.0048,
+        0.0086,
+        0.02264,
+        0.02935,
+        0.0182,
+        0.01398,
+        0.00476,
+        0.00848,
+        0.02099
+      ],
+      "top_tokens": [
+        {
+          "token": "is",
+          "weight": 0.1454
+        },
+        {
+          "token": "song",
+          "weight": 0.06527
+        },
+        {
+          "token": "the",
+          "weight": 0.06183
+        },
+        {
+          "token": "male",
+          "weight": 0.05741
+        },
+        {
+          "token": "a",
+          "weight": 0.05578
+        }
+      ]
+    }
+  ]
+}

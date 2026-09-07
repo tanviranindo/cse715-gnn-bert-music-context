@@ -4,6 +4,8 @@
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
 \usepackage{multicol}
 \usepackage{float}
 \usepackage[hidelinks]{hyperref}
@@ -64,7 +66,7 @@ alone.
 We test that premise rather than assume it. Our contributions are:
 
 \begin{itemize}\itemsep2pt
-\item Complete implementations of all four tasks, with $87$ unit
+\item Complete implementations of all four tasks, with $92$ unit
 tests and every result reproducible from a seeded configuration recorded
 alongside it.
 \item Two dataset integrity findings that change how the numbers must be read:
@@ -109,6 +111,78 @@ implement the masked alternating-batch scheme and, unusually, report what it
 costs the primary task.
 
 \section{Method}
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style   ={draw, rounded corners=1pt, minimum height=7.5mm, align=center, inner sep=3pt},
+  data/.style  ={box, fill=black!4, minimum width=17mm},
+  enc/.style   ={box, fill=black!10, minimum width=20mm, very thick},
+  head/.style  ={box, fill=white, minimum width=27mm, draw=black!55},
+  fuse/.style  ={box, fill=black!16, minimum width=17mm, very thick},
+  ar/.style    ={-{Latex[length=2mm]}, thick},
+  lbl/.style   ={font=\scriptsize, inner sep=1pt},
+]
+% --- audio branch ---
+\node[data] (audio) {audio\\\scriptsize 22.05\,kHz};
+\node[data, right=6mm of audio] (seg) {segments\\\scriptsize MFCC + chroma};
+\node[data, right=6mm of seg]  (graph) {graph $G$\\\scriptsize $\tau{=}0.35$};
+\node[enc,  right=6mm of graph] (gnn) {GNN\\\scriptsize GraphSAGE / GAT};
+\node[box, fill=black!4, right=6mm of gnn, minimum width=12mm] (g) {$g$};
+
+% --- text branch ---
+\node[data, below=13mm of audio] (text) {text\\\scriptsize tags / captions};
+\node[data, right=6mm of text, minimum width=17mm] (tok) {WordPiece\\\scriptsize $\leq$128 tok};
+\node[enc,  right=6mm of tok, minimum width=20mm] (bert) {DistilBERT};
+\node[box, fill=black!4, right=6mm of bert, minimum width=22mm] (h) {$H_{\text{text}},\; t$};
+
+% --- fusion ---
+\node[fuse, right=9mm of $(g)!0.5!(h)$, yshift=0mm] (fusion)
+  {cross-attention\\\scriptsize $Q{=}gW_Q$, $K{=}H_{\text{text}}W_K$};
+\node[box, fill=black!4, right=6mm of fusion, minimum width=12mm] (z) {$z$};
+
+% --- heads ---
+\node[head, right=9mm of z, yshift=11mm]  (tags)    {tag head \quad\scriptsize $\sigma(Wz)$};
+\node[head, right=9mm of z]               (emo)     {emotion head \scriptsize $(\hat v,\hat a)$};
+\node[head, right=9mm of z, yshift=-11mm] (contrast){InfoNCE \scriptsize shared space};
+
+% --- edges ---
+\draw[ar] (audio) -- (seg);  \draw[ar] (seg) -- (graph);
+\draw[ar] (graph) -- (gnn);  \draw[ar] (gnn) -- (g);
+\draw[ar] (text) -- (tok);   \draw[ar] (tok) -- (bert);
+\draw[ar] (bert) -- (h);
+\draw[ar] (g) -| ([xshift=-4mm]fusion.north);
+\draw[ar] (h) -| ([xshift=-4mm]fusion.south);
+\draw[ar] (fusion) -- (z);
+\draw[ar] (z.east) -- (tags.west);
+\draw[ar] (z.east) -- (emo.west);
+\draw[ar] (z.east) -- (contrast.west);
+
+% --- task annotations ---
+\node[lbl, above=1.5mm of gnn]    {\textbf{Task 2}};
+\node[lbl, below=1.5mm of bert]   {\textbf{Task 1}};
+\node[lbl, above=1.5mm of fusion] {\textbf{Task 3}};
+\node[lbl, right=1.5mm of contrast, rotate=-90, anchor=north] {};
+\node[lbl, below=1.5mm of contrast] {\textbf{Task 4}};
+
+% --- ablation cut lines ---
+\draw[dashed, black!45] ([yshift=3mm]g.north east) -- ([yshift=-3mm]h.south east);
+\node[lbl, align=center, above right=1mm and -6mm of g.north east, text=black!55]
+  {\itshape ablation cut:\\ either branch alone};
+\end{tikzpicture}
+\caption{System overview, and how the four tasks sit inside one architecture.
+Audio becomes a segment graph read by the GNN into a graph vector $g$; text is
+read by DistilBERT into a token sequence $H_{\text{text}}$ and its pooled vector
+$t$. Task 1 is the text branch with a tag head; Task 2 is the graph branch with
+a genre head; Task 3 fuses them by letting $g$ query $H_{\text{text}}$, then
+feeds the tag and emotion heads; Task 4 reuses the same two encoders as
+projection towers trained contrastively. The ablation table in
+Section~\ref{sec:t3results} is produced by cutting at the dashed line --- taking
+$g$ alone, $t$ alone, or their concatenation --- so every row shares encoders,
+data and schedule with the others.}
+\label{fig:arch}
+\end{figure*}
 
 \subsection{Task 1: BERT tag classifier}
 Following the task specification, a pretrained encoder maps text to a pooled
@@ -306,6 +380,24 @@ designed to isolate.
 
 \begin{figure}[H]
 \centering
+\includegraphics[width=\linewidth]{attention_task1_mtat.png}
+\caption{Final-layer \texttt{[CLS]} attention, averaged over heads, for the five
+committed MagnaTagATune example predictions --- the optional attention
+visualisation named in the specification. It shows the duplicated-input ceiling
+of Section~4.2 directly rather than as a statistic: clips $14$, $21$ and $23$
+are three distinct clips whose text input is the same string
+(\emph{Contimune $\mid$ LVX Nova}), so the attention pattern over them is
+identical to five decimal places --- yet their ground-truth tags are
+\emph{techno}, \emph{electronic/fast/rock} and \emph{fast} respectively. The
+model cannot separate them because nothing in its input differs. Clips $90$ and
+$91$ repeat the pattern. Mass concentrates on the separator and on the one
+distinctive surname token rather than on any musical content word, which is what
+a track-title corpus offers a language model to work with.}
+\label{fig:attention}
+\end{figure}
+
+\begin{figure}[H]
+\centering
 \includegraphics[width=\linewidth]{training_curves.png}
 \caption{Validation Macro-F1 and Micro-F1 against training epoch for the three
 Task 1 configurations (left, centre) --- the curve deliverable required by the
@@ -385,6 +477,7 @@ That pattern is consistent with the graph capturing coarse repetition structure
 but discarding the timbral detail the spectrogram preserves.
 
 \subsection{Task 3: fusion and its failure mode}
+\label{sec:t3results}
 
 \begin{table}[H]
 \centering\small
@@ -700,6 +793,19 @@ and chord-transition graphs, both of which we build but do not use as the
 primary GNN input. A 19-node graph over uniform windows may simply not encode
 much beyond a smoothed timeline.
 
+\textbf{Two evaluations we did not run.} The specification asks for a human
+study on Task 4 --- at least five listeners rating retrieved clips $1$--$5$ for
+whether the clip matches the query caption. We did not run it, so our retrieval
+claims rest entirely on R@K against a $2{,}773$-clip gallery; with $R@10$ at
+$0.022$ a human study would mostly be measuring near-misses, but it remains a
+gap against the brief rather than a considered omission. Separately, the DEAM
+multi-task numbers in Table~6 were scored at the final epoch, before we adopted
+best-validation checkpointing everywhere else; the metadata archive that
+supplies DEAM's pseudo-captions is no longer retrievable from any surviving
+mirror, so that run could not be repeated under the corrected policy. Both
+comparisons in that table share the methodology, so the reported delta stands
+even though the absolute values are not directly comparable with Table~4.
+
 \section{Conclusion}
 We implemented all four tasks and report results that are, for the fusion
 model, negative. We regard the diagnosis as the contribution: a measured
@@ -712,7 +818,7 @@ music context understanding remains plausible; this work delimits the
 conditions under which it can be demonstrated.
 
 \section*{Reproducibility}
-Code, seeded configurations, per-run metrics, $130$ example graphs, the t-SNE
+Code, seeded configurations, per-run metrics, $155$ example graphs, the t-SNE
 projection and all training logs are in the project repository. Every reported
 number is regenerable from the committed configuration.
 
