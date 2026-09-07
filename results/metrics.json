@@ -130,6 +130,82 @@
         "test_macro_f1": 0.37081853141803006
       }
     },
+    "graph_coherence": {
+      "note": "Graph coherence S_graph (PDF S6): the fraction of edges whose endpoints the trained GNN maps to cosine similarity above tau. Swept over tau, because post-ReLU embeddings are non-negative and any single low threshold marks every edge coherent.",
+      "n_graphs": 50,
+      "checkpoint": "results/task3_crossattn.pt",
+      "conv": "gat",
+      "controls": {
+        "rewired": "same edge count between the same nodes, drawn at random",
+        "untrained": "same architecture at initialisation"
+      },
+      "sweep": [
+        {
+          "tau": 0.5,
+          "real": 1.0,
+          "rewired": 0.9635,
+          "untrained": 1.0,
+          "real_minus_rewired": 0.0365
+        },
+        {
+          "tau": 0.7,
+          "real": 0.9922,
+          "rewired": 0.9016,
+          "untrained": 0.9987,
+          "real_minus_rewired": 0.0906
+        },
+        {
+          "tau": 0.8,
+          "real": 0.9822,
+          "rewired": 0.8402,
+          "untrained": 0.9939,
+          "real_minus_rewired": 0.142
+        },
+        {
+          "tau": 0.9,
+          "real": 0.9518,
+          "rewired": 0.7109,
+          "untrained": 0.9792,
+          "real_minus_rewired": 0.2409
+        },
+        {
+          "tau": 0.95,
+          "real": 0.8702,
+          "rewired": 0.546,
+          "untrained": 0.9436,
+          "real_minus_rewired": 0.3242
+        },
+        {
+          "tau": 0.98,
+          "real": 0.7176,
+          "rewired": 0.3669,
+          "untrained": 0.8432,
+          "real_minus_rewired": 0.3507
+        },
+        {
+          "tau": 0.99,
+          "real": 0.5601,
+          "rewired": 0.2608,
+          "untrained": 0.7215,
+          "real_minus_rewired": 0.2993
+        },
+        {
+          "tau": 0.995,
+          "real": 0.4119,
+          "rewired": 0.1846,
+          "untrained": 0.5865,
+          "real_minus_rewired": 0.2273
+        }
+      ],
+      "most_discriminating": {
+        "tau": 0.98,
+        "real": 0.7176,
+        "rewired": 0.3669,
+        "untrained": 0.8432,
+        "real_minus_rewired": 0.3507
+      },
+      "reading": "Real edges are markedly more coherent than rewired ones -- at tau = 0.980, 0.718 against 0.367 (+0.351). The graph's wiring is not arbitrary. But an untrained encoder of the same shape scores 0.843 on those same edges -- higher than the trained one -- so this coherence is a property of how the graph was built (edges are thresholded on feature cosine similarity) rather than something training produced. Training slightly *reduces* it, which is what an encoder learning to tell adjacent segments apart would do."
+    },
     "chord_graph_input": {
       "note": "Chord-transition graph as the GNN input, same splits/labels as the segment-similarity graphs above. Nodes are chords from a 24-triad vocabulary, features are the chord's pitch-class template, so all timbre is discarded.",
       "artist_leakage": {

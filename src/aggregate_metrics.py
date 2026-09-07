@@ -75,6 +75,10 @@ def task2():
 
     # The spec (S3.3) names two graph structures. Both are trained on identical
     # splits and labels so the comparison is like-for-like.
+    coh = read("metrics_graph_coherence.json")
+    if coh:
+        out["graph_coherence"] = coh
+
     chord = read("metrics_task2_chord.json")
     if chord:
         out["chord_graph_input"] = {

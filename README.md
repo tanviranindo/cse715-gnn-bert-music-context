@@ -90,6 +90,12 @@ doubling), putting a usable R@10 of 0.10 about 100× beyond MusicCaps' official
 split. Zero-shot tagging from captions reaches Micro-F1 0.107 against Task 1's
 supervised 0.488 on the same corpus.
 
+**Graph coherence** (spec §6, optional): swept over τ because post-ReLU
+embeddings make any low threshold read 1.000. Real edges beat rewired ones
+(0.718 vs 0.367 at τ = 0.98), but an *untrained* encoder scores 0.843 on the
+same edges — the coherence comes from building edges by feature similarity in
+the first place, not from training. `src/graph_coherence.py`.
+
 **Task 4 — human evaluation** (spec §6): six listeners rated all 30 retrieved
 clips 1–5 for caption match. Mean **1.79 ± 1.36**; by model rank, 2.03 / 1.28 /
 2.07. Clip order was randomised per listener so the ranking under test was never
@@ -233,7 +239,7 @@ cd report && pdflatex final_report.tex && pdflatex final_report.tex
 src/            audio_features, graph_builder, bert_encoder, gnn_model,
                 fusion_model, contrastive, train*, evaluate, analyze_fusion,
                 analyze_scale, attention_viz, human_eval, infer, dump_splits,
-                make_plots, aggregate_sweep, aggregate_metrics,
+                make_plots, aggregate_sweep, aggregate_metrics, graph_coherence,
                 make_report_numbers
 tests/          16 modules / 117 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
@@ -278,5 +284,4 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes,
 - Single seed everywhere except the Task 3 learning-rate comparison (5 paired
   seeds) and the Task 1 curves. Measured seed spread is ±0.023 Macro-F1, which
   exceeds several of the Task 3 ablation margins.
-- Task 1 reports Macro/Micro-F1 but not AUC-PR; the §6 graph-coherence score,
-  which the spec marks optional, is not implemented.
+- Task 1 reports Macro/Micro-F1 but not AUC-PR.

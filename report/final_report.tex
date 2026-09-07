@@ -71,7 +71,7 @@ alone.
 We test that premise rather than assume it. Our contributions are:
 
 \begin{itemize}\itemsep2pt
-\item Complete implementations of all four tasks, with $117$ unit
+\item Complete implementations of all four tasks, with $126$ unit
 tests and every result reproducible from a seeded configuration recorded
 alongside it.
 \item Two dataset integrity findings that change how the numbers must be read:
@@ -488,6 +488,53 @@ is discarded before the GNN sees anything. Genre on FMA-small is substantially
 a timbral judgement, so the symbolic abstraction removes most of what the label
 depends on. We report it because the negative result localises the problem: it
 is the \emph{node features}, not message passing, that limit the chord graph.
+
+\subsection{Are the graph's edges meaningful?}
+
+The specification offers an optional diagnostic: the graph coherence score
+$S_{\mathrm{graph}} = \frac{1}{|E|}\sum_{(i,j)\in E}\mathbb{1}[\cos(h_i,h_j) >
+\tau]$, the fraction of edges whose endpoints the encoder maps to similar
+representations. We report it as a sweep rather than a single number, because
+node embeddings after ReLU are non-negative, so any low threshold marks
+essentially every edge coherent whatever the graph contains --- at $\tau=0.5$
+the score is $1.000$ for both a trained and an untrained encoder, and says
+nothing.
+
+\begin{table}[H]
+\centering\small
+\caption{Graph coherence over the 50 committed FMA sample graphs. ``Rewired''
+draws the same number of edges at random between the same nodes; ``untrained''
+is the same architecture at initialisation. A score is only meaningful against
+these.}
+\label{tab:coherence}
+\begin{tabular}{lccc}
+\toprule
+$\tau$ & Real edges & Rewired & Untrained \\
+\midrule
+0.50 & 1.000 & 0.964 & 1.000 \\
+0.80 & 0.982 & 0.840 & 0.994 \\
+0.90 & 0.952 & 0.711 & 0.979 \\
+0.95 & 0.870 & 0.546 & 0.944 \\
+0.98 & 0.718 & 0.367 & 0.843 \\
+0.99 & 0.560 & 0.261 & 0.722 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The built edges separate clearly from rewired ones --- at $\tau=0.98$,
+$0.718$ against $0.367$ --- so the wiring is not arbitrary. But the untrained
+encoder scores $0.843$ on those same edges, \emph{higher} than the trained one,
+and that is the informative part. Segment edges are created by thresholding
+cosine similarity between node features in the first place, so their endpoints
+begin similar and any encoder will map them to similar places. The coherence is
+a property of how we built the graph, not something training discovered.
+Training slightly reduces it, which is what an encoder learning to tell
+adjacent segments apart should do.
+
+This is a caution about the metric as much as about our graphs: reported alone
+and at a permissive threshold, $S_{\mathrm{graph}}$ would have looked like
+strong evidence that the graph structure was working, on a task where the
+graph model loses to a CNN.
 
 \subsection{Where the genre models succeed and fail}
 
