@@ -153,6 +153,10 @@ def _process_track_inner(record: dict, librosa) -> dict | None:
         "text": record.get("text", ""),
         "labels": record.get("labels", set()),
         "ytid": record.get("ytid", ""),
+        # The caption describes this window only; a listening study that plays
+        # from 0:00 rates the wrong audio (see src/enrich_examples.py).
+        "start_s": record.get("start_s"),
+        "end_s": record.get("end_s"),
         "is_eval": record.get("is_eval", False),
         **({"valence_z": record["valence_z"], "arousal_z": record["arousal_z"],
             "valence": record["valence"], "arousal": record["arousal"]}

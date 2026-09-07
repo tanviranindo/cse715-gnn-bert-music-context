@@ -46,6 +46,8 @@ def load_cache(path, tokenizer, max_length: int):
         # resolve a retrieved clip back to its source audio. Without it the
         # Task 4 rating sheet degrades to judging captions against captions.
         d.ytid = str(r.get("ytid", "") or "")
+        d.start_s = r.get("start_s")
+        d.end_s = r.get("end_s")
         d.genre = r.get("genre", "")
         d.text = r.get("text", "")
         d.is_eval = bool(r.get("is_eval", False))

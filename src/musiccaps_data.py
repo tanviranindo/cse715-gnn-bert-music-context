@@ -116,3 +116,22 @@ def lexical_match_predict(text: str, vocab: list[str]) -> set[str]:
     """
     low = text.lower()
     return {t for t in vocab if t.lower() in low}
+
+
+def clip_windows(path: str | Path) -> dict[str, tuple[int, int]]:
+    """{ytid: (start_s, end_s)} from musiccaps-public.csv.
+
+    Every caption describes one specific ten-second window, and that window is
+    usually not at 0:00 — the first row of the corpus starts at 30 s. A rating
+    study that plays each video from its beginning therefore asks listeners
+    about audio the caption never described, and produces numbers that look
+    fine and mean nothing.
+    """
+    out: dict[str, tuple[int, int]] = {}
+    with open(path, newline="") as f:
+        for row in csv.DictReader(f):
+            try:
+                out[row["ytid"]] = (int(float(row["start_s"])), int(float(row["end_s"])))
+            except (KeyError, TypeError, ValueError):
+                continue
+    return out

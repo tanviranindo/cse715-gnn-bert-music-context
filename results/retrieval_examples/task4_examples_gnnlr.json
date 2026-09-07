@@ -10,21 +10,27 @@
         "ytid": "TdHdD1wxu_0",
         "caption": "The music features a calm male voice singing a short melody. An acoustic guitar is accompanying the singer and playing chords throughout the music excerpt. In t",
         "score": 0.6903,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "159578490",
         "ytid": "eW8se7t0s-U",
         "caption": "The low quality recording features a classical song that consists of arpeggiated, soft piano melody, wide sustained string melody and a tom hit at the very begi",
         "score": 0.688,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "769395224",
         "ytid": "-0Gj8-vB1q4",
         "caption": "The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and s",
         "score": 0.6841,
-        "is_correct": true
+        "is_correct": true,
+        "start_s": 30,
+        "end_s": 40
       }
     ]
   },
@@ -39,21 +45,27 @@
         "ytid": "S7TYAcOEPt4",
         "caption": "A female voice is singing emotionally along to an acoustic piano. In the background you can hear people laughing. This song may be playing in a tv-show.",
         "score": 0.6931,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "3074654",
         "ytid": "efTVnvwI2PQ",
         "caption": "This is a live recording to which music was later added. The main audio in the clip includes a squeaky toy being repeatedly pressed. The song that was later add",
         "score": 0.6902,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 240,
+        "end_s": 250
       },
       {
         "clip_id": "746003018",
         "ytid": "B90BOtSOD2Q",
         "caption": "A female singer sings this bluesy melody. The song is medium tempo with minimal guitar accompaniment and no other instrumentation. The song's medium tempo is ve",
         "score": 0.6828,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 410,
+        "end_s": 420
       }
     ]
   },
@@ -68,21 +80,27 @@
         "ytid": "1-Y9kafYuqQ",
         "caption": "The low quality recording features a DJ scratching his vinyl track that consists of a boomy 808 bass, low male vocal, laser synth lead melody, soft white noise,",
         "score": 0.6162,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 100,
+        "end_s": 110
       },
       {
         "clip_id": "941909166",
         "ytid": "0PMFAO4TIU4",
         "caption": "A digital drum is playing a simple beat along with some percussive sounds. A bass is playing the same melody as the accordion-like instrument. A male voice is s",
         "score": 0.6036,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "342233672",
         "ytid": "hzr2aY33EuI",
         "caption": "This is an instrumental rock and roll music piece. An overdriven electric guitar is playing the melody while a bass guitar is playing the background. There is a",
         "score": 0.6026,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       }
     ]
   },
@@ -97,21 +115,27 @@
         "ytid": "04NjXsLyCl4",
         "caption": "A loud cymbal sound is opening the space for a digital drum playing a simple groove when an e-guitar-like sound comes in and plays a melody on top. This is an a",
         "score": 0.7256,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "805212731",
         "ytid": "TCRxCAYyduo",
         "caption": "The clip starts off with a series of sound effects that indicate that a person is stepping into a car and starting the engine. The car is a powerful sports car.",
         "score": 0.6921,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 0,
+        "end_s": 10
       },
       {
         "clip_id": "388668948",
         "ytid": "t637ILYjH_A",
         "caption": "The low quality recording features a manic, crushed music playing in the background, while there are reverberant metallic, plastic tapping and male screaming so",
         "score": 0.6916,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 280,
+        "end_s": 290
       }
     ]
   },
@@ -126,21 +150,27 @@
         "ytid": "PFX2OO75sRQ",
         "caption": "The Hip Hop/Rap song features a flat male vocal with filtered, background male vocals, rapping over repetitive plucked synth melody and addictive synth lead mel",
         "score": 0.7088,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "312323892",
         "ytid": "OmjfHQB_lcs",
         "caption": "A male singer sings this passionate melody with auto tuned vocals. The song is medium tempo with Indian percussion, dholak percussion, keyboard accompaniment an",
         "score": 0.6943,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "108310187",
         "ytid": "X7qFgrAl3OU",
         "caption": "A male vocalist sings this spirited song. The tempo is fast with electronic instrumentation, synthesiser articulation and turn table. The song is spirited,youth",
         "score": 0.6883,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 70,
+        "end_s": 80
       }
     ]
   },
@@ -155,21 +185,27 @@
         "ytid": "yi4-kGV30qs",
         "caption": "The low quality recording features a wide glass shattering sound effects layered with some synth sound effects. At the very beginning of the loop, there is a sh",
         "score": 0.6065,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 60,
+        "end_s": 70
       },
       {
         "clip_id": "60006257",
         "ytid": "OMcoFfaCaGM",
         "caption": "The low quality recording features a digital drum machine playing tinny syncopated percussion, shimmering hi hats, soft crash cymbals, punchy kick and snare hit",
         "score": 0.5885,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "265219163",
         "ytid": "JI26wmUPcrM",
         "caption": "A male singer sings this rap vocals with backup singers in harmony. The song is medium tempo with typing and beeping tones, followed by steady drumming rhythm, ",
         "score": 0.588,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 0,
+        "end_s": 10
       }
     ]
   },
@@ -184,21 +220,27 @@
         "ytid": "-nlkWWphiaM",
         "caption": "The low quality recording features a live performance that consists of fruity male vocal singing over accordion melody, acoustic rhythm guitar chords and shimme",
         "score": 0.6581,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "368926067",
         "ytid": "iqOPJWWKo90",
         "caption": "The low quality recording features a lullaby sung by passionate male vocalists over an arpeggiated acoustic guitar melody. It sounds mellow, soft, sad and so em",
         "score": 0.6418,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "274735875",
         "ytid": "AcX6rAwFTiY",
         "caption": "This song contains a female voice singing a melody along with a flute and strings playing the same melody. You can hear white noise that almost sounds like rain",
         "score": 0.6398,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 260,
+        "end_s": 270
       }
     ]
   },
@@ -213,21 +255,27 @@
         "ytid": "bYwoYjbPm-I",
         "caption": "This music is an electric guitar instrumental. The tempo is slow with an amplified guitar solo riff. The audio quality is inferior so the sound is muffled, boom",
         "score": 0.6235,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "256567502",
         "ytid": "3VTinB14Pmw",
         "caption": "The low quality recording features an ambient scraping synth lead playing. It sounds muddy, muffled, but also spacey and the recording is noisy and in mono.",
         "score": 0.6135,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "270122017",
         "ytid": "6_zzu2KON6c",
         "caption": "A male guitarist plays a cool guitar like on an electric guitar. The song is medium tempo with a guitar solo with heavy a[echoes played though a guitar amplifie",
         "score": 0.6105,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 80,
+        "end_s": 90
       }
     ]
   },
@@ -242,21 +290,27 @@
         "ytid": "e_W17jp40G4",
         "caption": "The low quality recording features a passionate male vocal singing over a wooden percussive element and sustained strings melody. It sounds emotional, passionat",
         "score": 0.681,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "591705724",
         "ytid": "P1Vxm_ICSG0",
         "caption": "The Electro song features a filter modulated synth melody, groovy synth bass, shimmering hi hats, punchy kick and snare hits, followed by short snare roll, haun",
         "score": 0.6774,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "172278676",
         "ytid": "1pR0SgbqP3M",
         "caption": "A male vocalist sings this lively pop. The tempo is fast and peppy with animated trumpets, groovy saxophone, slick drumming, funky bass line, keyboard harmony, ",
         "score": 0.6714,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       }
     ]
   },
@@ -271,21 +325,27 @@
         "ytid": "dTVkk4GSmNA",
         "caption": "A male voice is singing loud and soulfully. A saxophone is playing a slight variation of the singer's melody. A piano is playing bluesy/jazzy chord chops accomp",
         "score": 0.6205,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 140,
+        "end_s": 150
       },
       {
         "clip_id": "370849959",
         "ytid": "ztfegVzqeCI",
         "caption": "A quirky drum machine and warm synth bass provide the accompaniment for a female singer with noticeable reverb. A wild theremin with delay and wide aggressive v",
         "score": 0.5999,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       },
       {
         "clip_id": "521451282",
         "ytid": "uy3nQ9VYE-Q",
         "caption": "A digital drum is playing a simple groove with a digital bass. An e-piano is playing 2 chords to add some color to the song. A male voice is rapping with light ",
         "score": 0.5776,
-        "is_correct": false
+        "is_correct": false,
+        "start_s": 30,
+        "end_s": 40
       }
     ]
   }

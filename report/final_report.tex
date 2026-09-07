@@ -67,7 +67,7 @@ alone.
 We test that premise rather than assume it. Our contributions are:
 
 \begin{itemize}\itemsep2pt
-\item Complete implementations of all four tasks, with $109$ unit
+\item Complete implementations of all four tasks, with $112$ unit
 tests and every result reproducible from a seeded configuration recorded
 alongside it.
 \item Two dataset integrity findings that change how the numbers must be read:
@@ -904,8 +904,10 @@ study on Task 4 --- at least five listeners rating retrieved clips $1$--$5$ for
 whether the clip matches the query caption. We did not run it, so our retrieval
 claims rest entirely on R@K against a $2{,}773$-clip gallery. The instrument is
 complete: \texttt{src/human\_eval.py} builds a self-contained rating sheet that
-embeds all $30$ retrieved clips as playable YouTube segments and aggregates
-returned ratings with per-rank means, refusing to score fewer than five raters.
+embeds all $30$ retrieved clips as playable YouTube segments --- each cued to
+the exact ten-second window its caption describes, which matters because those
+windows sit up to $6{:}50$ into their source videos --- and aggregates returned
+ratings with per-rank means, refusing to score fewer than five raters.
 What is missing is only the listeners. We record this as a gap against the
 brief rather than a considered omission.
 

@@ -56,6 +56,9 @@ PAGE = """<!doctype html>
  .clip:first-of-type { border-top: 0; }
  iframe { border: 0; width: 100%; max-width: 420px; aspect-ratio: 16/9; }
  .noaudio { color: #a33; font-size: .85rem; }
+ .fallback { font-size: .85rem; color: #666; margin: .35rem 0 0; }
+ .filenote { border: 1px solid #c90; background: rgba(200,150,0,.10);
+   padding: .7rem .85rem; font-size: .9rem; margin: 0 0 1.25rem; }
  .scale { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .6rem; }
  .scale label { border: 1px solid #999; padding: .3rem .6rem; cursor: pointer; }
  .scale input { margin-right: .35rem; }
@@ -70,10 +73,21 @@ PAGE = """<!doctype html>
 for it. Play each clip and rate <strong>how well it matches the caption you were
 shown</strong>, from 1 (no relation) to 5 (an excellent match). Rate what you
 hear, not whether you like it. Roughly 15 minutes.</p>
+<p class="lede"><strong>Each clip is a ten-second excerpt</strong>, and the
+player is set to start at the right moment. If a player shows an error or stays
+blank, use the “Open on YouTube” link under it — that always works — and listen
+for ten seconds from where it starts. If a video is unavailable in your country
+or has been deleted, <strong>leave that one unrated</strong> rather than
+guessing; a missing rating is fine, an invented one is not.</p>
 <p class="lede"><strong>Scale.</strong> 1 = unrelated · 2 = shares little ·
 3 = shares mood or instrumentation · 4 = a good match with minor differences ·
 5 = matches the description closely.</p>
 __WARNING__
+<p class="filenote" id="filenote" hidden><strong>Heads up:</strong> you opened this
+file directly, and YouTube blocks its inline player in that mode (it shows
+“Video player configuration error”). Use the <strong>Open on YouTube</strong>
+link under each clip instead — each one jumps straight to the right ten seconds.
+Everything else on this page works normally.</p>
 <form id="sheet">__ITEMS__</form>
 <div class="bar">
   <label>Your name or initials <input type="text" id="rater" required></label>
@@ -81,6 +95,13 @@ __WARNING__
   <span id="status"></span>
 </div>
 <script>
+// Opened as file:// ? The embedded players cannot work (null origin), so point
+// raters at the direct links rather than letting them hit error 153 thirty times.
+if (location.protocol === "file:") {
+  var fn = document.getElementById("filenote");
+  if (fn) fn.hidden = false;
+}
+
 const TOTAL = __TOTAL__;
 function collect() {
   const out = [];
@@ -129,11 +150,30 @@ def build(examples_path):
             total += 1
             ytid = c.get("ytid", "")
             if ytid:
-                player = (
-                    '<iframe src="https://www.youtube-nocookie.com/embed/%s?start=%d" '
-                    'allow="encrypted-media" title="clip %d"></iframe>'
-                    % (ytid, int(c.get("start_s", 0)), rank)
-                )
+                # MusicCaps captions describe a specific 10 s window, often well
+                # into the video, so the offset is not decoration: without it a
+                # rater judges the wrong audio and the study silently measures
+                # nothing. Refuse to imply 0:00 is correct when we do not know.
+                start = c.get("start_s")
+                if start is None:
+                    player = (
+                        '<p class="noaudio">No start offset for this clip, so the '
+                        'rated 10-second window is unknown — skip it rather than '
+                        'guess. Rebuild the examples with a MusicCaps CSV to fix.</p>'
+                    )
+                else:
+                    start = int(start)
+                    end = int(c.get("end_s", start + 10))
+                    watch = ("https://www.youtube.com/watch?v=%s&t=%ds" % (ytid, start))
+                    player = (
+                        '<iframe src="https://www.youtube-nocookie.com/embed/%s'
+                        '?start=%d&end=%d" allow="encrypted-media" '
+                        'title="clip %d"></iframe>'
+                        '<p class="fallback">Player blank or showing an error? '
+                        '<a href="%s" target="_blank" rel="noopener">Open on YouTube '
+                        'at %d:%02d</a> and listen for ten seconds from there.</p>'
+                        % (ytid, start, end, rank, watch, start // 60, start % 60)
+                    )
             else:
                 player = ('<p class="noaudio">No audio link for this clip — rate from '
                           'its description below.</p>')

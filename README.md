@@ -110,7 +110,7 @@ evaluation run on CPU in seconds from the committed artifacts.
 ## Tests
 
 ```bash
-pytest -q     # 109 passed
+pytest -q     # 112 passed
 ```
 
 The root `conftest.py` is what puts the repo root on `sys.path` so that
@@ -200,7 +200,13 @@ python src/dump_splits.py --cache /data/processed/fma_small_graphs.pt --dataset 
 python -m src.infer --text "A gentle piano ballad with soft female vocals."
 
 # 8. Task 4 human evaluation (needs 5 real listeners; see below)
-python src/human_eval.py build     # -> results/human_eval/rating_sheet.html
+#    Join the MusicCaps clip windows onto the examples first: each caption
+#    describes one 10 s excerpt, often minutes into the video, so a sheet built
+#    without them plays the wrong audio and the study measures nothing.
+python -m src.enrich_examples \
+    --examples results/retrieval_examples/task4_examples_gnnlr.json \
+    --csv data/raw/musiccaps/musiccaps-public.csv
+python src/human_eval.py build --examples results/retrieval_examples/task4_examples_gnnlr.json
 #   ... send the sheet to >=5 listeners, collect their JSON downloads into
 #       results/human_eval/ratings/, then:
 python src/human_eval.py score     # -> results/metrics_task4_human.json
@@ -223,7 +229,7 @@ src/            audio_features, graph_builder, bert_encoder, gnn_model,
                 analyze_scale, attention_viz, human_eval, infer, dump_splits,
                 make_plots, aggregate_sweep, aggregate_metrics,
                 make_report_numbers
-tests/          14 modules / 109 tests, run with pytest
+tests/          15 modules / 112 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
                 retrieval_examples/, case studies, t-SNE
@@ -240,8 +246,11 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes
   `python src/human_eval.py build` produces the rating sheet and `score`
   aggregates the returned files — but it needs five real listeners, so the
   result cannot be produced from this repository alone.
-- The rating sheet in `results/human_eval/` now embeds all 30 retrieved clips
-  as playable YouTube segments, so the study is a listening study. Its examples
+- The rating sheet in `results/human_eval/` embeds all 30 retrieved clips as
+  playable YouTube segments, each cued to the exact 10-second window its caption
+  describes, so the study is a listening study. Opened as a `file://` page the
+  inline players are blocked by YouTube (error 153) and the sheet says so,
+  pointing raters at the per-clip "Open on YouTube" links, which always work. Its examples
   come from `task4_examples_gnnlr.json`, a same-configuration replicate run on
   different hardware: R@10 is identical to the reported run at 0.0339, while
   R@1 and R@5 differ in the third decimal (0.0054/0.0177 vs 0.0058/0.0173).
