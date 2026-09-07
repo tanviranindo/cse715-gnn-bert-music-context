@@ -534,10 +534,12 @@ def score(examples_path):
             round(_pearson(xs, ys), 3) if _pearson(xs, ys) is not None else None
         ),
         "interpretation": (
-            "A mean near 1 says the retrieved clips do not match their captions, "
-            "which is what R@10 = 0.022 predicts. A positive correlation with the "
-            "model's similarity score would say the ranking is meaningful even "
-            "where the top-1 is wrong."
+            "A low mean says the retrieved clips mostly do not match their "
+            "captions, which is what R@10 = 0.034 already predicted: the top-3 "
+            "shown to a listener usually do not contain the true clip. A "
+            "positive correlation with the model's similarity score would say "
+            "the ranking is informative even where the top-1 is wrong; a "
+            "correlation near zero says it is not."
         ),
     }
     out = RESULTS / "metrics_task4_human.json"

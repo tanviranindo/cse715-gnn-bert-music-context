@@ -46,7 +46,11 @@ that giving the graph branch its own learning rate un-collapses that attention
 (entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 by
 $+0.067 \pm 0.023$ over five paired seeds ($p = 0.003$), the largest effect we
 measured --- and one that transfers: applied to the contrastive dual encoder it
-doubles retrieval R@1 and lifts R@10 from $0.0220$ to $0.0339$. We report every number against
+doubles retrieval R@1 and lifts R@10 from $0.0220$ to $0.0339$. A six-listener
+study corroborates those retrieval numbers from the other direction (mean
+$1.79/5$) and adds what recall cannot see: the ranking within the model's own
+top three does not predict human judgement ($r = -0.051$).
+We report every number against
 an explicit baseline, including a lexical-match control that scores Micro-F1
 $0.540$ where our model scores $0.565$ --- a margin small enough that, on
 Macro-F1, the control actually wins.
@@ -750,6 +754,64 @@ gives Micro-F1 $0.107$, against $0.488$ for the supervised stripped-caption
 Task 1 model on the same corpus and the same official split. Contrastive
 alignment alone thus recovers roughly $22\%$ of supervised performance.
 
+\subsection{Task 4: what listeners said}
+
+The specification asks for a human study on Task 4. Six listeners rated each of
+the thirty retrieved clips from 1 (unrelated) to 5 (matches closely), against
+the caption that retrieved it.
+
+\begin{table}[H]
+\centering\small
+\caption{Task 4 human evaluation. Six listeners, $174$ ratings, $1$--$5$ for
+whether the retrieved clip matches its query caption. Clip order was randomised
+per listener so the model's ranking was not visible to them.}
+\label{tab:human}
+\begin{tabular}{lccc}
+\toprule
+& Mean & SD & $n$ \\
+\midrule
+All ratings & $1.79$ & $1.36$ & 174 \\
+\midrule
+Rank 1 & $2.03$ & $1.51$ & 60 \\
+Rank 2 & $1.28$ & $0.69$ & 60 \\
+Rank 3 & $2.07$ & $1.59$ & 54 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent \textbf{Listeners agree with R@K.} A mean of $1.79$ on a five-point
+scale says most retrieved clips do not match the caption that retrieved them.
+That is what Table~\ref{tab:retrieval} already implied --- with R@10 at
+$0.0339$ and a median true-clip rank of $400$, the three clips a listener sees
+usually do not contain the right one. Two independent instruments, one
+automatic and one human, place this system in the same place, which is stronger
+evidence than either alone.
+
+\textbf{The model's own ranking carries no signal for listeners.} Rank~2 scores
+\emph{below} both rank~1 and rank~3, and the correlation between a clip's
+similarity score and its mean human rating is $r = -0.051$ --- indistinguishable
+from none. So within the top three the ordering is arbitrary to a listener, even
+though those three were selected out of a $2{,}773$-clip gallery. This is
+consistent with the picture in Section~\ref{sec:t3results}: the learned space
+separates relevant from irrelevant weakly, and does not rank finely within what
+it has already selected.
+
+\textbf{Retrieval is more often plausible than correct.} Fourteen of the $174$
+ratings were $4$ or $5$, spread across most queries, while only $0.58\%$ of
+queries place the true clip at rank~1. A clip can legitimately match a generic
+caption without being the annotated one, so the human study measures something
+R@K cannot: the model finds \emph{believable} audio considerably more often than
+it finds the \emph{intended} audio. For a retrieval system that distinction
+matters, and it is invisible to recall alone.
+
+\textbf{Study design.} Each listener saw one clip per screen with its caption,
+and the three clips for a caption were presented in a random order, so the
+ranking under test was never visible. A clip that could not be played was
+recorded as a gap rather than a low score: one clip was unavailable and all six
+listeners marked it so, giving $174$ ratings rather than $180$. Time on task
+ranged from $6.3$ to $17.3$ minutes against $5.0$ minutes of audio, so no
+submission was faster than listening allows.
+
 \subsection{Qualitative analysis of the fused space}
 
 \begin{figure}[H]
@@ -899,17 +961,16 @@ beyond a smoothed timeline, and beat-synchronous segmentation, which we
 implement but did not train on, remains untested. The chord result suggests the
 limitation is in the node features rather than in message passing.
 
-\textbf{The evaluation we did not run.} The specification asks for a human
-study on Task 4 --- at least five listeners rating retrieved clips $1$--$5$ for
-whether the clip matches the query caption. We did not run it, so our retrieval
-claims rest entirely on R@K against a $2{,}773$-clip gallery. The instrument is
-complete: \texttt{src/human\_eval.py} builds a self-contained rating sheet that
-embeds all $30$ retrieved clips as playable YouTube segments --- each cued to
-the exact ten-second window its caption describes, which matters because those
-windows sit up to $6{:}50$ into their source videos --- and aggregates returned
-ratings with per-rank means, refusing to score fewer than five raters.
-What is missing is only the listeners. We record this as a gap against the
-brief rather than a considered omission.
+\textbf{The human study is small, and its scale is its limit.} Six listeners
+and $174$ ratings is enough to establish that retrieved clips mostly do not
+match their captions, and enough to show that the model's ranking does not
+predict human judgement. It is not enough to estimate either quantity
+precisely, to model listener effects, or to detect a small difference between
+ranks. Listeners were not screened for musical training or hearing, and with
+six raters no such split would have been interpretable. We therefore report the
+aggregate and the per-rank means, and make no claim resting on a difference
+smaller than the spread between listeners, whose means range from $1.28$ to
+$2.48$.
 
 \textbf{Single seeds.} Every result in this report except the Task 3
 learning-rate comparison and the Task 1 curves comes from one seed. Our own
@@ -923,9 +984,10 @@ than saturation.
 We implemented all four tasks and report results that are, for the fusion
 model, negative. We regard the diagnosis as the contribution: a measured
 performance ceiling from duplicated inputs, a measured artist leak in a
-standard split, a measured attention collapse, and --- after correcting our own
-checkpoint policy --- a multi-task term that turned out to be roughly free
-rather than costly. Each of these would have been invisible had we reported only
+standard split, a measured attention collapse, a multi-task term that proved
+roughly free rather than costly once our own checkpoint policy was corrected,
+and a human study that agrees with the automatic metric while showing the
+ranking beneath it to be arbitrary. Each of these would have been invisible had we reported only
 headline F1 against no baseline --- and in one case (raw-caption tagging) doing
 so would have overstated our result roughly fivefold. Cross-modal fusion for
 music context understanding remains plausible; this work delimits the
@@ -943,7 +1005,10 @@ The train/validation/test manifests for all three corpora are committed under
 \texttt{data/splits/}, so the exact partition behind every number can be
 inspected without re-running preprocessing.
 Training requires a GPU; every evaluation, plot and notebook in the repository
-runs on CPU in seconds from the committed artifacts.
+runs on CPU in seconds from the committed artifacts. The human study ran as a
+web application whose source, stimuli and per-listener submissions are all
+committed, so it can be repeated with new listeners rather than merely
+described.
 
 \begin{thebibliography}{9}\small
 \bibitem{fma} M. Defferrard et al., ``FMA: A Dataset For Music Analysis,''

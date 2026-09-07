@@ -1,0 +1,248 @@
+{
+  "rater": "Fahad Faisal Arpan",
+  "study": "caption-match",
+  "started_at": "2026-09-07T23:21:36.152Z",
+  "finished_at": "2026-09-07T23:29:22.285Z",
+  "ratings": [
+    {
+      "query_index": 0,
+      "rank": 1,
+      "shown_position": 3,
+      "clip_id": "581356124",
+      "rating": 2,
+      "listened": false
+    },
+    {
+      "query_index": 0,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "159578490",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 0,
+      "rank": 3,
+      "shown_position": 2,
+      "clip_id": "769395224",
+      "rating": 4,
+      "listened": false
+    },
+    {
+      "query_index": 1,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "30922054",
+      "rating": 2,
+      "listened": false
+    },
+    {
+      "query_index": 1,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "3074654",
+      "rating": 1,
+      "listened": true
+    },
+    {
+      "query_index": 1,
+      "rank": 3,
+      "shown_position": 3,
+      "clip_id": "746003018",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 2,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "4484960",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 2,
+      "rank": 2,
+      "shown_position": 3,
+      "clip_id": "941909166",
+      "rating": 2,
+      "listened": false
+    },
+    {
+      "query_index": 2,
+      "rank": 3,
+      "shown_position": 1,
+      "clip_id": "342233672",
+      "rating": 3,
+      "listened": false
+    },
+    {
+      "query_index": 3,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "179025202",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 3,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "805212731",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 3,
+      "rank": 3,
+      "shown_position": 3,
+      "clip_id": "388668948",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 4,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "557881296",
+      "rating": 2,
+      "listened": false
+    },
+    {
+      "query_index": 4,
+      "rank": 2,
+      "shown_position": 3,
+      "clip_id": "312323892",
+      "rating": 2,
+      "listened": false
+    },
+    {
+      "query_index": 4,
+      "rank": 3,
+      "shown_position": 1,
+      "clip_id": "108310187",
+      "rating": 5,
+      "listened": false
+    },
+    {
+      "query_index": 5,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "352745527",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 5,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "60006257",
+      "rating": 4,
+      "listened": false
+    },
+    {
+      "query_index": 5,
+      "rank": 3,
+      "shown_position": 3,
+      "clip_id": "265219163",
+      "rating": 4,
+      "listened": false
+    },
+    {
+      "query_index": 6,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "490983059",
+      "rating": 5,
+      "listened": false
+    },
+    {
+      "query_index": 6,
+      "rank": 2,
+      "shown_position": 3,
+      "clip_id": "368926067",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 6,
+      "rank": 3,
+      "shown_position": 1,
+      "clip_id": "274735875",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 7,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "822026723",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 7,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "256567502",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 7,
+      "rank": 3,
+      "shown_position": 3,
+      "clip_id": "270122017",
+      "rating": null,
+      "listened": false
+    },
+    {
+      "query_index": 8,
+      "rank": 1,
+      "shown_position": 2,
+      "clip_id": "778257713",
+      "rating": 3,
+      "listened": false
+    },
+    {
+      "query_index": 8,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "591705724",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 8,
+      "rank": 3,
+      "shown_position": 3,
+      "clip_id": "172278676",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 9,
+      "rank": 1,
+      "shown_position": 3,
+      "clip_id": "181626426",
+      "rating": 5,
+      "listened": false
+    },
+    {
+      "query_index": 9,
+      "rank": 2,
+      "shown_position": 1,
+      "clip_id": "370849959",
+      "rating": 1,
+      "listened": false
+    },
+    {
+      "query_index": 9,
+      "rank": 3,
+      "shown_position": 2,
+      "clip_id": "521451282",
+      "rating": 3,
+      "listened": false
+    }
+  ]
+}

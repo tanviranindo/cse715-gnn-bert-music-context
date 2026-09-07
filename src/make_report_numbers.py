@@ -58,6 +58,7 @@ def main():
             "random": t4["random_baseline"],
             "data_scale": t4.get("data_scale_ablation"),
             "zeroshot": t4.get("zero_shot_tagging"),
+            "human_evaluation": t4.get("human_evaluation"),
         },
     }
     out = REPORT / "_numbers.json"

@@ -220,6 +220,10 @@ def task4():
     zs = read("metrics_task4_zeroshot.json")
     if zs:
         out["zero_shot_tagging"] = zs
+
+    human = read("metrics_task4_human.json")
+    if human:
+        out["human_evaluation"] = human
     return out
 
 
