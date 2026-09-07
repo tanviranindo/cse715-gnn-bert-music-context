@@ -20,7 +20,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from src import evaluate as ev, fma_data, gnn_model
+from src import evaluate as ev, fma_data, gnn_model, graph_builder as gb
 
 
 def load_cache(path: str | Path) -> tuple[list[dict], list[str]]:
@@ -30,20 +30,66 @@ def load_cache(path: str | Path) -> tuple[list[dict], list[str]]:
     return records, genres
 
 
-def to_pyg(records: list[dict], genres: list[str]):
-    """Wrap cached arrays as PyTorch Geometric Data objects."""
+def chord_node_features(chord_names: list[str]) -> np.ndarray:
+    """Node features for a chord-transition graph.
+
+    A chord node carries no audio vector of its own, so it is described by what
+    the chord *is*: its 12-dim binary pitch-class template (the same templates
+    the estimator matched against), plus a quality flag separating major from
+    minor. That keeps the representation faithful to the symbolic graph rather
+    than smuggling spectral features back in through the node table.
+    """
+    templates, names = gb._chord_templates()
+    lookup = {n: templates[i] for i, n in enumerate(names)}
+    rows = []
+    for name in chord_names:
+        pitch = lookup.get(name)
+        if pitch is None:                       # "N" (no chord) or unknown label
+            rows.append(np.zeros(13, dtype=np.float32))
+            continue
+        is_minor = 1.0 if name.endswith(":min") else 0.0
+        rows.append(np.concatenate([np.asarray(pitch, dtype=np.float32), [is_minor]]))
+    # float32 throughout: the chord templates are float64 and a Double node
+    # table against Float weights fails inside the first linear layer.
+    return (np.stack(rows).astype(np.float32) if rows
+            else np.zeros((0, 13), dtype=np.float32))
+
+
+def to_pyg(records: list[dict], genres: list[str], graph: str = "segment"):
+    """Wrap cached arrays as PyTorch Geometric Data objects.
+
+    `graph` selects which of the two structures the specification names as the
+    GNN input: the segment-similarity graph, or the chord-transition graph.
+    Both are built by the same preprocessing pass and stored in the cache, so
+    switching between them re-uses identical data, splits and labels --- the
+    comparison isolates the graph, not the pipeline.
+    """
     from torch_geometric.data import Data
 
     index = {g: i for i, g in enumerate(genres)}
     out = []
     for r in records:
-        out.append(
-            Data(
+        if graph == "chord":
+            names = list(r["chord_nodes"])
+            if len(names) < 2:
+                continue          # a single-chord track has no transition to learn
+            x = chord_node_features(names)
+            ei = np.asarray(r["chord_edge_index"], dtype=np.int64)
+            w = np.asarray(r["chord_edge_weight"], dtype=np.float32)
+            d = Data(
+                x=torch.from_numpy(x),
+                edge_index=torch.from_numpy(ei),
+                edge_attr=torch.from_numpy(w),
+                y=torch.tensor([index[r["genre"]]], dtype=torch.long),
+            )
+        else:
+            d = Data(
                 x=torch.from_numpy(np.asarray(r["x"], dtype=np.float32)),
                 edge_index=torch.from_numpy(np.asarray(r["edge_index"], dtype=np.int64)),
                 y=torch.tensor([index[r["genre"]]], dtype=torch.long),
             )
-        )
+        d.track_id = r["track_id"]
+        out.append(d)
     return out
 
 
@@ -209,6 +255,10 @@ def main() -> None:
     p.add_argument("--layers", type=int, default=2)
     p.add_argument("--dropout", type=float, default=0.3)
     p.add_argument("--mel-width", type=int, default=640)
+    p.add_argument("--graph", default="segment", choices=["segment", "chord"],
+                   help="which cached structure feeds the GNN (PDF S3.3 names both)")
+    p.add_argument("--metrics-name", default=None,
+                   help="output filename; defaults to metrics_task2[_<graph>].json")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
@@ -224,11 +274,20 @@ def main() -> None:
     print(f"[data] splits: " + " ".join(f"{k}={len(v)}" for k, v in by_split.items()))
     print(f"[data] artist leakage (verified, not assumed): {leakage}")
 
-    graph_splits = {k: to_pyg(v, genres) for k, v in by_split.items()}
+    graph_splits = {k: to_pyg(v, genres, args.graph) for k, v in by_split.items()}
+    if args.graph == "chord":
+        dropped = {k: len(by_split[k]) - len(graph_splits[k]) for k in by_split}
+        sizes = " ".join(f"{k}={len(v)}" for k, v in graph_splits.items())
+        print(f"[data] chord graphs: {sizes} (dropped for <2 chords: {dropped})")
     standardise(graph_splits, device)
 
+    # The CNN baseline reads spectrograms, not graphs, so it is unaffected by
+    # --graph; running it again under chord mode would duplicate a number.
     wanted = ["sage", "gat", "cnn"] if args.model == "all" else [args.model]
-    results = {"config": vars(args), "genres": genres,
+    if args.graph == "chord" and "cnn" in wanted:
+        wanted = [k for k in wanted if k != "cnn"]
+        print("[note] skipping the CNN baseline: it does not consume a graph")
+    results = {"config": vars(args), "graph": args.graph, "genres": genres,
                "split_sizes": {k: len(v) for k, v in by_split.items()},
                "artist_leakage": leakage, "runs": {}}
     for kind in wanted:
@@ -240,14 +299,18 @@ def main() -> None:
 
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "metrics_task2.json").write_text(json.dumps(results, indent=2))
+    name = args.metrics_name or (
+        "metrics_task2.json" if args.graph == "segment"
+        else "metrics_task2_%s.json" % args.graph
+    )
+    (out / name).write_text(json.dumps(results, indent=2))
 
     print("\n=== Task 2 summary ===")
     print(f"{'model':<10}{'params':>10}{'test-acc':>10}{'macro-F1':>10}")
     for kind, r in results["runs"].items():
         print(f"{r['model']:<10}{r['params']:>10,}{r['test_accuracy']:>10.4f}"
               f"{r['test_macro_f1']:>10.4f}")
-    print(f"[out ] {out}/metrics_task2.json")
+    print(f"[out ] {out}/{name}")
 
 
 if __name__ == "__main__":
