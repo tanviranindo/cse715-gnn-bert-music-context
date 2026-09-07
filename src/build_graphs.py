@@ -14,6 +14,7 @@ CPU-bound and single-threaded; on 32 cores this is the difference between
 
 import argparse
 import json
+import concurrent.futures as cf
 import multiprocessing as mp
 import os
 import time
@@ -42,9 +43,51 @@ def _init(cfg: dict) -> None:
     _CFG = cfg
 
 
+class _Timeout(Exception):
+    pass
+
+
+def _deadline(seconds: int):
+    """Abort a single track that takes absurdly long.
+
+    libmpg123 can spin in its resync loop on a truncated FMA mp3; `except
+    Exception` cannot catch that because it never returns. SIGALRM turns it
+    into an ordinary skipped track.
+    """
+    import signal
+
+    def _fire(signum, frame):
+        raise _Timeout()
+
+    try:
+        signal.signal(signal.SIGALRM, _fire)
+        signal.alarm(seconds)
+    except ValueError:                    # not the main thread of the worker
+        pass
+
+
+def _clear_deadline() -> None:
+    import signal
+    try:
+        signal.alarm(0)
+    except ValueError:
+        pass
+
+
 def process_track(record: dict) -> dict | None:
     """Load one clip, emit its segment graph, chord graph and mel spectrogram."""
     import librosa
+
+    _deadline(_CFG.get("track_timeout", 120))
+    try:
+        return _process_track_inner(record, librosa)
+    except _Timeout:
+        return None
+    finally:
+        _clear_deadline()
+
+
+def _process_track_inner(record: dict, librosa) -> dict | None:
 
     if record.get("audio_bytes") is not None:
         import io
@@ -98,6 +141,7 @@ def process_track(record: dict) -> dict | None:
         "text": record.get("text", ""),
         "labels": record.get("labels", set()),
         "ytid": record.get("ytid", ""),
+        "is_eval": record.get("is_eval", False),
         **({"valence_z": record["valence_z"], "arousal_z": record["arousal_z"],
             "valence": record["valence"], "arousal": record["arousal"]}
            if "valence_z" in record else {}),
@@ -124,6 +168,10 @@ def main() -> None:
     p.add_argument("--deam-metadata", default="/data/raw/deam/metadata")
     p.add_argument("--musiccaps-dir", default="/data/raw/musiccaps",
                    help="musiccaps only: dir of parquet shards with audio+caption")
+    p.add_argument("--musiccaps-csv", default="",
+                   help="musiccaps only: musiccaps-public.csv, read for the "
+                        "official is_audioset_eval partition. Used when the "
+                        "parquet mirror does not carry the column itself.")
     p.add_argument("--n-tags", type=int, default=50, help="mtat only")
     p.add_argument("--out", default="/data/processed")
     p.add_argument("--sample-rate", type=int, default=22050)
@@ -139,6 +187,8 @@ def main() -> None:
     p.add_argument("--workers", type=int, default=0, help="0 = all cores")
     p.add_argument("--limit", type=int, default=0, help="0 = all tracks")
     p.add_argument("--n-examples", type=int, default=25)
+    p.add_argument("--track-timeout", type=int, default=120,
+                   help="seconds before a single track is abandoned")
     args = p.parse_args()
 
     import torch
@@ -173,6 +223,17 @@ def main() -> None:
         shards = sorted(glob.glob(str(Path(args.musiccaps_dir) / "**" / "*.parquet"),
                                   recursive=True))
         print(f"[data] {len(shards)} MusicCaps parquet shards")
+        # The AudioSet eval partition is what MusicCaps is meant to be scored
+        # on. The HF audio mirror does not reliably carry the column, so fall
+        # back to joining musiccaps-public.csv by youtube id. Losing the flag
+        # silently would leave Tasks 1 and 4 on an incomparable random split.
+        eval_ids: set[str] | None = None
+        if args.musiccaps_csv:
+            from src import musiccaps_data
+            eval_ids = {r["ytid"] for r in
+                        musiccaps_data.load_musiccaps(args.musiccaps_csv)
+                        if r["is_eval"]}
+            print(f"[data] {len(eval_ids)} official AudioSet eval ids from CSV")
         records = []
         for shard in shards:
             table = pq.read_table(shard).to_pylist()
@@ -198,9 +259,20 @@ def main() -> None:
                     "labels": {str(a).strip() for a in aspects if str(a).strip()},
                     "audio_bytes": blob,
                     "ytid": row.get("youtube_id", ""),
+                    "is_eval": (row.get("youtube_id", "") in eval_ids)
+                               if eval_ids is not None
+                               else bool(row.get("is_audioset_eval", False)),
                 })
         vocab = []
-        print(f"[data] {len(records)} MusicCaps clips with audio + caption")
+        n_eval = sum(1 for r in records if r["is_eval"])
+        if not n_eval:
+            raise SystemExit(
+                "no MusicCaps clip carries is_audioset_eval. Pass "
+                "--musiccaps-csv <musiccaps-public.csv>; building the cache "
+                "without the official partition is not useful."
+            )
+        print(f"[data] {len(records)} MusicCaps clips with audio + caption "
+              f"({n_eval} in the official eval partition)")
     if args.dataset == "deam":
         from src import deam_data
         drecs = deam_data.build_dataset(args.deam_annotations, args.deam_metadata)
@@ -229,25 +301,47 @@ def main() -> None:
         "n_mels": args.n_mels,
         "mel_width": args.mel_width,
         "store_mel": not args.no_mel,
+        "track_timeout": args.track_timeout,
     }
     workers = args.workers or mp.cpu_count()
     print(f"[proc] {workers} workers, {args.segment_seconds}s segments, tau={args.tau}")
 
     started = time.time()
     out_records = []
-    # maxtasksperchild recycles workers so a leaked/segfaulting decoder cannot
-    # wedge the pool permanently. A run on 2026-08-31 deadlocked at 10500/21318
-    # with every worker's CPU time frozen; recycling avoids that class of hang.
-    with mp.Pool(workers, initializer=_init, initargs=(cfg,),
-                 maxtasksperchild=200) as pool:
-        for i, res in enumerate(pool.imap_unordered(process_track, records, chunksize=4), 1):
-            if res is not None:
-                out_records.append(res)
-            if i % 500 == 0:
-                rate = i / (time.time() - started)
-                print(f"  {i}/{len(records)}  ok={len(out_records)}  "
-                      f"{rate:.1f} tracks/s  eta {(len(records)-i)/rate/60:.1f}m",
-                      flush=True)
+    # A worker that dies mid-task must abort the run, not wedge it.
+    #
+    # mp.Pool silently respawns a dead worker and simply never delivers the
+    # result its task was going to produce, so the parent blocks in
+    # imap_unordered forever. That cost two long Vast.ai rentals: a
+    # MagnaTagATune build froze at 10500/21318 and an FMA-small build at
+    # 4000/8000, both looking like a "hang" when the real event was a
+    # SIGSEGV inside a librosa numba kernel (see requirements.txt for the
+    # numba pin that fixes the crash itself).
+    #
+    # ProcessPoolExecutor raises BrokenProcessPool the moment a child dies,
+    # which turns an hour of silent stalling into an immediate, diagnosable
+    # failure.
+    ctx = mp.get_context("fork")
+    with cf.ProcessPoolExecutor(max_workers=workers, mp_context=ctx,
+                                initializer=_init, initargs=(cfg,)) as pool:
+        try:
+            for i, res in enumerate(
+                pool.map(process_track, records, chunksize=4), 1
+            ):
+                if res is not None:
+                    out_records.append(res)
+                if i % 500 == 0:
+                    rate = i / (time.time() - started)
+                    print(f"  {i}/{len(records)}  ok={len(out_records)}  "
+                          f"{rate:.1f} tracks/s  eta {(len(records)-i)/rate/60:.1f}m",
+                          flush=True)
+        except cf.process.BrokenProcessPool as exc:
+            raise SystemExit(
+                f"a worker died after {len(out_records)} usable tracks "
+                f"({exc}). This is normally a native crash in the audio "
+                f"stack rather than a bug in this file; check the numba / "
+                f"numpy / librosa versions against requirements.txt."
+            ) from exc
 
     elapsed = time.time() - started
     print(f"[proc] {len(out_records)}/{len(records)} usable in {elapsed/60:.1f} min")
@@ -272,6 +366,14 @@ def main() -> None:
         gi += 1
         if gi > args.n_examples:
             break
+
+    # With --n-examples 0 this run contributes no samples, so leave the
+    # directory (and its index) exactly as an earlier dataset's build left it.
+    # Writing an empty index here silently destroyed the 50-sample manifest
+    # that Tasks 2 and 3 had already produced.
+    if not examples:
+        print(f"[out ] {out_dir}/{cache_stem}_graphs.pt  +  0 examples (index kept)")
+        return
 
     index = []
     for r in examples:

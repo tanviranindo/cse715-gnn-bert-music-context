@@ -1,0 +1,32 @@
+{
+  "track_id": 53126,
+  "genre": "eastern",
+  "segment_graph": {
+    "n_nodes": 19,
+    "n_edges": 56,
+    "avg_degree": 2.947,
+    "density": 0.1637
+  },
+  "chord_graph": {
+    "n_nodes": 16,
+    "n_edges": 63,
+    "chords": [
+      "A#:maj",
+      "A#:min",
+      "A:maj",
+      "A:min",
+      "C#:maj",
+      "C#:min",
+      "C:maj",
+      "C:min",
+      "D:min",
+      "E:min",
+      "F#:maj",
+      "F#:min",
+      "F:maj",
+      "F:min",
+      "G#:maj",
+      "G:min"
+    ]
+  }
+}

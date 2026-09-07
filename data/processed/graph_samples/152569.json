@@ -1,0 +1,27 @@
+{
+  "track_id": 152569,
+  "genre": "Instrumental",
+  "segment_graph": {
+    "n_nodes": 19,
+    "n_edges": 46,
+    "avg_degree": 2.421,
+    "density": 0.1345
+  },
+  "chord_graph": {
+    "n_nodes": 11,
+    "n_edges": 42,
+    "chords": [
+      "A#:maj",
+      "A:min",
+      "B:min",
+      "C:maj",
+      "C:min",
+      "D:maj",
+      "F#:maj",
+      "F:maj",
+      "F:min",
+      "G:maj",
+      "G:min"
+    ]
+  }
+}

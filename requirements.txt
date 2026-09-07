@@ -2,8 +2,16 @@ torch>=2.2
 torch-geometric>=2.5
 transformers>=4.40
 librosa>=0.10
-numpy>=1.26
+numpy>=1.26,<2.2
 scikit-learn>=1.4
 pandas>=2.2
 pytest>=8.0
 matplotlib>=3.8
+
+# librosa's chroma_stft calls estimate_tuning -> piptrack, whose parabolic
+# interpolation is a numba guvectorize kernel. On 2026-09-07 a Vast.ai image
+# carrying numba 0.67.0 / llvmlite 0.49.0 against numpy 2.1.2 segfaulted
+# inside that kernel on the very first track, which silently wedged the
+# graph builder's worker pool. Pin the pairing that is known to work.
+numba>=0.61,<0.62
+llvmlite>=0.44,<0.45

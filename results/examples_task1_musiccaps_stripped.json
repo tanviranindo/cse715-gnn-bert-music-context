@@ -1,213 +1,214 @@
 [
   {
-    "clip_id": "d61plJ66vE8",
-    "text": "The recording features a fruity male vocal singing over steel drums melody, electric guitar melody, brass stabs, and snare hits, energetic crash cymbal, , shimmering shakers and sustained organ keys c",
+    "clip_id": "-0Gj8-vB1q4",
+    "text": "The recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday serv",
     "true": [
-      "exciting",
-      "groovy bass",
-      "happy",
-      "low quality",
-      "punchy kick",
-      "punchy snare"
-    ],
-    "predicted": [
-      {
-        "tag": "groovy bass",
-        "p": 0.946
-      },
-      {
-        "tag": "shimmering hi hats",
-        "p": 0.938
-      },
-      {
-        "tag": "punchy kick",
-        "p": 0.938
-      },
-      {
-        "tag": "low quality",
-        "p": 0.929
-      },
-      {
-        "tag": "punchy snare",
-        "p": 0.924
-      },
-      {
-        "tag": "fun",
-        "p": 0.78
-      },
-      {
-        "tag": "flat male vocal",
-        "p": 0.762
-      },
-      {
-        "tag": "happy",
-        "p": 0.743
-      }
-    ]
-  },
-  {
-    "clip_id": "A2WdjyKQ57A",
-    "text": "This is the of a classical music piece. The piece is being performed with a harpsichord. It is in the minor key. The piece is medieval sounding. It could fit perfectly in the soundtrack of a historica",
-    "true": [
-      "live performance"
-    ],
-    "predicted": [
-      {
-        "tag": "instrumental",
-        "p": 0.789
-      },
-      {
-        "tag": "live performance",
-        "p": 0.696
-      },
-      {
-        "tag": "percussion",
-        "p": 0.516
-      },
-      {
-        "tag": "slow tempo",
-        "p": 0.473
-      },
-      {
-        "tag": "piano",
-        "p": 0.415
-      },
-      {
-        "tag": "emotional",
-        "p": 0.386
-      },
-      {
-        "tag": "amateur recording",
-        "p": 0.33
-      },
-      {
-        "tag": "acoustic guitar",
-        "p": 0.315
-      }
-    ]
-  },
-  {
-    "clip_id": "M5sptjrboqA",
-    "text": "This is an amateur DJ set performance with a turntable scratched over an electronic music piece with eurobeat characteristics. The track has a repeating fuzzy bass with a repeating loud electronic dru",
-    "true": [
-      "electronic drums"
-    ],
-    "predicted": [
-      {
-        "tag": "electronic drums",
-        "p": 0.933
-      },
-      {
-        "tag": "loud",
-        "p": 0.617
-      },
-      {
-        "tag": "upbeat",
-        "p": 0.596
-      },
-      {
-        "tag": "groovy",
-        "p": 0.593
-      },
-      {
-        "tag": "energetic",
-        "p": 0.562
-      },
-      {
-        "tag": "bass",
-        "p": 0.51
-      },
-      {
-        "tag": "rock",
-        "p": 0.435
-      },
-      {
-        "tag": "pop",
-        "p": 0.434
-      }
-    ]
-  },
-  {
-    "clip_id": "6TSluKI0X54",
-    "text": "This clip features a home recording of a musical piece using low quality gear. The clip is of a and the sound is captured on the video capturing device and not through a mixer. The bass is playing ham",
-    "true": [
-      "bass guitar"
-    ],
-    "predicted": [
-      {
-        "tag": "no voices",
-        "p": 0.873
-      },
-      {
-        "tag": "male voice",
-        "p": 0.829
-      },
-      {
-        "tag": "instrumental",
-        "p": 0.798
-      },
-      {
-        "tag": "moderate tempo",
-        "p": 0.754
-      },
-      {
-        "tag": "percussion",
-        "p": 0.704
-      },
-      {
-        "tag": "electric guitar",
-        "p": 0.575
-      },
-      {
-        "tag": "piano",
-        "p": 0.541
-      },
-      {
-        "tag": "slow tempo",
-        "p": 0.525
-      }
-    ]
-  },
-  {
-    "clip_id": "t8os583-_JM",
-    "text": "The recording features a cover of a latin urban song that consists of a groovy bass guitar, acoustic rhythm guitar, hand tapping and electric guitar solo playing over it in the first half of the loop,",
-    "true": [
-      "energetic",
-      "low quality",
-      "passionate"
+      "low quality"
     ],
     "predicted": [
       {
         "tag": "low quality",
-        "p": 0.924
-      },
-      {
-        "tag": "exciting",
-        "p": 0.868
+        "p": 0.838
       },
       {
         "tag": "passionate",
-        "p": 0.837
+        "p": 0.734
       },
       {
-        "tag": "punchy snare",
+        "tag": "emotional",
+        "p": 0.7
+      },
+      {
+        "tag": "noisy",
+        "p": 0.575
+      },
+      {
+        "tag": "flat male vocal",
+        "p": 0.541
+      },
+      {
+        "tag": "mellow",
+        "p": 0.457
+      },
+      {
+        "tag": "pop",
+        "p": 0.432
+      },
+      {
+        "tag": "mono",
+        "p": 0.415
+      }
+    ]
+  },
+  {
+    "clip_id": "-0vPFx-wRRI",
+    "text": "a male voice is singing a melody with changing tempos while snipping his fingers rhythmically. The recording sounds like it has been recorded in an empty room. This song may be playing, practicing sni",
+    "true": [
+      "amateur recording"
+    ],
+    "predicted": [
+      {
+        "tag": "amateur recording",
+        "p": 0.861
+      },
+      {
+        "tag": "e-guitar",
+        "p": 0.819
+      },
+      {
+        "tag": "uptempo",
         "p": 0.773
       },
       {
-        "tag": "fun",
-        "p": 0.77
+        "tag": "e-bass",
+        "p": 0.708
       },
+      {
+        "tag": "medium tempo",
+        "p": 0.622
+      },
+      {
+        "tag": "acoustic drums",
+        "p": 0.541
+      },
+      {
+        "tag": "piano",
+        "p": 0.522
+      },
+      {
+        "tag": "rock",
+        "p": 0.513
+      }
+    ]
+  },
+  {
+    "clip_id": "-0xzrMun0Rs",
+    "text": "This song contains digital drums playing a simple groove along with two guitars. One strumming chords along with the snare the other one playing a melody on top. An is playing the footnote while a is ",
+    "true": [
+      "acoustic guitar",
+      "e-bass",
+      "medium tempo",
+      "piano"
+    ],
+    "predicted": [
+      {
+        "tag": "e-bass",
+        "p": 0.843
+      },
+      {
+        "tag": "acoustic drums",
+        "p": 0.802
+      },
+      {
+        "tag": "e-guitar",
+        "p": 0.793
+      },
+      {
+        "tag": "amateur recording",
+        "p": 0.751
+      },
+      {
+        "tag": "percussion",
+        "p": 0.726
+      },
+      {
+        "tag": "piano",
+        "p": 0.725
+      },
+      {
+        "tag": "acoustic guitar",
+        "p": 0.695
+      },
+      {
+        "tag": "uptempo",
+        "p": 0.655
+      }
+    ]
+  },
+  {
+    "clip_id": "-1OlgJWehn8",
+    "text": "This clip is three tracks playing consecutively. The first one is an electric guitar lead harmony with a groovy bass line, followed by white noise and then a female vocalisation to a vivacious melody ",
+    "true": [
+      "bass guitar",
+      "instrumental",
+      "keyboard harmony"
+    ],
+    "predicted": [
       {
         "tag": "energetic",
-        "p": 0.77
+        "p": 0.781
       },
       {
-        "tag": "shimmering hi hats",
-        "p": 0.767
+        "tag": "groovy",
+        "p": 0.764
       },
       {
-        "tag": "punchy kick",
-        "p": 0.756
+        "tag": "rock",
+        "p": 0.708
+      },
+      {
+        "tag": "upbeat",
+        "p": 0.684
+      },
+      {
+        "tag": "fun",
+        "p": 0.663
+      },
+      {
+        "tag": "happy",
+        "p": 0.64
+      },
+      {
+        "tag": "exciting",
+        "p": 0.623
+      },
+      {
+        "tag": "groovy bass",
+        "p": 0.603
+      }
+    ]
+  },
+  {
+    "clip_id": "-1UWSisR2zo",
+    "text": "A sings this groovy melody. The song is a techno dance song with a groovy bass line, strong drumming rhythm and a keyboard accompaniment. The song is so groovy and serves as a dance track for the danc",
+    "true": [
+      "live performance",
+      "male singer",
+      "medium tempo",
+      "poor audio quality"
+    ],
+    "predicted": [
+      {
+        "tag": "poor audio quality",
+        "p": 0.921
+      },
+      {
+        "tag": "male singer",
+        "p": 0.916
+      },
+      {
+        "tag": "romantic",
+        "p": 0.887
+      },
+      {
+        "tag": "medium tempo",
+        "p": 0.886
+      },
+      {
+        "tag": "spirited",
+        "p": 0.875
+      },
+      {
+        "tag": "instrumental music",
+        "p": 0.854
+      },
+      {
+        "tag": "emotional",
+        "p": 0.821
+      },
+      {
+        "tag": "exciting",
+        "p": 0.795
       }
     ]
   }

@@ -1,250 +1,250 @@
 [
   {
-    "query_caption": "A female singer sings this emotional melody. The song is medium tempo with a guitar accompaniment and a subtle bass line with no percussion instruments. The song is emotional and romantic. The song is a wedding song.",
-    "true_clip": "305448212",
-    "rank_of_true": 36,
-    "top3": [
-      {
-        "clip_id": "429490182",
-        "caption": "This is an excerpt from a music documentary on harp making. A very brief harp performance can be heard in the beginning. There is a female voice that is speakin",
-        "score": 0.4766,
-        "is_correct": false
-      },
-      {
-        "clip_id": "195775917",
-        "caption": "This is an amateur recording. There are two famous actors singing melodically but with a lot of mistakes on the words. The piano is playing a simple tune. The r",
-        "score": 0.4706,
-        "is_correct": false
-      },
-      {
-        "clip_id": "266442941",
-        "caption": "A female singer sings this soulful melody. The song is slow tempo with a guitar playing a subtle bass line and no other instrumentation. The song is romantic an",
-        "score": 0.4673,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "The low quality recording features a gospel song that consists of harmonizing mixed choir singing. The recording is noisy, in mono and it sounds passionate, joyful, soulful and reverberant.",
-    "true_clip": "681480772",
-    "rank_of_true": 15,
-    "top3": [
-      {
-        "clip_id": "98401835",
-        "caption": "This clip features noises created by mixing output from different effect pedals. This is a synth noise. There are no instruments or voices in this song.",
-        "score": 0.5043,
-        "is_correct": false
-      },
-      {
-        "clip_id": "300461628",
-        "caption": "The song is an instrumental. The song is medium tempo with a brass quartet playing French horns playing a well known movie soundtrack to the crowds cheering, cl",
-        "score": 0.4925,
-        "is_correct": false
-      },
-      {
-        "clip_id": "574191154",
-        "caption": "This is an exciting, epic cinematic orchestral piece. This kind of music would be used for a scene involving a chase or something thrilling. There are tubas, tr",
-        "score": 0.475,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "The low quality recording features a passionate trumpet melody. The recording is noisy and in mono.",
-    "true_clip": "616637501",
-    "rank_of_true": 62,
-    "top3": [
-      {
-        "clip_id": "334615508",
-        "caption": "This is a very poor quality recording of an electronic music piece played in the background of a dance video. There is an irritatingly high-pitched synth playin",
-        "score": 0.584,
-        "is_correct": false
-      },
-      {
-        "clip_id": "377495238",
-        "caption": "This amateur recording features a female voice saying the alphabet in a non-musical tone. There are sounds of hard plastic objects striking each other. After th",
-        "score": 0.5568,
-        "is_correct": false
-      },
-      {
-        "clip_id": "869412309",
-        "caption": "The Jewish religious instrument shofar is being played. It has a sound that resembles a bugle. In between each articulation, sounds of a dog barking can be hear",
-        "score": 0.5384,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "This audio contains background noises of people talking. Then the music begins involving synth pad sounds playing long drones in the lower mid range to the higher register with little sparkling tones on top playing in a ",
-    "true_clip": "968865124",
-    "rank_of_true": 119,
-    "top3": [
-      {
-        "clip_id": "455600093",
-        "caption": "The song is an instrumental. The tempo is slow with a choir harmonising and creating ethereal chants, string section and a philharmonic orchestra harmony backin",
-        "score": 0.4804,
-        "is_correct": false
-      },
-      {
-        "clip_id": "723610813",
-        "caption": "The low quality recording features an arpeggiated harp melody. It sounds emotional and passionate and the recording is noisy, in mono and a bit muffled.",
-        "score": 0.46,
-        "is_correct": false
-      },
-      {
-        "clip_id": "345312917",
-        "caption": "The low quality recording features a classical song that consists of an arpeggiated strings melody and mellow woodwind melody playing in the background. It soun",
-        "score": 0.4535,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "A digital drum is playing a groove that motivates to dance with a kick on every beat along with a shaker. Male backing voices are singing a melody in harmony and adlips that are panned to the right side of the speakers. ",
-    "true_clip": "698786819",
-    "rank_of_true": 144,
-    "top3": [
-      {
-        "clip_id": "923113618",
-        "caption": "A male vocalist sings this energetic Nigerian song. The tempo is fast and upbeat with keyboard harmony and Afro beats of conga, clave, drums and akuba. The musi",
-        "score": 0.4954,
-        "is_correct": false
-      },
-      {
-        "clip_id": "14645995",
-        "caption": "The performer is snapping his fingers in rhythm with the upbeat japanese music playing in the background. The song is a j-pop song and features vibrant rhythmic",
-        "score": 0.4909,
-        "is_correct": false
-      },
-      {
-        "clip_id": "937091297",
-        "caption": "This pop song features a male and female voice singing the main melody. There are backing voices singing fills in between lines. Children sing in the background",
-        "score": 0.4748,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "This is the recording of a radio play. There is a male voice narrating a story. As a transition piece, the bassoon plays a tune implying mystery and the brass section starts playing a little after. There is a theatrical ",
-    "true_clip": "852699550",
-    "rank_of_true": 47,
-    "top3": [
-      {
-        "clip_id": "429490182",
-        "caption": "This is an excerpt from a music documentary on harp making. A very brief harp performance can be heard in the beginning. There is a female voice that is speakin",
-        "score": 0.4983,
-        "is_correct": false
-      },
-      {
-        "clip_id": "321238045",
-        "caption": "A male guitar player plays a guitar riff followed by an introduction of a guitar effects flanger pedal. The video has an instrumental solo of a guitar playing r",
-        "score": 0.4715,
-        "is_correct": false
-      },
-      {
-        "clip_id": "616637501",
-        "caption": "The low quality recording features a passionate trumpet melody. The recording is noisy and in mono.",
-        "score": 0.4363,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "This is a funk/disco music piece. There is a male vocalist singing melodically in the lead. The melody is being played by the keyboard with the backing of the electric guitar and the bass guitar. The rhythm is being play",
-    "true_clip": "502306836",
-    "rank_of_true": 210,
-    "top3": [
-      {
-        "clip_id": "531714992",
-        "caption": "A male singer sings this passionate melody with auto tuned vocals. The song is medium tempo with Indian percussion, dholak percussion, keyboard accompaniment an",
-        "score": 0.508,
-        "is_correct": false
-      },
-      {
-        "clip_id": "109040709",
-        "caption": "This is a dancehall music piece. There is a male vocalist singing with a Jamaican accent. An electric guitar and a bass guitar are playing the melody in the bac",
-        "score": 0.5042,
-        "is_correct": false
-      },
-      {
-        "clip_id": "923113618",
-        "caption": "A male vocalist sings this energetic Nigerian song. The tempo is fast and upbeat with keyboard harmony and Afro beats of conga, clave, drums and akuba. The musi",
-        "score": 0.4973,
-        "is_correct": false
-      }
-    ]
-  },
-  {
-    "query_caption": "The low quality recording features a tutorial on boomy organ keys narrated by flat male vocals. It is noisy and the recording is in mono.",
-    "true_clip": "414538576",
+    "query_caption": "The low quality recording features a ballad song that contains sustained strings, mellow piano melody and soft female vocal singing over it. It sounds sad and soulful, like something you would hear at Sunday services.",
+    "true_clip": "244207184",
     "rank_of_true": 29,
     "top3": [
       {
-        "clip_id": "465785542",
-        "caption": "The Techno song features a repetitive synth bass, repetitive, distorted synth cowbell percussion and punchy \"4 on the floor\" kick patter. It sounds energetic an",
-        "score": 0.5215,
+        "clip_id": "696474520",
+        "caption": "The song is instrumental music. The tempo is medium tempo with a piano bass note playing rhythmically, along with piano accompaniment, a violin playing a high p",
+        "score": 0.4939,
         "is_correct": false
       },
       {
-        "clip_id": "538163581",
-        "caption": "This music is an Electronic music instrumental. The tempo is medium with synthesiser arrangements , electronic xylophone harmony and digital drum beats. The mus",
-        "score": 0.4976,
+        "clip_id": "682466876",
+        "caption": "This is an outro for a kids song. The song features quirky male vocals. Right after the end of the phrase, thunderstorm sounds start to play in the background a",
+        "score": 0.4887,
         "is_correct": false
       },
       {
-        "clip_id": "303323810",
-        "caption": "The sounds are background sound elements of a sci-fi tv show. There is no tempo, there are a collection of sounds like machine whirring, computer signal beeps, ",
-        "score": 0.4713,
+        "clip_id": "661983300",
+        "caption": "This music is an instrumental with a melancholic piano melody, mesmerising sound of chimes, simple keyboard harmony and a burgeoning cello note. The music is ca",
+        "score": 0.4854,
         "is_correct": false
       }
     ]
   },
   {
-    "query_caption": "The song is an instrumental. The tempo is medium and sometimes glitch out if time, with a banjo being played by a beginner. The song is amateurish in quality and not pleasant. The song audio quality is very poor.",
-    "true_clip": "361898708",
-    "rank_of_true": 83,
+    "query_caption": "a male voice is singing a melody with changing tempos while snipping his fingers rhythmically. The recording sounds like it has been recorded in an empty room. This song may be playing, practicing snipping and singing al",
+    "true_clip": "123365422",
+    "rank_of_true": 512,
     "top3": [
       {
-        "clip_id": "448966991",
-        "caption": "This audio contains trumpets playing the main melody in the higher mid range while oboes and flutes are playing a melody that sounds like a bunny hopping over o",
-        "score": 0.5405,
+        "clip_id": "624261226",
+        "caption": "This clip features the sound of an alarm clock. A female voice is also featured. The voice is irritated at the sound of the alarm. The device is being hit in an",
+        "score": 0.5238,
         "is_correct": false
       },
       {
-        "clip_id": "882998822",
-        "caption": "The low quality recording features an alarm beeping sound effect, after which the hip hop song starts playing and it has a stuttering DJ scratching sound effect",
-        "score": 0.5256,
+        "clip_id": "579442109",
+        "caption": "someone is masterfully scratching over an instrumental containing percussive elements with strings/sounds and a bass note on the kick. This audio is an amateur ",
+        "score": 0.5204,
         "is_correct": false
       },
       {
-        "clip_id": "541459543",
-        "caption": "This is an instrument which creates sounds that are similar to laser beams. It sounds futuristic and like something that would be heard in a sci-fi movie. There",
-        "score": 0.5038,
+        "clip_id": "795447723",
+        "caption": "This is an acoustic cover of a pop music piece. There is a boy singing melodically. The chords are being played on the ukulele. The atmosphere of the original p",
+        "score": 0.5158,
         "is_correct": false
       }
     ]
   },
   {
-    "query_caption": "This is a live performance of a movie music piece. The recording has a very poor quality. The saxophone is playing the main tune while the piano can be heard providing a melodic background. The atmosphere is romantic and",
-    "true_clip": "163812352",
-    "rank_of_true": 135,
+    "query_caption": "This song contains digital drums playing a simple groove along with two guitars. One strumming chords along with the snare the other one playing a melody on top. An e-bass is playing the footnote while a piano is playing",
+    "true_clip": "735691254",
+    "rank_of_true": 832,
     "top3": [
       {
-        "clip_id": "581638617",
-        "caption": "The song is an acoustic pop song with acoustic guitar strumming chords, a drumset playing a simple steady groove accompanied by a bassline. At every end of a ph",
-        "score": 0.4436,
+        "clip_id": "593376153",
+        "caption": "This electronic beat contains digital drums playing a four on the floor groove with percussive elements panned to the left and right side of the speakers. A syn",
+        "score": 0.5006,
         "is_correct": false
       },
       {
-        "clip_id": "681480772",
-        "caption": "The low quality recording features a gospel song that consists of harmonizing mixed choir singing. The recording is noisy, in mono and it sounds passionate, joy",
-        "score": 0.4429,
+        "clip_id": "506978020",
+        "caption": "The low quality recording features a hip hop song that consists of synth keys melody, punchy kick, punchy muffled snare, shimmering open hat and shakers and sho",
+        "score": 0.4782,
         "is_correct": false
       },
       {
-        "clip_id": "152381928",
-        "caption": "The low quality recording features a live performance of blues songs and it consists of a harmonica solo melody played over groovy bass, punchy snare, shimmerin",
-        "score": 0.4382,
+        "clip_id": "940789699",
+        "caption": "A male vocalist sings this HIp-hop. The tempo is medium with subdued keyboard accompaniment, slick drumming, boomy bass drops, synthesised arrangements and voca",
+        "score": 0.4755,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "This clip is three tracks playing consecutively. The first one is an electric guitar lead harmony with a groovy bass line, followed by white noise and then a female vocalisation to a vivacious melody with a keyboard harm",
+    "true_clip": "662828401",
+    "rank_of_true": 1840,
+    "top3": [
+      {
+        "clip_id": "8292386",
+        "caption": "The low quality recording features an electro song that consists of punchy kicks, crispy claps, male vocal chants and groovy, filter modulated synth bass. There",
+        "score": 0.4238,
+        "is_correct": false
+      },
+      {
+        "clip_id": "352869287",
+        "caption": "This audio clip features the sound of water dropping. This is followed by the sound of a wild creature. The sound is creaking. Toward the end, the sound of a ra",
+        "score": 0.407,
+        "is_correct": false
+      },
+      {
+        "clip_id": "68598553",
+        "caption": "The excerpt features a synth sound playing a few notes and then a short melody. Throughout the passage and from time to time the synth sound slides from one not",
+        "score": 0.4055,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "A male singer sings this groovy melody. The song is a techno dance song with a groovy bass line, strong drumming rhythm and a keyboard accompaniment. The song is so groovy and serves as a dance track for the dancing chil",
+    "true_clip": "599904847",
+    "rank_of_true": 315,
+    "top3": [
+      {
+        "clip_id": "259920249",
+        "caption": "This is an instrumental percussion piece. There is a wide variety of percussion instruments. There is a marimba playing a playful melody. The acoustic drums and",
+        "score": 0.555,
+        "is_correct": false
+      },
+      {
+        "clip_id": "432603287",
+        "caption": "Instrumental electro music with a half time feel in the kick and busy drums. The bass is constantly busy, with resonant filter sweeps for dramatic effect. There",
+        "score": 0.5468,
+        "is_correct": false
+      },
+      {
+        "clip_id": "115226345",
+        "caption": "The Hip Hop/Rap song features a flat male vocal with filtered, background male vocals, rapping over repetitive plucked synth melody and addictive synth lead mel",
+        "score": 0.5431,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "someone is playing a high pitched melody on a steel drum. The file is of poor audio-quality.",
+    "true_clip": "129032641",
+    "rank_of_true": 288,
+    "top3": [
+      {
+        "clip_id": "452973599",
+        "caption": "The clip just contains a high pitched synth melody. The motif keeps going higher in pitch, and then eventually a riser comes in. The combination of these two fa",
+        "score": 0.4987,
+        "is_correct": false
+      },
+      {
+        "clip_id": "842473554",
+        "caption": "This clip features noises created by mixing output from different effect pedals. This is a synth noise. There are no instruments or voices in this song.",
+        "score": 0.4932,
+        "is_correct": false
+      },
+      {
+        "clip_id": "735237996",
+        "caption": "The excerpt features bells in different pitches being played/hit by what sounds to be a metallic object. The melody sounded by these bells is simple. There are ",
+        "score": 0.4823,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "low fidelity audio from a live performance featuring a solo direct input acoustic guitar strumming airy, suspended open chords. Also present are occasional ambient sounds, perhaps papers being shuffled.",
+    "true_clip": "721773840",
+    "rank_of_true": 1256,
+    "top3": [
+      {
+        "clip_id": "863583463",
+        "caption": "an uprising low modulated sound comes in with a lot of airy noise before a digital drum rhythm is playing. This is an amateur recording. This sequence may be pl",
+        "score": 0.3823,
+        "is_correct": false
+      },
+      {
+        "clip_id": "580149668",
+        "caption": "Male singers sing this gospel tune in vocal harmony. The song is medium tempo with a guitar accompaniment . The song is devotional amid inspiring. The song is a",
+        "score": 0.3765,
+        "is_correct": false
+      },
+      {
+        "clip_id": "612388361",
+        "caption": "This music is an electric guitar lead instrumental. The tempo is slow with no accompaniment and ambient sounds like a popping and swishing sound. The music is a",
+        "score": 0.3765,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "The instrumental music features an ensemble that resembles the orchestra. The melody is being played by a brass section while strings provide harmonic accompaniment. At the end of the music excerpt one can hear a double ",
+    "true_clip": "589427207",
+    "rank_of_true": 66,
+    "top3": [
+      {
+        "clip_id": "716104786",
+        "caption": "The low quality recording features a muffled female soft vocal singing over sustained strings melody and arpeggiated acoustic guitar melody. It sounds mellow, s",
+        "score": 0.5403,
+        "is_correct": false
+      },
+      {
+        "clip_id": "957013018",
+        "caption": "This instrumental pop song features an acoustic guitar being played fingerstyle. The notes are being plucked. Guitar harmonics are played in between the plucked",
+        "score": 0.5391,
+        "is_correct": false
+      },
+      {
+        "clip_id": "58721933",
+        "caption": "This song features a flute playing the main melody. This is accompanied by percussion playing a nomadic beat. A stringed instrument plucks notes in the backgrou",
+        "score": 0.5375,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "This middle eastern folk song features a male voice. This is accompanied by a string instrument called the oud playing the melody in between lines. A variety of middle-eastern percussion instruments are played in the bac",
+    "true_clip": "420438800",
+    "rank_of_true": 10,
+    "top3": [
+      {
+        "clip_id": "973542818",
+        "caption": "The low quality recording features a passionate male vocal singing over a wooden percussive element and sustained strings melody. It sounds emotional, passionat",
+        "score": 0.6437,
+        "is_correct": false
+      },
+      {
+        "clip_id": "972815487",
+        "caption": "The low quality recording features a trap song playing in the background that contains stuttering snares, scratching effects and male vocals that occasionally c",
+        "score": 0.5987,
+        "is_correct": false
+      },
+      {
+        "clip_id": "877459967",
+        "caption": "A male vocalist sings this lively pop. The tempo is fast and peppy with animated trumpets, groovy saxophone, slick drumming, funky bass line, keyboard harmony, ",
+        "score": 0.5949,
+        "is_correct": false
+      }
+    ]
+  },
+  {
+    "query_caption": "A male voice narrates a monologue to the rhythm of a song in the background. The song is fast tempo with enthusiastic drumming, groovy bass lines,cymbal ride, keyboard accompaniment ,electric guitar and animated vocals. ",
+    "true_clip": "448212172",
+    "rank_of_true": 1001,
+    "top3": [
+      {
+        "clip_id": "454563752",
+        "caption": "A female singer sings this passionate melody. The song is a medium  tempo with a groovy bass line , steady drumming, keyboard accompaniment, Indian percussion a",
+        "score": 0.6018,
+        "is_correct": false
+      },
+      {
+        "clip_id": "13579897",
+        "caption": "This clip features a percussion based song with no other instruments. The focus is on the kick drum and snare with minimal use of cymbals. Hand claps are played",
+        "score": 0.5886,
+        "is_correct": false
+      },
+      {
+        "clip_id": "794980504",
+        "caption": "This pop rock song features a female voice singing the main melody. The song starts off with the sound of folding paper. Then the voice starts singing. This is ",
+        "score": 0.5705,
         "is_correct": false
       }
     ]

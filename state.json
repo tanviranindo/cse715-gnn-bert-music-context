@@ -283,26 +283,51 @@
       "title": "GitHub Project board",
       "detail": "gh token lacks the project scope. Fix: gh auth refresh -s project,read:project, then gh project create --owner @me --title \"GNN-BERT Music Context\".",
       "severity": "low"
+    },
+    {
+      "title": "DEAM metadata.zip unobtainable",
+      "detail": "cvml.unige.ch times out from datacenter IPs (2026-09-07). HF mirror herrjyj/herrjyj-deam-assets supplies the 1.3GB audio but not metadata.zip, whose genre/artist/title build DEAM's pseudo-captions. Task 3's multi-task row therefore was NOT re-run under the corrected best-val checkpoint policy and is labelled as final-epoch methodology in the report.",
+      "impact": "low - valence/arousal is marked optional in the spec",
+      "status": "open"
+    },
+    {
+      "title": "Task 4 human evaluation not done",
+      "detail": "Spec S6 asks for >=5 listeners rating retrieved-clip/caption match on 1-5. Requires real listeners; cannot be synthesised. Open gap against the PDF.",
+      "impact": "medium - an explicit spec deliverable",
+      "status": "open"
+    },
+    {
+      "title": "Single-seed results",
+      "detail": "The separate-GNN-lr result (+0.075 Macro-F1 over BERT-only) is the largest effect in the project but comes from one seed; variance unmeasured.",
+      "impact": "medium - affects strength of the central claim",
+      "status": "open"
     }
   ],
   "next_session_checklist": [
-    "Rent a fresh Vast.ai instance \u2014 this time provision a persistent Volume, not container disk",
-    "Clone repo via the fine-grained PAT (Contents: Read/write, scoped to this repo only)",
-    "pip install -r requirements.txt, re-run pytest tests/ -v (expect 9 passed)",
-    "Re-download all 4 datasets (commands below) \u2014 took ~50 min at 15-20MB/s last time",
-    "Start Week 2: BERT multi-label tag classifier on MagnaTagATune"
+    "Optional: seed sweep (3-5 seeds) on train_fusion --gnn-lr 1e-3 to put error bars on the headline Task 3 result",
+    "Optional: if a DEAM metadata.zip source appears, rebuild deam_graphs.pt and re-run the multi-task row under best-val checkpoints",
+    "Optional: arrange >=5 listeners for the Task 4 human evaluation (spec S6)",
+    "Fix the GitHub Project board token scope: gh auth refresh -s project,read:project",
+    "Do NOT submit until the above are triaged - deadline 2026-09-11"
   ],
-  "reproduce_commands": {
-    "fma_medium": "wget -c https://os.unil.cloud.switch.ch/fma/fma_medium.zip",
-    "fma_metadata": "wget -c https://os.unil.cloud.switch.ch/fma/fma_metadata.zip",
-    "magnatagatune_1": "wget -c https://mirg.city.ac.uk/datasets/magnatagatune/mp3.zip.001",
-    "magnatagatune_2": "wget -c https://mirg.city.ac.uk/datasets/magnatagatune/mp3.zip.002",
-    "magnatagatune_3": "wget -c https://mirg.city.ac.uk/datasets/magnatagatune/mp3.zip.003",
-    "magnatagatune_annotations": "wget -c https://mirg.city.ac.uk/datasets/magnatagatune/annotations_final.csv",
-    "deam": "wget -c https://cvml.unige.ch/databases/DEAM/DEAM_audio.zip",
-    "musiccaps_captions": "curl -sL https://huggingface.co/datasets/google/MusicCaps/resolve/main/musiccaps-public.csv -o musiccaps-public.csv",
-    "musiccaps_audio": "for i in 0 1 2 3 4 5 6; do wget -c https://huggingface.co/datasets/mahendra0203/musiccaps_processed_full/resolve/main/data/train-0000${i}-of-00007-*.parquet; done"
-  },
+  "reproduce_commands": [
+    "# instance 50108358 (RTX 4060 Ti, $0.0979/hr) - 2026-09-07 correction pass",
+    "pip install -r requirements.txt   # numba/llvmlite pins matter: 0.67+numpy2.1 segfaults librosa",
+    "python -m src.build_graphs --dataset fma  --audio-root /data/raw/fma_small/fma_small --tracks-csv /data/raw/fma_metadata/fma_metadata/tracks.csv --out /data/processed --workers 8 --n-examples 25",
+    "python -m src.build_graphs --dataset mtat --audio-root /data/raw/magnatagatune/audio --mtat-dir /data/raw/magnatagatune --no-mel --workers 8 --out /data/processed --n-examples 25",
+    "python -m src.build_graphs --dataset musiccaps --musiccaps-dir /data/raw/musiccaps_audio --musiccaps-csv /data/raw/musiccaps/musiccaps-public.csv --no-mel --workers 8 --out /data/processed --n-examples 0",
+    "python -m src.train --dataset musiccaps --epochs 6 --save-checkpoint",
+    "python -m src.train --dataset musiccaps --epochs 6 --strip-leakage --save-checkpoint",
+    "python -m src.train --dataset mtat --epochs 6 --save-checkpoint",
+    "python -m src.train_gnn --cache /data/processed/fma_small_graphs.pt --model all --epochs 40",
+    "python -m src.train_b4  --cache /data/processed/fma_small_graphs.pt --out results/metrics_task2_b4.json",
+    "python -m src.train_fusion --mode all --epochs 8 --deam-cache /nonexistent --out-dir results",
+    "python -m src.train_fusion --mode crossattn --epochs 8 --gnn-lr 1e-3 --deam-cache /nonexistent --out-dir results/_gnnlr",
+    "python -m src.train_fusion --mode crossattn --epochs 8 --freeze-bert --deam-cache /nonexistent --out-dir results/_freeze",
+    "python -m src.train_contrastive --cache /data/processed/musiccaps_graphs.pt --epochs 30 --out-dir results",
+    "python -m src.analyze_fusion --checkpoint results/task3_crossattn.pt --cache /data/processed/mtat_graphs.pt --out-dir results",
+    "python -m src.make_plots --results results --out results/plots"
+  ],
   "compute": {
     "provider": "Vast.ai",
     "instance": null,

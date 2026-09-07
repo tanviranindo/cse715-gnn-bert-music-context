@@ -41,12 +41,25 @@ def build_records(args) -> tuple[list[str], dict[str, list[dict]]]:
             n_aspects=args.n_tags,
             strip_leakage=args.strip_leakage,
         )
+        # MusicCaps publishes the AudioSet provenance split in the metadata:
+        # keep its eval examples as test and only split the train pool.
+        # Treating all rows as one random pool makes the reported test score
+        # incomparable with the dataset's intended evaluation partition.
         rng = random.Random(args.seed)
-        rng.shuffle(records)
-        n = len(records)
-        train = records[: int(0.7 * n)]
-        val = records[int(0.7 * n) : int(0.85 * n)]
-        test = records[int(0.85 * n) :]
+        if not any("is_eval" in r for r in records):
+            raise SystemExit(
+                "musiccaps records carry no is_eval flag: the metadata CSV is "
+                "missing is_audioset_eval. Refusing to fall back to a random "
+                "split, which would not be comparable with the official one."
+            )
+        train_pool = [r for r in records if not r.get("is_eval", False)]
+        test = [r for r in records if r.get("is_eval", False)]
+        if not test:
+            raise SystemExit("musiccaps is_audioset_eval selected 0 rows")
+        rng.shuffle(train_pool)
+        n_val = int(0.15 * len(train_pool))
+        val = train_pool[:n_val]
+        train = train_pool[n_val:]
     return vocab, {"train": train, "val": val, "test": test}
 
 
@@ -118,6 +131,7 @@ def main() -> None:
     )
 
     history = []
+    best: tuple[float, int, dict] = (-1.0, 0, {})
     for epoch in range(1, args.epochs + 1):
         model.train()
         started, total = time.time(), 0.0
@@ -140,9 +154,18 @@ def main() -> None:
             "seconds": round(time.time() - started, 1),
         }
         history.append(row)
+        # Select on validation macro-F1 rather than trusting the final epoch:
+        # these runs are short and the last epoch is not reliably the best.
+        if row["val_macro_f1"] > best[0]:
+            best = (row["val_macro_f1"], epoch,
+                    {k: v.detach().cpu().clone() for k, v in model.state_dict().items()})
         print(f"[epoch {epoch}] loss {row['train_loss']:.4f} "
               f"micro-F1 {row['val_micro_f1']:.4f} macro-F1 {row['val_macro_f1']:.4f} "
               f"({row['seconds']}s)")
+
+    if best[2]:
+        model.load_state_dict(best[2])
+        print(f"[select] restored epoch {best[1]} (val macro-F1 {best[0]:.4f})")
 
     # threshold tuned on val, then applied once to test
     y_val, p_val = predict(model, loaders["val"], device)
@@ -153,12 +176,16 @@ def main() -> None:
     y_train = [
         mtat_data.labels_to_vector(r["labels"], vocab) for r in splits["train"]
     ]
+    train_rates = [sum(row[i] for row in y_train) / max(len(y_train), 1)
+                   for i in range(len(vocab))]
     results = {
         "config": vars(args),
         "n_tags": len(vocab),
         "vocab": vocab,
         "split_sizes": {k: len(v) for k, v in splits.items()},
         "history": history,
+        "selected_epoch": best[1],
+        "selected_val_macro_f1": best[0],
         "threshold": thr,
         "test": {
             "micro_f1": ev.micro_f1(y_test, pred_test),
@@ -166,8 +193,9 @@ def main() -> None:
         },
         "baselines": {
             "B1_random_prevalence": {
-                "micro_f1": ev.micro_f1(y_test, ev.baseline_random(y_test, args.seed)),
-                "macro_f1": ev.macro_f1(y_test, ev.baseline_random(y_test, args.seed)),
+                # Estimate each tag's prevalence from training labels only.
+                "micro_f1": ev.micro_f1(y_test, ev.baseline_random(y_test, args.seed, rate=train_rates)),
+                "macro_f1": ev.macro_f1(y_test, ev.baseline_random(y_test, args.seed, rate=train_rates)),
             },
             "B1_majority": {
                 "micro_f1": ev.micro_f1(y_test, ev.baseline_majority(y_train, len(y_test))),

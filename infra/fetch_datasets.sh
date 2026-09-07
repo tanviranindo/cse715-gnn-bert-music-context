@@ -50,10 +50,18 @@ fi
 
 say "=== DEAM ==="
 mkdir -p "$RAW/deam"
+# NOTE: zenodo record 1188976 is RAVDESS, not DEAM -- the old fallback here
+# pointed at the wrong dataset and could only ever 404. As of 2026-09-07
+# cvml.unige.ch does not respond at all from a datacenter IP, so the working
+# source is the HF mirror. It carries the audio but NOT metadata.zip.
 get https://cvml.unige.ch/databases/DEAM/DEAM_audio.zip "$RAW/deam/DEAM_audio.zip" \
-  || get https://zenodo.org/records/1188976/files/DEAM_audio.zip "$RAW/deam/DEAM_audio.zip" \
-  || say "NOTE  DEAM needs manual fetch from https://cvml.unige.ch/databases/DEAM/"
+  || /venv/main/bin/python -c "
+from huggingface_hub import hf_hub_download; import shutil
+p = hf_hub_download('herrjyj/herrjyj-deam-assets', 'DEAM_audio.zip', repo_type='dataset')
+shutil.copy(p, '$RAW/deam/DEAM_audio.zip')" \
+  || say "NOTE  DEAM audio needs manual fetch"
 get https://cvml.unige.ch/databases/DEAM/DEAM_Annotations.zip "$RAW/deam/DEAM_Annotations.zip" \
+  || get https://zenodo.org/api/records/11400122/files/DEAM_Annotations.zip/content "$RAW/deam/DEAM_Annotations.zip" \
   || say "NOTE  DEAM annotations need manual fetch"
 # metadata.zip is a SEPARATE download and is easy to miss. Task 3 needs it:
 # DEAM_Annotations.zip has valence/arousal only, no genre/artist/title, and

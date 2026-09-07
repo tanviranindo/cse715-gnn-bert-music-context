@@ -73,7 +73,8 @@ def best_threshold(
 # ---------------------------------------------------------------- baselines
 
 def baseline_random(
-    y_true: list[list[int]], seed: int = 42, rate: float | None = None
+    y_true: list[list[int]], seed: int = 42,
+    rate: float | list[float] | None = None,
 ) -> list[list[int]]:
     """B1: random predictor.
 
@@ -86,6 +87,10 @@ def baseline_random(
     rng = random.Random(seed)
     if rate is None:
         rates = [sum(row[i] for row in y_true) / len(y_true) for i in range(k)]
+    elif isinstance(rate, list):
+        if len(rate) != k:
+            raise ValueError("rate list must have one prevalence per tag")
+        rates = rate
     else:
         rates = [rate] * k
     return [[1 if rng.random() < rates[i] else 0 for i in range(k)] for _ in y_true]

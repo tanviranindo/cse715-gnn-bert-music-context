@@ -38,14 +38,14 @@ while its clips are 29\,s segments, so $96.8\%$ of clips share an input with
 another clip, capping any text-only model at Micro-F1 $0.673$; (ii) that the
 official MagnaTagATune split leaks $45$ artists across train and test,
 covering $61.6\%$ of test clips; (iii) that our cross-attention collapses to
-near-uniform weights, with entropy at $65$--$88\%$ of the uniform maximum, so
-the fusion degenerates into averaging the caption; and (iv) that adding the
-DEAM auxiliary term buys usable emotion regression ($R^2 = 0.181$
-valence) at a $36\%$ relative cost to tag Macro-F1. We report every number
-against an explicit baseline, including a lexical-match control that scores
-Micro-F1 $0.581$ on a
-task where our model scores $0.687$ --- without
-which that result would be overstated roughly fivefold.
+exactly uniform weights (entropy $1.000$ of the uniform maximum) under a shared
+learning rate, so the fusion degenerates into averaging the caption; and (iv)
+that giving the graph branch its own learning rate un-collapses that attention
+(entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 from $0.192$ to
+$0.246$, the largest single effect we measured. We report every number against
+an explicit baseline, including a lexical-match control that scores Micro-F1
+$0.540$ where our model scores $0.565$ --- a margin small enough that, on
+Macro-F1, the control actually wins.
 \end{abstract}
 
 \vspace{0.5em}
@@ -177,6 +177,18 @@ artist-grouped splits with zero leakage throughout, and report this deviation
 explicitly. By contrast we \emph{verified} that FMA's official split is
 artist-disjoint (0 shared artists in all pairings) rather than assuming it.
 
+\textbf{MusicCaps is split by its own metadata, and is a proxy task.} The
+corpus ships an \texttt{is\_audioset\_eval} flag marking the official AudioSet
+eval partition; we use it verbatim as the test set for both Task 1 and Task 4
+rather than drawing a random split, and we carry the flag through into the
+cached graphs so the two tasks agree. The partition is large --- $2{,}858$ of
+$5{,}521$ clips ($52\%$) --- so respecting it roughly halves the training pool
+and enlarges the test set, which is why our MusicCaps numbers are lower than a
+random split would report. We also stress that MusicCaps caption~$\to$~aspect
+classification is a \emph{proxy} for audio tagging: the aspects come from the
+same annotator who wrote the caption, so the label is not independent of the
+input. It measures caption comprehension, not listening.
+
 \textbf{MagnaTagATune's 188 tags contain heavy near-duplicates.} The
 \texttt{female vocal} concept alone is spread across six tags totalling $3{,}848$
 clips. We merge synonym groups before ranking; without merging, one concept
@@ -226,41 +238,53 @@ that has already begun to overfit --- is easy to miss in a contrastive setting.
 
 \begin{table}[H]
 \centering\small
-\caption{Task 1. Test-set results with baselines. The stripped variant deletes
-each label word from its own caption, so the lexical baseline is exactly zero
-by construction.}
+\caption{Task 1. Test-set results with baselines. MusicCaps uses the
+\emph{official} AudioSet eval partition as its test set (2{,}579 clips after
+vocabulary filtering; 2{,}054 train / 362 val), not a random split. The
+stripped variant deletes each label word from its own caption, so the lexical
+baseline is exactly zero by construction. Every model is evaluated at the
+epoch restored by best-validation selection, and B1's per-tag prevalence is
+estimated from training labels only.}
 \begin{tabular}{lcc}
 \toprule
 Setting & Micro-F1 & Macro-F1 \\
 \midrule
-MagnaTagATune (metadata) & 0.258 & 0.182 \\
-\quad B1 random-prevalence & 0.111 & 0.060 \\
+MagnaTagATune (metadata) & 0.275 & 0.192 \\
+\quad B1 random-prevalence & 0.103 & 0.058 \\
 \quad oracle ceiling & 0.673 & 0.575 \\
 \midrule
-MusicCaps (raw captions) & \textbf{0.687} & \textbf{0.646} \\
-\quad B5 lexical match & 0.581 & 0.559 \\
+MusicCaps (raw captions) & \textbf{0.565} & 0.532 \\
+\quad B5 lexical match & 0.540 & \textbf{0.550} \\
 \midrule
-MusicCaps (stripped) & 0.608 & 0.551 \\
+MusicCaps (stripped) & 0.488 & 0.439 \\
 \quad B5 lexical match & 0.000 & 0.000 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent The raw-caption number is misleading on its own. A pure substring
-matcher already achieves Micro-F1
-$0.581$, because
-$52.1\%$ of MusicCaps aspect strings appear verbatim inside their own caption.
-Only $0.105$
-of the gap is language understanding. We therefore treat the \emph{stripped}
-setting --- where the label words are deleted from the input and the lexical
-baseline is exactly $0.000$ --- as the honest headline:
-\textbf{Micro-F1 $0.608$ earned entirely by inference
-from surrounding context}.
+\noindent \textbf{On the official split, BERT barely beats substring matching.}
+A pure lexical matcher reaches Micro-F1 $0.540$ against the model's $0.565$,
+because $52.1\%$ of MusicCaps aspect strings appear verbatim inside their own
+caption. On Macro-F1 the baseline is actually \emph{ahead}, $0.550$ against
+$0.532$. This is a sharper negative result than our earlier random-split
+measurement suggested, and it is the direct consequence of respecting the
+dataset's own partition: the official eval set is $52\%$ of the corpus, so the
+training pool falls from $3{,}496$ to $2{,}054$ captions while the test set
+grows from $750$ to $2{,}579$. We report the official-split number because it
+is the comparable one, not the flattering one.
 
-MagnaTagATune's much lower $0.258$ is expected
-rather than a failure: it is $2.332\times$
-the random-prevalence baseline while operating under the $0.673$ ceiling
-established above.
+We therefore treat the \emph{stripped} setting --- where the label words are
+deleted from the input and the lexical baseline is exactly $0.000$ --- as the
+honest headline: \textbf{Micro-F1 $0.488$ earned entirely by inference from
+surrounding context}. That is the only Task 1 number not inflated by string
+overlap.
+
+MagnaTagATune's much lower $0.275$ is expected rather than a failure: it is
+$2.67\times$ the random-prevalence baseline while operating under the $0.673$
+ceiling established above. Note that its split is artist-grouped, which is
+stricter than the conventional MagnaTagATune benchmark partition and therefore
+not directly comparable with published numbers on that corpus; we prefer it
+because it measures generalisation to unheard artists.
 
 \noindent \textbf{A worked example.} For a held-out MusicCaps clip whose true
 aspects are \emph{exciting, groovy bass, happy, low quality}, the stripped input
@@ -304,18 +328,27 @@ best-checkpoint selection.}
 \toprule
 Model & Params & Accuracy & Macro-F1 \\
 \midrule
-GraphSAGE & 49,416 & 0.414 & 0.407 \\
-GAT & \textbf{26,120} & 0.438 & \textbf{0.432} \\
-CNN baseline (B2) & 241,992 & \textbf{0.443} & 0.407 \\
+B4 PCA$+$MLP (audio features) & 8,712 & 0.379 & 0.371 \\
+GraphSAGE & 49,416 & 0.396 & 0.401 \\
+GAT & \textbf{26,120} & 0.433 & 0.426 \\
+CNN baseline (B2) & 241,992 & \textbf{0.483} & \textbf{0.479} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent All three sit at roughly $3.5\times$ chance. The CNN edges out both
-graph models on accuracy, while GAT matches it on Macro-F1 using
-$9.3\times$ fewer parameters.
-The fair conclusion is that relational structure is \emph{competitive with},
-not superior to, treating the spectrogram as an image.
+\noindent All four sit well above the $0.125$ chance rate, and the ordering is
+unambiguous: \textbf{the CNN wins on both metrics}, by $+0.050$ accuracy and
+$+0.053$ Macro-F1 over the better graph model. GAT remains the most efficient
+model, reaching $90\%$ of the CNN's accuracy with $9.3\times$ fewer parameters,
+and both GNNs clear the B4 hand-crafted-feature baseline, so the graphs do
+carry genre information. But the honest conclusion is stronger than in our
+earlier draft: on FMA-small, relational structure is \emph{inferior to} --- not
+merely competitive with --- treating the spectrogram as an image.
+
+These numbers come from a cache rebuilt after the preprocessing crash described
+in Section~\ref{sec:engineering}; the split (6{,}394/800/800, artist-disjoint,
+verified zero leakage) is byte-identical to the earlier run, so the shifts are
+attributable to the rebuilt features and not to a different partition.
 
 \subsection{Where the genre models succeed and fail}
 
@@ -328,68 +361,105 @@ architecture.}
 \toprule
 Genre & GAT & CNN (B2) \\
 \midrule
-Hip-Hop & 0.664 & 0.688 \\
-Rock & 0.533 & 0.698 \\
-International & 0.495 & 0.482 \\
-Electronic & 0.479 & 0.386 \\
-Instrumental & 0.396 & 0.123 \\
-Folk & 0.350 & 0.260 \\
-Pop & 0.286 & 0.244 \\
-Experimental & 0.250 & 0.379 \\
+Hip-Hop & 0.686 & 0.674 \\
+Rock & 0.589 & 0.563 \\
+Electronic & 0.509 & 0.537 \\
+International & 0.493 & 0.600 \\
+Instrumental & 0.374 & 0.466 \\
+Folk & 0.304 & 0.292 \\
+Pop & 0.281 & 0.368 \\
+Experimental & 0.172 & 0.335 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent Hip-Hop is the easiest class for both models and Experimental the
-hardest, by a wide margin. This is informative: ``Experimental'' is a residual
-category defined by what it is not, so a model has no consistent acoustic
-signature to learn. The near-identical per-class ordering between an
-architecture that sees relational structure and one that sees a spectrogram
-image is further evidence that, at this scale, the graph is not contributing
-information the CNN lacks.
+\noindent Hip-Hop is the easiest class for both models, and Experimental the
+hardest for the GAT by a wide margin ($0.172$). This is informative:
+``Experimental'' is a residual category defined by what it is not, so there is
+no consistent acoustic signature to learn. The CNN's advantage is concentrated
+in exactly the classes where the segment graph is least informative ---
+Experimental ($+0.163$), Pop ($+0.087$) and International ($+0.107$) --- while
+the GAT retains a small edge on the rhythmically distinctive Hip-Hop and Rock.
+That pattern is consistent with the graph capturing coarse repetition structure
+but discarding the timbral detail the spectrogram preserves.
 
 \subsection{Task 3: fusion and its failure mode}
 
 \begin{table}[H]
 \centering\small
 \caption{Task 3 ablation. MagnaTagATune top-50, artist-grouped splits, zero
-leakage.}
+leakage. Every row is evaluated at the epoch chosen by best-validation
+Macro-F1, never at a fixed final epoch. The last two rows are the two
+follow-ups our earlier draft named as the experiments to try next.}
 \begin{tabular}{lcccc}
 \toprule
 Mode & Params & Macro-F1 & Micro-F1 & AUC-PR \\
 \midrule
-BERT-only & 66.4M & \textbf{0.186} & 0.311 & 0.170 \\
-GNN-only & 31.8K & 0.114 & 0.236 & 0.103 \\
-Early concat & 66.4M & 0.175 & 0.318 & \textbf{0.184} \\
-Cross-attention & 66.8M & 0.182 & \textbf{0.323} & 0.178 \\
+BERT-only & 66.4M & 0.171 & 0.306 & 0.168 \\
+GNN-only & 31.8K & 0.123 & 0.124 & 0.084 \\
+Early concat & 66.4M & 0.168 & 0.314 & 0.182 \\
+Cross-attention & 66.8M & 0.192 & 0.325 & 0.177 \\
+\midrule
+\quad $+$ frozen BERT & 0.5M & 0.118 & 0.315 & 0.197 \\
+\quad $+$ separate GNN lr $10^{-3}$ & 66.8M & \textbf{0.246} & \textbf{0.415} & \textbf{0.248} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent \textbf{Fusion does not clearly win.} Cross-attention gains
-$+0.012$ Micro-F1 and
-$+0.008$ AUC-PR over
-BERT alone, but \emph{loses}
-$-0.005$ Macro-F1.
-These margins do not establish the project's central claim.
+\noindent \textbf{At a shared learning rate, fusion is marginal.} Cross-attention
+gains $+0.022$ Macro-F1 and $+0.019$ Micro-F1 over BERT alone, but loses
+$-0.005$ on AUC-PR to early concat. On their own these margins would be too
+small to establish the project's central claim from a single seed.
 
-\textbf{Why: the attention collapsed.} Measuring the attention distribution
-directly, the ratio between the largest and smallest weight over the top-8
-tokens is $1.03$--$1.11$, and entropy sits at $65$--$88\%$ of the uniform
-maximum. The graph query is not discriminating between caption tokens, so
-$AH_{\mathrm{text}}$ degenerates to a mean over the text and the model reduces
-to early concat --- which is exactly what the table shows. Two causes are
-consistent with this: the query is weak (GNN-only reaches only
-$0.114$ Macro-F1 on 19-node graphs), and the text
-tower has $66.4$M parameters against the graph branch's $31.8$K while sharing a
-single learning rate tuned for BERT fine-tuning.
+\textbf{Why: the attention collapses completely.} Measuring the attention
+distribution directly, the baseline cross-attention model has entropy
+$\mathbf{1.000}$ of the uniform maximum with a peak-to-mean ratio of
+$\mathbf{1.03\times}$ --- that is, the graph query does not discriminate
+between caption tokens \emph{at all}, so $AH_{\mathrm{text}}$ degenerates to an
+unweighted mean over the text and the model reduces to early concat. Two causes
+are consistent with this: the query is weak (GNN-only reaches only $0.123$
+Macro-F1 on 19-node graphs), and the text tower has $66.4$M parameters against
+the graph branch's $31.8$K while sharing a single learning rate tuned for BERT
+fine-tuning ($2\times10^{-5}$).
+
+\textbf{The second cause is the operative one.} Giving the graph branch, the
+fusion block and the heads their own learning rate of $10^{-3}$ --- changing no
+architecture, no data and no seed --- raises Macro-F1 from $0.192$ to
+$\mathbf{0.246}$, Micro-F1 from $0.325$ to $\mathbf{0.415}$ and AUC-PR from
+$0.177$ to $\mathbf{0.248}$. The same run's attention entropy falls from
+$1.000$ to $0.695$ of uniform and its peak rises from $1.03\times$ to
+$4.19\times$. The intervention that fixes the metric is the one that
+demonstrably un-collapses the attention, which is the mechanism our diagnosis
+predicted. Against BERT-only this is $+0.075$ Macro-F1 and $+0.109$ Micro-F1:
+on this corpus, structural fusion helps once the graph branch is actually
+trained.
+
+We state two caveats plainly. First, these are single-seed runs; the
+learning-rate result is large enough ($+0.109$ Micro-F1) to be unlikely to be
+seed noise, but we have not measured its variance. Second, the earlier draft's
+conclusion that ``fusion does not clearly win'' was confounded by evaluating
+every ablation at a fixed epoch~8 rather than at its best validation epoch ---
+GNN-only, for instance, peaks at epoch~1 and has decayed to near-zero
+validation Macro-F1 by epoch~8. Correcting the checkpoint policy changed the
+ranking; it was a methodological error, not a discovery about fusion.
+
+\textbf{Freezing BERT does not work.} The other follow-up --- freezing the text
+tower so only the $0.5$M-parameter graph and fusion path train --- collapses
+Macro-F1 to $0.118$ while producing the sharpest attention of any run (entropy
+$0.079$, peak $10.02\times$) and, curiously, the second-best AUC-PR ($0.197$).
+Sharp attention is therefore not sufficient: the model attends decisively to a
+text representation it can no longer adapt.
 
 \subsection{Task 3: the DEAM auxiliary term}
 
 \begin{table}[H]
 \centering\small
 \caption{Effect of adding DEAM's valence/arousal term to cross-attention.
-MagnaTagATune training data is identical across both runs.}
+MagnaTagATune training data is identical across both runs. \textbf{These two
+columns are from our earlier run and were evaluated at a fixed final epoch, not
+at the best validation checkpoint used everywhere else in this report}; the
+DEAM audio host became unreachable before we could re-run them, so they are not
+directly comparable with Table~3 and are reported as indicative only.}
 \begin{tabular}{lccc}
 \toprule
 Cross-attention & Tags only & $+$ DEAM & $\Delta$ \\
@@ -411,35 +481,49 @@ the tag training data is unchanged, this is the auxiliary objective competing
 for shared capacity. The specification marks valence/arousal optional; we
 report it as a trade-off rather than a free addition.
 
+We flag one reproducibility gap honestly. DEAM's official host
+(\texttt{cvml.unige.ch}) stopped responding during this work, and the only
+surviving audio mirror we located does not ship the \texttt{metadata.zip} whose
+genre/artist/title fields we use to build DEAM's pseudo-captions. We could have
+re-run this experiment with empty captions, but that would silently change the
+setup rather than reproduce it, so we left the original numbers in place and
+labelled them. Re-running this row under the corrected checkpoint policy is the
+one outstanding item in this report.
+
 \subsection{Task 4: cross-modal retrieval}
 
 \begin{table}[H]
 \centering\small
-\caption{Task 4. MusicCaps retrieval, gallery of 536 clips.
-R@K depends on gallery size, so it is reported alongside.}
+\caption{Task 4. MusicCaps retrieval on the \emph{official} AudioSet eval
+partition: a gallery of 2{,}773 clips, $5.2\times$ larger than the random-split
+gallery of 536 we reported earlier. R@K falls sharply with gallery size, so the
+two are not comparable in absolute terms and we give the random baseline for
+scale.}
 \begin{tabular}{lccc}
 \toprule
 Direction & R@1 & R@5 & R@10 \\
 \midrule
-Caption $\to$ Audio & 0.0168 & 0.0784 & 0.1269 \\
-Audio $\to$ Caption & 0.0224 & 0.0597 & 0.1325 \\
-Random baseline & 0.0019 & --- & 0.0187 \\
+Caption $\to$ Audio & 0.0029 & 0.0108 & 0.0220 \\
+Audio $\to$ Caption & 0.0022 & 0.0126 & 0.0224 \\
+Random baseline & 0.0004 & --- & 0.0036 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent Retrieval is $9.0\times$ random
-at R@1 and $6.8\times$ at R@10, with
-median rank $68$ of $536$.
-The alignment is real but weak: across our ten saved qualitative examples,
-\textbf{none} places the true clip at rank 1.
+\noindent Retrieval is $8.0\times$ random at R@1 and $6.1\times$ at R@10, with
+median rank $527$ of $2{,}773$ --- that is, the median true clip still sits in
+the top $19\%$ of the gallery. The alignment is real but weak, and it is
+weaker than our random-split measurement implied for two compounding reasons:
+the gallery is $5.2\times$ larger, and the official partition leaves only
+$2{,}195$ training pairs against the $4{,}284$ a random $80/10/10$ split
+provided. Across our ten saved qualitative examples, \textbf{none} places the
+true clip at rank 1.
 
 \textbf{Zero-shot tagging.} Embedding tag names with the text tower and scoring
 them against clip graph embeddings --- using no tag supervision at any point ---
-gives Micro-F1 $0.117$, against
-$0.608$ for the supervised Task 1 model on the same
-corpus. Contrastive alignment alone thus recovers roughly a fifth of supervised
-performance.
+gives Micro-F1 $0.107$, against $0.488$ for the supervised stripped-caption
+Task 1 model on the same corpus and the same official split. Contrastive
+alignment alone thus recovers roughly $22\%$ of supervised performance.
 
 \subsection{Qualitative analysis of the fused space}
 
@@ -479,22 +563,21 @@ beat, electronic, fast, techno & rock, male vocal, vocal & 1.11 \\
 \emph{drum, electronic, synth} is predicted \emph{techno, electronic, beat},
 capturing the family if not the exact vocabulary. The third is a clear failure:
 an electronic/techno clip is predicted \emph{rock, male vocal, guitar}. In every
-case the attention spread is within $11\%$ of uniform, so these predictions are
+case the attention spread is within $3\%$ of uniform, so these predictions are
 driven by the text mean and the graph vector, not by any selective reading of
-the caption.
+the caption. These case studies come from the shared-learning-rate model; the
+separate-learning-rate run does attend selectively (peak $4.19\times$ uniform).
 
-\noindent \textbf{Retrieval behaviour.} Across the ten saved caption
-$\to$ audio queries, the true clip's ranks were
-$36, 15, 62, 119, 144, 47, 210, 29, 83, 135$ out of
-$536$. Median rank
-$68$ places the correct clip in the top
-$13\%$ of the gallery on
-average --- clearly better than chance, but far from usable retrieval. The
+\noindent \textbf{Retrieval behaviour.} Across the official-split gallery of
+$2{,}773$ clips the median true-clip rank is $527$, placing the correct clip in
+the top $19\%$ of the gallery on average --- clearly better than chance
+($8.0\times$ random at R@1), but far from usable retrieval. The
 model appears to learn coarse acoustic-descriptive correspondence (recording
 quality, instrumentation family, tempo band) without the fine discrimination
 that rank-1 retrieval demands.
 
 \section{Engineering Findings}
+\label{sec:engineering}
 Several results in this report depended on catching pipeline defects that
 produce plausible-looking numbers. We record them because each was silent.
 
@@ -522,9 +605,39 @@ prevalence-weighted BCE do not centre at $0.5$; our tuned thresholds ranged from
 $0.7$ to $0.8$. Evaluating at $0.5$ would have understated every Task 1 and
 Task 3 result substantially.
 
-We mention these not as incidental debugging notes but because three of the four
+\textbf{A segfault that looked like a deadlock.} The graph builder appeared to
+hang: it froze at $4{,}000/8{,}000$ FMA tracks and, on another run, at
+$10{,}500/21{,}318$ MagnaTagATune clips, with every worker asleep on a futex at
+$\approx0$\,s of CPU. The real event was a \emph{segmentation fault} inside a
+numba \texttt{guvectorize} kernel reached through
+\texttt{librosa.chroma\_stft} $\to$ \texttt{estimate\_tuning} $\to$
+\texttt{piptrack}, caused by a \texttt{numba} $0.67$ / \texttt{numpy} $2.1$ ABI
+mismatch in the GPU image. The deadlock appearance is a property of
+\texttt{multiprocessing.Pool}: it silently respawns a worker that dies mid-task
+and simply never delivers that task's result, so the parent blocks forever.
+Pinning the numba/llvmlite pairing fixed the crash, and replacing the pool with
+\texttt{ProcessPoolExecutor} --- which raises \texttt{BrokenProcessPool}
+immediately on worker death --- converted an hour of silent stalling into an
+instant diagnosable failure. Throughput also rose from $8.8$ to $16.2$
+tracks/s.
+
+\textbf{Two split defects.} Our Task 1 and Task 4 MusicCaps experiments
+originally used random splits even though the metadata ships an
+\texttt{is\_audioset\_eval} flag defining the official partition; the corrected
+official-split results are materially worse and are what this report now
+carries. Separately, the Task 1 random baseline estimated per-tag prevalence
+from \emph{test} labels, which leaks test statistics into a baseline; it now
+uses training labels only.
+
+\textbf{Checkpoint policy.} Task 1 and Task 3 evaluated whichever epoch
+happened to be last rather than restoring the best validation checkpoint. This
+was not cosmetic: Task 3's GNN-only ablation peaks at epoch~1 and decays to
+near-zero validation Macro-F1 by epoch~8, and correcting it changed the ranking
+of the Task 3 ablation table.
+
+We mention these not as incidental debugging notes but because most of them
 would have yielded a complete, publishable-looking results table built on a
-model that was not doing what its description claimed.
+model, a split, or a baseline that was not doing what its description claimed.
 
 \section{Discussion and Limitations}
 
@@ -536,14 +649,19 @@ plausibly, the attention collapse: there is little in a track title for a graph
 vector to select between. A corpus pairing audio with genuine descriptive text
 at clip granularity --- as MusicCaps does --- is the right setting for fusion,
 and our Task 1 results support this, with stripped-caption Micro-F1 of
-$0.608$ versus $0.258$.
+$0.488$ versus $0.275$.
 
-\textbf{The graph branch is under-trained, not necessarily uninformative.}
-GNN-only reaches $0.114$ Macro-F1 with $31.8$K
-parameters against BERT's $66.4$M, sharing one learning rate. We implemented a
-separate graph-branch learning rate and a frozen-BERT configuration to test
-this, but were unable to complete those runs within budget; they are the first
-experiments we would run next.
+\textbf{The graph branch was under-trained, and fixing that was decisive.}
+GNN-only reaches $0.123$ Macro-F1 with $31.8$K parameters against BERT's
+$66.4$M, sharing one learning rate. We ran both diagnostics this predicted. A
+separate graph-branch learning rate of $10^{-3}$ raised cross-attention
+Macro-F1 from $0.192$ to $0.246$ and Micro-F1 from $0.325$ to $0.415$ while
+cutting attention entropy from $1.000$ to $0.695$ of uniform; freezing BERT
+instead produced the sharpest attention of any run but the worst Macro-F1. The
+conclusion is that the shared learning rate, not the architecture, was the
+binding constraint --- and that attention sharpness alone is not a sufficient
+indicator of a working fusion. The natural next step is a seed sweep over the
+separate-learning-rate configuration, which we report from a single seed.
 
 \textbf{Segment graphs may be the wrong structure.} Our nodes are fixed
 1.5\,s windows. The specification also suggests beat-synchronous segmentation

@@ -1,8 +1,8 @@
 {
   "n_tags": 50,
   "threshold": 0.85,
-  "micro_f1": 0.11709506323949409,
-  "macro_f1": 0.10800080340417152,
-  "auc_pr": 0.08046085965661871,
+  "micro_f1": 0.10696064504511714,
+  "macro_f1": 0.09540822247710516,
+  "auc_pr": 0.06211730788547383,
   "note": "no tag supervision; compare against Task 1's supervised MusicCaps run in metrics_task1_musiccaps*.json"
 }

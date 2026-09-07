@@ -1,0 +1,39 @@
+{
+  "track_id": 56954,
+  "genre": "beat",
+  "segment_graph": {
+    "n_nodes": 19,
+    "n_edges": 42,
+    "avg_degree": 2.211,
+    "density": 0.1228
+  },
+  "chord_graph": {
+    "n_nodes": 23,
+    "n_edges": 209,
+    "chords": [
+      "A#:maj",
+      "A#:min",
+      "A:maj",
+      "A:min",
+      "B:maj",
+      "B:min",
+      "C#:maj",
+      "C#:min",
+      "C:min",
+      "D#:maj",
+      "D#:min",
+      "D:maj",
+      "D:min",
+      "E:maj",
+      "E:min",
+      "F#:maj",
+      "F#:min",
+      "F:maj",
+      "F:min",
+      "G#:maj",
+      "G#:min",
+      "G:maj",
+      "G:min"
+    ]
+  }
+}

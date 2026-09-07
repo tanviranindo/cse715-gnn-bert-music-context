@@ -13,7 +13,9 @@
     "pooling": "cls",
     "freeze_encoder": false,
     "use_artist": false,
-    "strip_leakage": false
+    "strip_leakage": false,
+    "save_checkpoint": true,
+    "checkpoint_dir": "/data/checkpoints"
   },
   "n_tags": 50,
   "vocab": [
@@ -69,123 +71,125 @@
     "e-guitar"
   ],
   "split_sizes": {
-    "train": 3496,
-    "val": 749,
-    "test": 750
+    "train": 2054,
+    "val": 362,
+    "test": 2579
   },
   "history": [
     {
       "epoch": 1,
-      "train_loss": 1.098051620613445,
-      "val_micro_f1": 0.2932475884244373,
-      "val_macro_f1": 0.2999476772645247,
-      "seconds": 6.7
+      "train_loss": 1.1730683789108738,
+      "val_micro_f1": 0.27050053248136313,
+      "val_macro_f1": 0.26526182715121666,
+      "seconds": 21.3
     },
     {
       "epoch": 2,
-      "train_loss": 0.8150601983070374,
-      "val_micro_f1": 0.341529618393741,
-      "val_macro_f1": 0.3493999830129526,
-      "seconds": 6.6
+      "train_loss": 0.9002931623747854,
+      "val_micro_f1": 0.33286451007969997,
+      "val_macro_f1": 0.3372972026569358,
+      "seconds": 13.1
     },
     {
       "epoch": 3,
-      "train_loss": 0.6954378561540083,
-      "val_micro_f1": 0.4118492953695715,
-      "val_macro_f1": 0.41209548594604734,
-      "seconds": 6.6
+      "train_loss": 0.7755835327235135,
+      "val_micro_f1": 0.3598256203890007,
+      "val_macro_f1": 0.3636352662902775,
+      "seconds": 13.4
     },
     {
       "epoch": 4,
-      "train_loss": 0.6124785054813732,
-      "val_micro_f1": 0.45437100213219617,
-      "val_macro_f1": 0.44717907925264344,
-      "seconds": 6.6
+      "train_loss": 0.6985890594395724,
+      "val_micro_f1": 0.4025998142989786,
+      "val_macro_f1": 0.39136112443267995,
+      "seconds": 13.5
     },
     {
       "epoch": 5,
-      "train_loss": 0.5517039651220496,
-      "val_micro_f1": 0.45557078106883103,
-      "val_macro_f1": 0.4502941076031541,
-      "seconds": 6.6
+      "train_loss": 0.6316540710853807,
+      "val_micro_f1": 0.4320914646165977,
+      "val_macro_f1": 0.4173268117918943,
+      "seconds": 13.9
     },
     {
       "epoch": 6,
-      "train_loss": 0.5032603155482899,
-      "val_micro_f1": 0.5258064516129032,
-      "val_macro_f1": 0.517329079068388,
-      "seconds": 6.6
+      "train_loss": 0.5764549446828438,
+      "val_micro_f1": 0.4818140996856758,
+      "val_macro_f1": 0.4598108861564195,
+      "seconds": 13.3
     }
   ],
-  "threshold": 0.8,
+  "selected_epoch": 6,
+  "selected_val_macro_f1": 0.4598108861564195,
+  "threshold": 0.75,
   "test": {
-    "micro_f1": 0.6868399675060926,
-    "macro_f1": 0.6464254757539466
+    "micro_f1": 0.5647071726255758,
+    "macro_f1": 0.5314858937503605
   },
   "baselines": {
     "B1_random_prevalence": {
-      "micro_f1": 0.08648881239242685,
-      "macro_f1": 0.04950095195955542
+      "micro_f1": 0.08874581834248564,
+      "macro_f1": 0.060240462777152025
     },
     "B1_majority": {
       "micro_f1": 0.0,
       "macro_f1": 0.0
     },
     "B5_lexical_match": {
-      "micro_f1": 0.5814732142857143,
-      "macro_f1": 0.5594949842017446
+      "micro_f1": 0.5402102713711675,
+      "macro_f1": 0.549870648258447
     }
   },
   "per_tag_f1": {
-    "low quality": 0.9580246913580247,
-    "instrumental": 0.721030042918455,
-    "noisy": 0.9166666666666666,
-    "emotional": 0.7108433734939759,
-    "medium tempo": 0.6503067484662577,
-    "energetic": 0.5766871165644172,
-    "passionate": 0.6927374301675978,
-    "amateur recording": 0.6771653543307087,
-    "slow tempo": 0.5660377358490566,
-    "live performance": 0.6724137931034483,
-    "acoustic drums": 0.803030303030303,
-    "fast tempo": 0.6857142857142857,
-    "mono": 0.8769230769230769,
-    "groovy": 0.6530612244897959,
-    "bass guitar": 0.8282828282828283,
-    "electric guitar": 0.8,
-    "acoustic guitar": 0.5974025974025974,
-    "uptempo": 0.4946236559139785,
-    "instrumental music": 0.8,
-    "piano": 0.7096774193548387,
-    "punchy kick": 0.7706422018348624,
-    "punchy snare": 0.7551020408163265,
-    "groovy bass": 0.45544554455445546,
-    "happy": 0.8235294117647058,
-    "moderate tempo": 0.5569620253164557,
-    "male voice": 0.7037037037037037,
-    "e-bass": 0.7901234567901234,
-    "poor audio quality": 0.5306122448979592,
-    "shimmering hi hats": 0.5833333333333334,
-    "male vocal": 0.8292682926829268,
-    "rock": 0.7076923076923077,
-    "percussion": 0.3902439024390244,
-    "no voices": 0.7213114754098361,
-    "pop": 0.2978723404255319,
-    "male singer": 0.48148148148148145,
-    "youthful": 0.5263157894736842,
-    "electronic drums": 0.7868852459016393,
-    "spirited": 0.35514018691588783,
-    "upbeat": 0.44776119402985076,
-    "bass": 0.45454545454545453,
-    "romantic": 0.4864864864864865,
-    "exciting": 0.4935064935064935,
-    "loud": 0.5333333333333333,
-    "fun": 0.7368421052631579,
-    "keyboard harmony": 0.3013698630136986,
-    "mellow": 0.6382978723404256,
-    "easygoing": 0.6923076923076923,
-    "flat male vocal": 0.7936507936507936,
-    "cheerful": 0.5263157894736842,
-    "e-guitar": 0.7605633802816901
+    "low quality": 0.9409751924721984,
+    "instrumental": 0.6883963494132985,
+    "noisy": 0.7392857142857143,
+    "emotional": 0.6533333333333333,
+    "medium tempo": 0.5773480662983426,
+    "energetic": 0.6132075471698113,
+    "passionate": 0.5032258064516129,
+    "amateur recording": 0.5374045801526718,
+    "slow tempo": 0.40119760479041916,
+    "live performance": 0.6631016042780749,
+    "acoustic drums": 0.685370741482966,
+    "fast tempo": 0.6565217391304348,
+    "mono": 0.7046979865771812,
+    "groovy": 0.33444816053511706,
+    "bass guitar": 0.6078431372549019,
+    "electric guitar": 0.5830508474576271,
+    "acoustic guitar": 0.32061068702290074,
+    "uptempo": 0.4305555555555556,
+    "instrumental music": 0.7396449704142012,
+    "piano": 0.36363636363636365,
+    "punchy kick": 0.6435331230283912,
+    "punchy snare": 0.7077922077922078,
+    "groovy bass": 0.43352601156069365,
+    "happy": 0.6970954356846473,
+    "moderate tempo": 0.5887096774193549,
+    "male voice": 0.5803571428571429,
+    "e-bass": 0.6938775510204082,
+    "poor audio quality": 0.6376146788990825,
+    "shimmering hi hats": 0.48466257668711654,
+    "male vocal": 0.6180555555555556,
+    "rock": 0.45454545454545453,
+    "percussion": 0.21052631578947367,
+    "no voices": 0.7236842105263158,
+    "pop": 0.18032786885245902,
+    "male singer": 0.5125348189415042,
+    "youthful": 0.5278450363196125,
+    "electronic drums": 0.5681818181818182,
+    "spirited": 0.3701067615658363,
+    "upbeat": 0.32,
+    "bass": 0.2905027932960894,
+    "romantic": 0.3273657289002558,
+    "exciting": 0.30985915492957744,
+    "loud": 0.3157894736842105,
+    "fun": 0.751269035532995,
+    "keyboard harmony": 0.37662337662337664,
+    "mellow": 0.6022727272727273,
+    "easygoing": 0.6918238993710691,
+    "flat male vocal": 0.3218390804597701,
+    "cheerful": 0.3282442748091603,
+    "e-guitar": 0.5618729096989966
   }
 }

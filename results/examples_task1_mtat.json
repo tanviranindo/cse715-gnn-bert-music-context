@@ -7,36 +7,36 @@
     ],
     "predicted": [
       {
-        "tag": "weird",
-        "p": 0.835
-      },
-      {
         "tag": "electronic",
-        "p": 0.746
-      },
-      {
-        "tag": "beat",
-        "p": 0.686
-      },
-      {
-        "tag": "synth",
-        "p": 0.68
-      },
-      {
-        "tag": "drum",
-        "p": 0.653
-      },
-      {
-        "tag": "no vocal",
-        "p": 0.626
+        "p": 0.816
       },
       {
         "tag": "techno",
-        "p": 0.623
+        "p": 0.813
+      },
+      {
+        "tag": "synth",
+        "p": 0.761
+      },
+      {
+        "tag": "weird",
+        "p": 0.753
+      },
+      {
+        "tag": "beat",
+        "p": 0.716
       },
       {
         "tag": "ambient",
-        "p": 0.601
+        "p": 0.565
+      },
+      {
+        "tag": "no vocal",
+        "p": 0.55
+      },
+      {
+        "tag": "bass",
+        "p": 0.535
       }
     ]
   },
@@ -50,36 +50,36 @@
     ],
     "predicted": [
       {
-        "tag": "weird",
-        "p": 0.835
-      },
-      {
         "tag": "electronic",
-        "p": 0.746
-      },
-      {
-        "tag": "beat",
-        "p": 0.686
-      },
-      {
-        "tag": "synth",
-        "p": 0.68
-      },
-      {
-        "tag": "drum",
-        "p": 0.653
-      },
-      {
-        "tag": "no vocal",
-        "p": 0.626
+        "p": 0.816
       },
       {
         "tag": "techno",
-        "p": 0.623
+        "p": 0.813
+      },
+      {
+        "tag": "synth",
+        "p": 0.761
+      },
+      {
+        "tag": "weird",
+        "p": 0.753
+      },
+      {
+        "tag": "beat",
+        "p": 0.716
       },
       {
         "tag": "ambient",
-        "p": 0.601
+        "p": 0.565
+      },
+      {
+        "tag": "no vocal",
+        "p": 0.55
+      },
+      {
+        "tag": "bass",
+        "p": 0.535
       }
     ]
   },
@@ -91,36 +91,36 @@
     ],
     "predicted": [
       {
-        "tag": "weird",
-        "p": 0.835
-      },
-      {
         "tag": "electronic",
-        "p": 0.746
-      },
-      {
-        "tag": "beat",
-        "p": 0.686
-      },
-      {
-        "tag": "synth",
-        "p": 0.68
-      },
-      {
-        "tag": "drum",
-        "p": 0.653
-      },
-      {
-        "tag": "no vocal",
-        "p": 0.626
+        "p": 0.816
       },
       {
         "tag": "techno",
-        "p": 0.623
+        "p": 0.813
+      },
+      {
+        "tag": "synth",
+        "p": 0.761
+      },
+      {
+        "tag": "weird",
+        "p": 0.753
+      },
+      {
+        "tag": "beat",
+        "p": 0.716
       },
       {
         "tag": "ambient",
-        "p": 0.601
+        "p": 0.565
+      },
+      {
+        "tag": "no vocal",
+        "p": 0.55
+      },
+      {
+        "tag": "bass",
+        "p": 0.535
       }
     ]
   },
@@ -137,36 +137,36 @@
     ],
     "predicted": [
       {
-        "tag": "male vocal",
-        "p": 0.922
-      },
-      {
-        "tag": "rock",
-        "p": 0.909
-      },
-      {
-        "tag": "male vocals",
-        "p": 0.899
+        "tag": "pop",
+        "p": 0.882
       },
       {
         "tag": "vocal",
-        "p": 0.849
+        "p": 0.879
       },
       {
-        "tag": "loud",
-        "p": 0.835
+        "tag": "rock",
+        "p": 0.868
       },
       {
-        "tag": "pop",
-        "p": 0.807
+        "tag": "male vocal",
+        "p": 0.843
       },
       {
         "tag": "drum",
-        "p": 0.739
+        "p": 0.718
       },
       {
         "tag": "guitar",
-        "p": 0.652
+        "p": 0.679
+      },
+      {
+        "tag": "loud",
+        "p": 0.638
+      },
+      {
+        "tag": "male vocals",
+        "p": 0.633
       }
     ]
   },
@@ -181,36 +181,36 @@
     ],
     "predicted": [
       {
-        "tag": "male vocal",
-        "p": 0.922
-      },
-      {
-        "tag": "rock",
-        "p": 0.909
-      },
-      {
-        "tag": "male vocals",
-        "p": 0.899
+        "tag": "pop",
+        "p": 0.882
       },
       {
         "tag": "vocal",
-        "p": 0.849
+        "p": 0.879
       },
       {
-        "tag": "loud",
-        "p": 0.835
+        "tag": "rock",
+        "p": 0.868
       },
       {
-        "tag": "pop",
-        "p": 0.807
+        "tag": "male vocal",
+        "p": 0.843
       },
       {
         "tag": "drum",
-        "p": 0.739
+        "p": 0.718
       },
       {
         "tag": "guitar",
-        "p": 0.652
+        "p": 0.679
+      },
+      {
+        "tag": "loud",
+        "p": 0.638
+      },
+      {
+        "tag": "male vocals",
+        "p": 0.633
       }
     ]
   }

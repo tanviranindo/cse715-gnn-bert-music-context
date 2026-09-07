@@ -1,0 +1,37 @@
+{
+  "track_id": 154309,
+  "genre": "Hip-Hop",
+  "segment_graph": {
+    "n_nodes": 19,
+    "n_edges": 82,
+    "avg_degree": 4.316,
+    "density": 0.2398
+  },
+  "chord_graph": {
+    "n_nodes": 21,
+    "n_edges": 118,
+    "chords": [
+      "A#:min",
+      "A:maj",
+      "A:min",
+      "B:maj",
+      "B:min",
+      "C#:min",
+      "C:maj",
+      "C:min",
+      "D#:min",
+      "D:maj",
+      "D:min",
+      "E:maj",
+      "E:min",
+      "F#:maj",
+      "F#:min",
+      "F:maj",
+      "F:min",
+      "G#:maj",
+      "G#:min",
+      "G:maj",
+      "G:min"
+    ]
+  }
+}

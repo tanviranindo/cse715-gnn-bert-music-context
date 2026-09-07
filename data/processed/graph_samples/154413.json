@@ -1,0 +1,39 @@
+{
+  "track_id": 154413,
+  "genre": "Pop",
+  "segment_graph": {
+    "n_nodes": 20,
+    "n_edges": 48,
+    "avg_degree": 2.4,
+    "density": 0.1263
+  },
+  "chord_graph": {
+    "n_nodes": 23,
+    "n_edges": 104,
+    "chords": [
+      "A#:maj",
+      "A#:min",
+      "A:maj",
+      "A:min",
+      "B:maj",
+      "B:min",
+      "C#:maj",
+      "C#:min",
+      "C:maj",
+      "C:min",
+      "D#:min",
+      "D:maj",
+      "D:min",
+      "E:maj",
+      "E:min",
+      "F#:maj",
+      "F#:min",
+      "F:maj",
+      "F:min",
+      "G#:maj",
+      "G#:min",
+      "G:maj",
+      "G:min"
+    ]
+  }
+}

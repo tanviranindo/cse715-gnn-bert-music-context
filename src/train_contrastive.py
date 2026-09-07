@@ -53,12 +53,35 @@ def main() -> None:
     tok = load_tokenizer()
     _, items = train_fusion.load_cache(args.cache, tok, args.max_length)
     items = [d for d in items if d.text.strip() and len(d.x) > 1]
-    random.shuffle(items)
-    n = len(items)
-    splits = {"train": items[: int(0.8 * n)],
-              "val": items[int(0.8 * n): int(0.9 * n)],
-              "test": items[int(0.9 * n):]}
-    print(f"[data] {n} clips | " + " ".join(f"{k}={len(v)}" for k, v in splits.items()))
+    # MusicCaps metadata identifies the original AudioSet eval partition.
+    # Preserve it as test; split only the published train pool for training
+    # and validation so retrieval is evaluated on the intended held-out set.
+    has_flag = any(getattr(d, "has_eval_flag", False) for d in items)
+    eval_items = [d for d in items if getattr(d, "is_eval", False)]
+    if has_flag:
+        # The cache carries AudioSet provenance, so the official eval clips
+        # become test. Never quietly downgrade to a random split here: the
+        # resulting R@k would not be comparable with the official partition.
+        if not eval_items:
+            raise SystemExit("cache has is_eval but it selected 0 clips")
+        train_pool = [d for d in items if not getattr(d, "is_eval", False)]
+        random.shuffle(train_pool)
+        n_val = int(0.15 * len(train_pool))
+        splits = {"train": train_pool[n_val:], "val": train_pool[:n_val], "test": eval_items}
+        split_kind = "official_audioset_eval"
+    else:
+        # A cache built before the flag was carried through. Keep the previous
+        # seeded random split, but label the result so the report cannot
+        # present it as the official partition.
+        print("[warn] cache predates is_eval; using the seeded RANDOM split")
+        random.shuffle(items)
+        n = len(items)
+        splits = {"train": items[: int(0.8 * n)],
+                  "val": items[int(0.8 * n): int(0.9 * n)],
+                  "test": items[int(0.9 * n):]}
+        split_kind = "random_synthetic"
+    print(f"[data] {len(items)} clips | split={split_kind} | "
+          + " ".join(f"{k}={len(v)}" for k, v in splits.items()))
 
     loaders = {k: GeoLoader(v, batch_size=args.batch_size, shuffle=(k == "train"))
                for k, v in splits.items()}
@@ -121,6 +144,7 @@ def main() -> None:
     results = {
         "config": vars(args),
         "split_sizes": {k: len(v) for k, v in splits.items()},
+        "split_kind": split_kind,
         "gallery_size": len(G),
         "history": history,
         "best_epoch": best[2],

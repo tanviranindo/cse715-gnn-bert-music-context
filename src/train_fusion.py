@@ -44,6 +44,10 @@ def load_cache(path, tokenizer, max_length: int):
         d.clip_id = str(r.get("track_id", ""))
         d.genre = r.get("genre", "")
         d.text = r.get("text", "")
+        d.is_eval = bool(r.get("is_eval", False))
+        # Distinguishes "this cache predates the provenance flag" from
+        # "the flag is present and this clip is not an eval clip".
+        d.has_eval_flag = "is_eval" in r
         d.labels_set = r.get("labels", set())
         d.valence = float(r.get("valence_z", 0.0))
         d.arousal = float(r.get("arousal_z", 0.0))
@@ -160,6 +164,7 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
     opt = torch.optim.AdamW(groups, lr=args.lr, weight_decay=1e-4)
 
     history = []
+    best: tuple[float, int, dict] = (-1.0, 0, {})
     for epoch in range(1, args.epochs + 1):
         model.train()
         started, total, seen = time.time(), 0.0, 0
@@ -193,10 +198,20 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
             "seconds": round(time.time() - started, 1),
         }
         history.append(row)
+        # Restore the best validation epoch before touching test: the fusion
+        # ablations are compared against each other, so letting one of them be
+        # scored at an unlucky final epoch would corrupt the comparison.
+        if row["val_macro_f1"] > best[0]:
+            best = (row["val_macro_f1"], epoch,
+                    {k: v.detach().cpu().clone() for k, v in model.state_dict().items()})
         print(f"  [{mode} epoch {epoch}] loss {row['train_loss']:.4f} "
               f"macroF1 {row['val_macro_f1']:.4f} microF1 {row['val_micro_f1']:.4f} "
               f"({row['seconds']}s)", flush=True)
 
+    if best[2]:
+        model.load_state_dict(best[2])
+        print(f"  [{mode} select] restored epoch {best[1]} "
+              f"(val macro-F1 {best[0]:.4f})", flush=True)
     tt, tp, et, ep = evaluate_split(model, loaders["val"], device, mode)
     thr, _ = ev.best_threshold(tt, tp)
     tt, tp, et, ep = evaluate_split(model, loaders["test"], device, mode)
@@ -205,6 +220,8 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
         "mode": mode,
         "params": sum(p.numel() for p in model.parameters() if p.requires_grad),
         "history": history,
+        "selected_epoch": best[1],
+        "selected_val_macro_f1": best[0],
         "threshold": thr,
         "test_macro_f1": ev.macro_f1(tt, pred),
         "test_micro_f1": ev.micro_f1(tt, pred),

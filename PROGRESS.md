@@ -306,3 +306,110 @@ Report both. The PDF marks valence/arousal "(optional)" for Task 3, and the
 honest framing is that the auxiliary term buys emotion regression at a
 measurable cost to tagging, not that it is free.
 
+
+## Correction pass (2026-09-07): official splits, checkpoints, and a segfault
+
+Instance `50108358` (1x RTX 4060 Ti, $0.0979/hr, `ssh6.vast.ai:28358`). Every
+number below was read back off that box after the run, not predicted.
+
+### What was actually wrong
+
+1. **The "FMA multiprocessing hang" was a segmentation fault.** `librosa`'s
+   `chroma_stft` -> `estimate_tuning` -> `piptrack` -> `_parabolic_interpolation`
+   is a numba `guvectorize` kernel, and the image's numba 0.67.0 / llvmlite
+   0.49.0 against numpy 2.1.2 segfaulted inside it on the *first* track.
+   `mp.Pool` silently respawns a worker that dies mid-task and never delivers
+   that task's result, so the parent blocked forever in `imap_unordered` — which
+   is why every worker showed ~0s CPU in `futex_wait` and it looked like a
+   deadlock. Two earlier "hangs" (MTAT 10500/21318, FMA 4000/8000) were the same
+   bug. `maxtasksperchild` made it worse, not better.
+   - Fixed by pinning `numba>=0.61,<0.62` / `llvmlite>=0.44,<0.45` / `numpy<2.2`
+     and replacing `mp.Pool` with `ProcessPoolExecutor`, which raises
+     `BrokenProcessPool` immediately instead of stalling.
+   - Throughput 8.8 -> **16.2 tracks/s**; FMA-small finished **7994/8000 in
+     14.4 min** having previously never passed 4000.
+2. **MusicCaps ignored its own official split.** The metadata ships
+   `is_audioset_eval`; Tasks 1 and 4 were using random splits. The flag is now
+   honoured and carried into the graph cache (verified: 2773 eval / 2582 train
+   in `musiccaps_graphs.pt`). Neither task will silently fall back to a random
+   split any more — Task 1 raises, Task 4 records `split_kind`.
+3. **The B1 random baseline leaked test statistics** by estimating per-tag
+   prevalence from test labels. Now training labels only.
+4. **Task 1 and Task 3 scored the final epoch, not the best validation
+   checkpoint.** Material, not cosmetic: Task 3's GNN-only peaks at epoch 1 and
+   has decayed to ~0 validation Macro-F1 by epoch 8. Correcting it changed the
+   Task 3 ranking.
+5. **`--n-examples 0` clobbered `graph_samples/index.json`**, emptying the
+   manifest for 50 committed samples. Guarded.
+6. **`infra/fetch_datasets.sh`'s DEAM Zenodo fallback points at record
+   1188976, which is RAVDESS**, not DEAM — a latent bug that would have failed
+   silently.
+
+### Verified results (all official-split unless noted)
+
+| Task 1 (best-val checkpoint) | Micro-F1 | Macro-F1 |
+|---|---|---|
+| MagnaTagATune (artist-grouped, epoch 5) | 0.2751 | 0.1923 |
+| MusicCaps raw (official eval, epoch 6) | 0.5647 | 0.5315 |
+| — B5 lexical match | 0.5402 | **0.5499** |
+| MusicCaps stripped (official eval) | 0.4877 | 0.4385 |
+
+MusicCaps splits moved from a random 3496/749/750 to the official
+**2054/362/2579**. BERT now *loses to substring matching on Macro-F1*; this is
+reported as-is.
+
+| Task 2 (FMA-small, 6394/800/800, 0 artist leakage) | Acc | Macro-F1 |
+|---|---|---|
+| B4 PCA+MLP (new) | 0.3787 | 0.3708 |
+| GraphSAGE | 0.3962 | 0.4006 |
+| GAT | 0.4325 | 0.4259 |
+| CNN (B2) | **0.4825** | **0.4794** |
+
+| Task 3 (MTAT, best-val) | Macro-F1 | Micro-F1 | AUC-PR |
+|---|---|---|---|
+| BERT-only | 0.1709 | 0.3057 | 0.1679 |
+| GNN-only | 0.1228 | 0.1243 | 0.0840 |
+| early concat | 0.1681 | 0.3139 | 0.1820 |
+| cross-attention | 0.1925 | 0.3245 | 0.1765 |
+| + freeze BERT | 0.1176 | 0.3152 | 0.1967 |
+| **+ separate GNN lr 1e-3** | **0.2457** | **0.4152** | **0.2484** |
+
+**The separate GNN learning rate is the largest single effect in the project.**
+Attention entropy vs uniform: shared lr **1.000** (total collapse, peak 1.03x),
+freeze-BERT 0.079 (peak 10.02x), GNN-lr **0.695** (peak 4.19x). The change that
+fixes the metric is the one that un-collapses the attention — the mechanism the
+earlier draft predicted. Single seed; variance not measured.
+
+| Task 4 (official eval, gallery 2773) | R@1 | R@5 | R@10 |
+|---|---|---|---|
+| caption -> audio | 0.0029 | 0.0108 | 0.0220 |
+| audio -> caption | 0.0022 | 0.0126 | 0.0224 |
+| random | 0.0004 | — | 0.0036 |
+
+Median rank 527/2773. Absolute R@K fell versus the old random-split run because
+the gallery is 5.2x larger (2773 vs 536) and training pairs halved (2195 vs
+4284); the two are not comparable. Zero-shot tagging micro-F1 0.1070.
+
+### Not done, and why
+
+- **Task 3 DEAM multi-task was NOT re-run.** `cvml.unige.ch` now times out
+  entirely; a HuggingFace mirror (`herrjyj/herrjyj-deam-assets`, 1343.2 MB,
+  matching our recorded 1.3 GB) supplied the audio, but no surviving source has
+  `metadata.zip`, whose genre/artist/title fields build DEAM's pseudo-captions.
+  Re-running with empty captions would change the setup rather than reproduce
+  it. The existing numbers stay, explicitly labelled in the report as
+  final-epoch methodology.
+- **Task 4 human evaluation (spec S6, >=5 listeners rating 1-5)** has never been
+  done and cannot be fabricated. Still an open gap against the PDF.
+- Single-seed throughout; no seed sweep on the GNN-lr result.
+
+### Artifact state
+
+- Report regenerated: **7 pages** (spec allows 6-10), tables and conclusions
+  rewritten for the corrected numbers.
+- Both notebooks re-executed end-to-end with `nbconvert` against the new
+  metrics; `results/plots/training_curves.png` now has a committed generator
+  (`src/make_plots.py`) instead of an uncommitted ad-hoc script.
+- t-SNE and case studies regenerated from the new cross-attention checkpoint.
+- 50 graph samples (25 FMA across 8 genres + 25 MTAT), index rebuilt.
+- **Not submitted, not merged, not published.**
