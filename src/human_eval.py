@@ -44,6 +44,8 @@ PAGE = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="description" content="A short listening study: rate how well each music clip matches its written description.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231F6156'/%3E%3Crect x='7' y='13' width='2.6' height='6' fill='%23fff'/%3E%3Crect x='12' y='9' width='2.6' height='14' fill='%23fff'/%3E%3Crect x='17' y='11' width='2.6' height='10' fill='%23fff'/%3E%3Crect x='22' y='14' width='2.6' height='4' fill='%23fff'/%3E%3C/svg%3E">
 <title>Does the clip match the description?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

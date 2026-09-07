@@ -1,0 +1,7 @@
+# Vercel only builds infra/listening-study (set as the project's Root Directory).
+# Everything else in this research repo -- checkpoints, graph caches, datasets --
+# must never be uploaded.
+*
+!infra
+!infra/listening-study
+!infra/listening-study/**

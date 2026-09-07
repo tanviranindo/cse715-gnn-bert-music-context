@@ -33,6 +33,12 @@ function slug(name) {
 }
 
 export default async function handler(req, res) {
+  // A file:// copy of the sheet posts from a null origin, so allow it: the
+  // endpoint stores ratings for a public study, holds nothing private, and
+  // validates every field it accepts.
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
