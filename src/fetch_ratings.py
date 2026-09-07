@@ -27,14 +27,34 @@ def fetch(token: str, prefix: str, out_dir: pathlib.Path) -> list[pathlib.Path]:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     written = []
+    superseded = []
+    # A rater who redoes the study submits again rather than overwriting, so the
+    # store legitimately holds several files for one person. Keeping them all
+    # would inflate the rater count and weight that person's opinion twice, so
+    # only their most recent submission is downloaded.
+    newest: dict[str, dict] = {}
     for blob in listing.get("blobs", []):
-        name = pathlib.Path(blob["pathname"]).name
-        dest = out_dir / name
         with urllib.request.urlopen(blob["url"], timeout=60) as r:
             body = r.read()
-        json.loads(body)  # refuse to write anything that is not valid JSON
-        dest.write_bytes(body)
+        doc = json.loads(body)  # refuse anything that is not valid JSON
+        who = str(doc.get("rater", "")).strip().lower()
+        stamp = blob.get("uploadedAt", "")
+        prev = newest.get(who)
+        if prev and prev["stamp"] >= stamp:
+            superseded.append((doc.get("rater"), blob["pathname"]))
+            continue
+        if prev:
+            superseded.append((prev["doc"].get("rater"), prev["pathname"]))
+        newest[who] = {"doc": doc, "body": body, "stamp": stamp,
+                       "pathname": blob["pathname"]}
+
+    for entry in newest.values():
+        dest = out_dir / pathlib.Path(entry["pathname"]).name
+        dest.write_bytes(entry["body"])
         written.append(dest)
+
+    for rater, path in superseded:
+        print("superseded, not downloaded: %s (%s)" % (rater, path))
     return written
 
 

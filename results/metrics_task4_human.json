@@ -1,0 +1,48 @@
+{
+  "note": "Task 4 human evaluation, PDF S6. Listeners rated 1-5 whether each retrieved clip matches its query caption. Ratings are as submitted; no value here is synthetic.",
+  "n_raters": 5,
+  "n_ratings": 145,
+  "overall_mean": 1.559,
+  "overall_sd": 1.224,
+  "mean_by_rank": {
+    "1": {
+      "mean": 1.72,
+      "sd": 1.4,
+      "n": 50
+    },
+    "2": {
+      "mean": 1.12,
+      "sd": 0.385,
+      "n": 50
+    },
+    "3": {
+      "mean": 1.867,
+      "sd": 1.486,
+      "n": 45
+    }
+  },
+  "per_rater": {
+    "Fahad Faisal Arpan": {
+      "n": 29,
+      "mean": 2.138
+    },
+    "Mahfuzur Rahman": {
+      "n": 29,
+      "mean": 1.586
+    },
+    "Md. Sakibur Rahman": {
+      "n": 29,
+      "mean": 1.414
+    },
+    "Shidhartha Chakrabarty Turzo": {
+      "n": 29,
+      "mean": 1.276
+    },
+    "Tanvir Rahman": {
+      "n": 29,
+      "mean": 1.379
+    }
+  },
+  "rating_vs_model_score_pearson_r": 0.018,
+  "interpretation": "A mean near 1 says the retrieved clips do not match their captions, which is what R@10 = 0.022 predicts. A positive correlation with the model's similarity score would say the ranking is meaningful even where the top-1 is wrong."
+}
