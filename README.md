@@ -42,6 +42,19 @@ The stripped variant is the honest measure of language understanding.
 
 The CNN wins. GAT reaches 89% of its Macro-F1 with 9× fewer parameters.
 
+The spec (§3.3) names two graph structures, so both were trained on identical
+splits and labels:
+
+| Graph input | GraphSAGE Macro-F1 | GAT Macro-F1 |
+|---|---|---|
+| Segment similarity | 0.401 | **0.426** |
+| Chord transition | 0.316 | 0.271 |
+
+Chord graphs carry real signal (2.5× chance) but lose 0.110 Macro-F1 to segment
+similarity: a 30 s clip collapses to ~21 nodes over a 24-triad vocabulary and
+the node feature is the chord's own pitch-class template, so all timbre is
+discarded before the GNN sees anything.
+
 **Task 3 — GNN-BERT fusion** (MagnaTagATune top-50, artist-grouped, best-val)
 
 | Mode | Macro-F1 | Micro-F1 | AUC-PR | Attn. entropy vs uniform |
@@ -60,14 +73,22 @@ between-mode margins, so those should not be read as firm rankings.
 
 **Task 4 — Contrastive retrieval** (MusicCaps official AudioSet eval, gallery 2,773)
 
-| Direction | R@1 | R@5 | R@10 |
-|---|---|---|---|
-| Caption → audio | 0.0029 | 0.0108 | 0.0220 |
-| Audio → caption | 0.0022 | 0.0126 | 0.0224 |
-| Random | 0.0004 | — | 0.0036 |
+| Run | Direction | R@1 | R@5 | R@10 |
+|---|---|---|---|---|
+| Shared lr | Caption → audio | 0.0029 | 0.0108 | 0.0220 |
+| Shared lr | Audio → caption | 0.0022 | 0.0126 | 0.0224 |
+| **Separate graph lr** | Caption → audio | **0.0058** | **0.0173** | **0.0339** |
+| **Separate graph lr** | Audio → caption | 0.0054 | 0.0184 | 0.0317 |
+| Random | — | 0.0004 | — | 0.0036 |
 
-Above chance but weak in absolute terms; median rank 527 / 2,773. Zero-shot
-tagging from captions reaches Micro-F1 0.107 against Task 1's supervised 0.565.
+The Task 3 learning-rate finding transfers: it doubles R@1 and lifts R@10 to
+9.4× random, with median rank improving from 527 to 400 of 2,773. The absolute
+numbers stay low because the task is data-limited, and that is measured rather
+than asserted — holding the gallery fixed and subsampling only the training
+pairs, R@10 grows log-linearly in paired examples (R² = 0.914, +0.0099 per
+doubling), putting a usable R@10 of 0.10 about 100× beyond MusicCaps' official
+split. Zero-shot tagging from captions reaches Micro-F1 0.107 against Task 1's
+supervised 0.488 on the same corpus.
 
 ## Setup
 
@@ -89,7 +110,7 @@ evaluation run on CPU in seconds from the committed artifacts.
 ## Tests
 
 ```bash
-pytest -q     # 92 passed
+pytest -q     # 107 passed
 ```
 
 The root `conftest.py` is what puts the repo root on `sys.path` so that
@@ -168,7 +189,15 @@ done
 python src/analyze_fusion.py --checkpoint results/task3_crossattn.pt   # t-SNE + case studies
 python src/attention_viz.py --dataset mtat                            # Task 1 attention heatmap
 python src/make_plots.py                                              # training curves
+python src/analyze_scale.py                                           # Task 4 data-scale fit + plot
 python src/aggregate_metrics.py                                       # -> results/metrics.json
+python src/make_report_numbers.py                                     # -> report/_numbers.json
+
+# Split manifests for data/splits/ (deterministic; needs the graph caches)
+python src/dump_splits.py --cache /data/processed/fma_small_graphs.pt --dataset fma_small
+
+# One end-to-end inference example, CPU, from the Task 1 checkpoint
+python -m src.infer --text "A gentle piano ballad with soft female vocals."
 
 # 8. Task 4 human evaluation (needs 5 real listeners; see below)
 python src/human_eval.py build     # -> results/human_eval/rating_sheet.html
@@ -177,10 +206,13 @@ python src/human_eval.py build     # -> results/human_eval/rating_sheet.html
 python src/human_eval.py score     # -> results/metrics_task4_human.json
 ```
 
-Rebuild the report (numbers come from `report/_numbers.json`, never typed in):
+Rebuild the report. `report/_numbers.json` is a build product of
+`aggregate_metrics.py` + `make_report_numbers.py`, so the paper's reference
+values cannot be older than the runs (run both before recompiling; two
+`pdflatex` passes resolve the cross-references):
 
 ```bash
-cd report && pdflatex final_report.tex
+cd report && pdflatex final_report.tex && pdflatex final_report.tex
 ```
 
 ## Layout
@@ -188,9 +220,10 @@ cd report && pdflatex final_report.tex
 ```
 src/            audio_features, graph_builder, bert_encoder, gnn_model,
                 fusion_model, contrastive, train*, evaluate, analyze_fusion,
-                attention_viz, human_eval, make_plots, aggregate_sweep,
-                aggregate_metrics
-tests/          10 modules / 92 tests, run with pytest
+                analyze_scale, attention_viz, human_eval, infer, dump_splits,
+                make_plots, aggregate_sweep, aggregate_metrics,
+                make_report_numbers
+tests/          13 modules / 107 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
                 retrieval_examples/, case studies, t-SNE
@@ -207,10 +240,18 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes
   aggregates the returned files — but it needs five real listeners, so the
   result cannot be produced from this repository alone.
 - The committed `task4_examples.json` predates the `ytid` field, so the rating
-  sheet currently falls back to caption-only judging. Rebuilding the examples
-  with `src/train_contrastive.py` restores the YouTube links and makes it a
-  true listening study.
-- The **DEAM multi-task numbers use final-epoch scoring**, not the best-val
-  checkpoint policy applied everywhere else; the source audio's metadata
-  archive is no longer downloadable, so the run could not be repeated.
-- Single seed everywhere except the Task 3 learning-rate comparison.
+  sheet currently falls back to caption-only judging — which makes it a text
+  similarity study, not a listening one. Rebuilding the examples with
+  `src/train_contrastive.py` (needs the MusicCaps graph cache, so a GPU box)
+  restores the YouTube links first. This is a prerequisite for the human
+  evaluation above, not an optional polish.
+- `data/splits/` is empty. Splits are deterministic — FMA's official partition,
+  artist-grouped at seed 42 elsewhere — and `src/dump_splits.py` writes the
+  manifests, but it needs the graph caches, which are not committed.
+- No model checkpoint is committed (253 MB each), so a fresh clone can read
+  every result but can only run inference if you supply the weights.
+- Single seed everywhere except the Task 3 learning-rate comparison (5 paired
+  seeds) and the Task 1 curves. Measured seed spread is ±0.023 Macro-F1, which
+  exceeds several of the Task 3 ablation margins.
+- Task 1 reports Macro/Micro-F1 but not AUC-PR; the §6 graph-coherence score,
+  which the spec marks optional, is not implemented.

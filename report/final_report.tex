@@ -45,7 +45,8 @@ learning rate, so the fusion degenerates into averaging the caption; and (iv)
 that giving the graph branch its own learning rate un-collapses that attention
 (entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 by
 $+0.067 \pm 0.023$ over five paired seeds ($p = 0.003$), the largest effect we
-measured. We report every number against
+measured --- and one that transfers: applied to the contrastive dual encoder it
+doubles retrieval R@1 and lifts R@10 from $0.0220$ to $0.0339$. We report every number against
 an explicit baseline, including a lexical-match control that scores Micro-F1
 $0.540$ where our model scores $0.565$ --- a margin small enough that, on
 Macro-F1, the control actually wins.
@@ -66,7 +67,7 @@ alone.
 We test that premise rather than assume it. Our contributions are:
 
 \begin{itemize}\itemsep2pt
-\item Complete implementations of all four tasks, with $92$ unit
+\item Complete implementations of all four tasks, with $107$ unit
 tests and every result reproducible from a seeded configuration recorded
 alongside it.
 \item Two dataset integrity findings that change how the numbers must be read:
@@ -75,9 +76,14 @@ ceiling induced by duplicated text inputs.
 \item A quantitative diagnosis of \emph{why} our cross-attention fusion fails
 to beat its text branch, using an attention-entropy measurement rather than an
 inference from F1.
+\item A data-scale measurement showing that our weak retrieval result is
+data-limited rather than broken: R@10 grows log-linearly in paired examples
+($R^2 = 0.914$), and MusicCaps' official split is two orders of magnitude short
+of the regime the task needs.
 \item Honest negative results with controls: a lexical-match baseline for
 caption-based tagging, and a random-prevalence baseline for every multi-label
-task.
+task --- including two conclusions of our own that we had to reverse after
+correcting a checkpoint-selection error.
 \end{itemize}
 
 \section{Related Work}
@@ -443,6 +449,42 @@ in Section~\ref{sec:engineering}; the split (6{,}394/800/800, artist-disjoint,
 verified zero leakage) is byte-identical to the earlier run, so the shifts are
 attributable to the rebuilt features and not to a different partition.
 
+\textbf{Which graph?} The specification names two structures, segment
+similarity and chord transitions. Both are built by our pipeline, so we trained
+the GNNs on each in turn --- identical splits, identical labels, identical
+optimiser --- rather than assuming the choice.
+
+\begin{table}[H]
+\centering\small
+\caption{Task 2, graph structure ablation. The same two encoders on the two
+graph types the specification names, on identical artist-disjoint splits. The
+CNN row is repeated for scale.}
+\label{tab:graphtype}
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{Segment similarity} & \multicolumn{2}{c}{Chord transition} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Model & Acc. & Macro-F1 & Acc. & Macro-F1 \\
+\midrule
+GraphSAGE & 0.396 & 0.401 & 0.339 & 0.316 \\
+GAT & 0.433 & \textbf{0.426} & 0.303 & 0.271 \\
+\midrule
+CNN (B2) & \multicolumn{4}{c}{0.483 acc / \textbf{0.479} Macro-F1} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The chord graph carries real signal --- $0.316$ Macro-F1 is
+$2.5\times$ chance --- but it is clearly the weaker input, losing $0.110$
+Macro-F1 to the segment graph and $0.163$ to the CNN. The reason is visible in
+the graphs themselves: a $30$\,s clip collapses to roughly $21$ nodes drawn
+from a $24$-triad vocabulary, and because each node's feature is that chord's
+own pitch-class template, every trace of timbre, production and instrumentation
+is discarded before the GNN sees anything. Genre on FMA-small is substantially
+a timbral judgement, so the symbolic abstraction removes most of what the label
+depends on. We report it because the negative result localises the problem: it
+is the \emph{node features}, not message passing, that limit the chord graph.
+
 \subsection{Where the genre models succeed and fail}
 
 \begin{table}[H]
@@ -485,6 +527,7 @@ but discarding the timbral detail the spectrogram preserves.
 leakage. Every row is evaluated at the epoch chosen by best-validation
 Macro-F1, never at a fixed final epoch. The last two rows are the two
 follow-ups our earlier draft named as the experiments to try next.}
+\label{tab:t3ablation}
 \begin{tabular}{lcccc}
 \toprule
 Mode & Params & Macro-F1 & Micro-F1 & AUC-PR \\
@@ -538,6 +581,7 @@ we test it with a paired $t$-test.
 \caption{Task 3 seed sweep, cross-attention, $n=5$ paired seeds. Mean $\pm$
 sample standard deviation; $p$ from a two-sided paired $t$-test on the
 per-seed difference.}
+\label{tab:sweep}
 \begin{tabular}{lccc}
 \toprule
 & Shared lr & Separate GNN lr & Paired $\Delta$ \\
@@ -577,40 +621,46 @@ text representation it can no longer adapt.
 \begin{table}[H]
 \centering\small
 \caption{Effect of adding DEAM's valence/arousal term to cross-attention.
-MagnaTagATune training data is identical across both runs. \textbf{These two
-columns are from our earlier run and were evaluated at a fixed final epoch, not
-at the best validation checkpoint used everywhere else in this report}; the
-DEAM audio host became unreachable before we could re-run them, so they are not
-directly comparable with Table~3 and are reported as indicative only.}
+MagnaTagATune training data is identical across both columns, and both are
+scored at their best validation epoch, the same policy used everywhere else in
+this report.}
+\label{tab:deam}
 \begin{tabular}{lccc}
 \toprule
 Cross-attention & Tags only & $+$ DEAM & $\Delta$ \\
 \midrule
-Macro-F1 & 0.182 & 0.116 & $-0.066$ \\
-Micro-F1 & 0.323 & 0.279 & $-0.044$ \\
-AUC-PR & 0.178 & 0.132 & $-0.046$ \\
+Macro-F1 & 0.192 & 0.186 & $-0.007$ \\
+Micro-F1 & 0.324 & 0.366 & $+0.041$ \\
+AUC-PR & 0.176 & 0.212 & $+0.035$ \\
 \midrule
-Valence & --- & MAE 0.710 & $R^2\;+0.181$ \\
-Arousal & --- & MAE 0.721 & $R^2\;+0.085$ \\
+Valence & --- & MAE 0.629 & $R^2\;+0.390$ \\
+Arousal & --- & MAE 0.662 & $R^2\;+0.191$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent The emotion heads work: both $R^2$ are positive, so the model beats
-predicting the training mean on held-out songs, and MAE of $0.83$/$0.92$ on the
-original 1--9 scale is usable. But tag Macro-F1 falls by $36\%$ relative. Since
-the tag training data is unchanged, this is the auxiliary objective competing
-for shared capacity. The specification marks valence/arousal optional; we
-report it as a trade-off rather than a free addition.
+\noindent The emotion heads work, and better than our first measurement
+suggested: valence reaches $R^2 = 0.390$ and arousal $R^2 = 0.191$ on held-out
+songs, so both beat predicting the training mean by a clear margin, with MAE of
+$0.63$/$0.66$ on the normalised scale.
 
-We flag one reproducibility gap honestly. DEAM's official host
-(\texttt{cvml.unige.ch}) stopped responding during this work, and the only
-surviving audio mirror we located does not ship the \texttt{metadata.zip} whose
-genre/artist/title fields we use to build DEAM's pseudo-captions. We could have
-re-run this experiment with empty captions, but that would silently change the
-setup rather than reproduce it, so we left the original numbers in place and
-labelled them. Re-running this row under the corrected checkpoint policy is the
-one outstanding item in this report.
+The more interesting correction is to the tag side. Our earlier draft reported
+this run at a fixed final epoch and concluded that the auxiliary term costs
+$36\%$ relative Macro-F1. Scored properly --- best validation checkpoint, as
+in Table~\ref{tab:t3ablation} --- that penalty almost disappears: Macro-F1
+falls by $0.007$, inside the $\pm0.023$ seed spread we measure in
+Table~\ref{tab:sweep}, while Micro-F1 and AUC-PR both \emph{improve} by more
+than $0.03$. The honest reading is that the multi-task term is roughly free on
+this data rather than a trade-off, and that our earlier claim of a large penalty
+was an artifact of the same checkpoint-policy error described below. We flag it
+because the direction of the conclusion reversed, not merely its magnitude.
+
+One reproducibility note. DEAM's official host (\texttt{cvml.unige.ch}) stopped
+responding during this work and the audio mirror we located does not ship the
+\texttt{metadata.zip} whose genre/artist/title fields build DEAM's
+pseudo-captions; recovering that archive from a surviving mirror is what made
+this re-run possible at all, and it is the single most fragile external
+dependency in the project.
 
 \subsection{Task 4: cross-modal retrieval}
 
@@ -620,26 +670,79 @@ one outstanding item in this report.
 partition: a gallery of 2{,}773 clips, $5.2\times$ larger than the random-split
 gallery of 536 we reported earlier. R@K falls sharply with gallery size, so the
 two are not comparable in absolute terms and we give the random baseline for
-scale.}
-\begin{tabular}{lccc}
+scale. ``Separate graph lr'' applies the Task 3 finding to this task.}
+\label{tab:retrieval}
+\begin{tabular}{llccc}
 \toprule
-Direction & R@1 & R@5 & R@10 \\
+Run & Direction & R@1 & R@5 & R@10 \\
 \midrule
-Caption $\to$ Audio & 0.0029 & 0.0108 & 0.0220 \\
-Audio $\to$ Caption & 0.0022 & 0.0126 & 0.0224 \\
-Random baseline & 0.0004 & --- & 0.0036 \\
+Shared lr & Caption $\to$ Audio & 0.0029 & 0.0108 & 0.0220 \\
+          & Audio $\to$ Caption & 0.0022 & 0.0126 & 0.0224 \\
+\midrule
+Separate  & Caption $\to$ Audio & \textbf{0.0058} & \textbf{0.0173} & \textbf{0.0339} \\
+graph lr  & Audio $\to$ Caption & 0.0054 & 0.0184 & 0.0317 \\
+\midrule
+Random    & ---                 & 0.0004 & --- & 0.0036 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\noindent Retrieval is $8.0\times$ random at R@1 and $6.1\times$ at R@10, with
-median rank $527$ of $2{,}773$ --- that is, the median true clip still sits in
-the top $19\%$ of the gallery. The alignment is real but weak, and it is
-weaker than our random-split measurement implied for two compounding reasons:
-the gallery is $5.2\times$ larger, and the official partition leaves only
-$2{,}195$ training pairs against the $4{,}284$ a random $80/10/10$ split
-provided. Across our ten saved qualitative examples, \textbf{none} places the
-true clip at rank 1.
+\noindent \textbf{The Task 3 finding transfers.} Giving the graph tower its own
+learning rate of $10^{-3}$ --- the intervention that un-collapsed the fusion
+attention in Section~\ref{sec:t3results}, here tested rather than assumed to
+carry over --- doubles R@1 and lifts R@10 from $0.0220$ to $0.0339$, or
+$9.4\times$ random. Median rank improves from $527$ to $400$ of $2{,}773$. That
+the same single hyperparameter governs both a supervised fusion model and a
+contrastive dual encoder is the strongest evidence we have that the graph
+branch, not the architecture, was the binding constraint throughout this
+project.
+
+The absolute numbers nevertheless stay low, and we wanted to know whether that
+is a modelling failure or a data-budget one. Holding the validation set, test
+set and gallery fixed and subsampling only the training pairs gives a clean
+answer.
+
+\begin{table}[H]
+\centering\small
+\caption{Task 4 retrieval against training-set size. Only the training split is
+subsampled; validation, test and the 2{,}773-clip gallery are held fixed, so
+R@K is comparable down the column. Single seed per point.}
+\label{tab:scale}
+\begin{tabular}{lccc}
+\toprule
+Train pairs & C$\to$A R@10 & A$\to$C R@10 & vs.\ random \\
+\midrule
+549   & 0.0155 & 0.0162 & $4.3\times$ \\
+1,098 & 0.0206 & 0.0216 & $5.7\times$ \\
+1,646 & 0.0325 & 0.0274 & $9.0\times$ \\
+2,195 & \textbf{0.0339} & 0.0317 & $\mathbf{9.4\times}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent R@10 grows log-linearly in the number of paired examples
+($R^2 = 0.914$, $+0.0099$ R@10 per doubling; Figure~\ref{fig:scale}) with no
+convincing sign of saturation --- the last interval flattens, but by less than
+single-seed noise. Extrapolating the fit, reaching a usable R@10 of $0.10$ would
+need on the order of $2\times10^5$ paired clips, roughly $100\times$ what the
+official split provides. We report the extrapolation to characterise the
+regime, not as a forecast: it spans an order of magnitude beyond our data.
+
+The conclusion we draw is specific. Our contrastive result is weak, but it is
+weak in the way a data-starved model is weak rather than a broken one --- the
+scaling behaviour is orderly, the direction is right, and every doubling buys a
+predictable amount. MusicCaps at $5{,}521$ clips is simply a small corpus for
+contrastive alignment, and the official partition spends half of it on
+evaluation.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{task4_scale.png}
+\caption{Task 4 R@10 against training-set size on a log axis, gallery held
+fixed at 2{,}773 clips. The fit is log-linear ($R^2 = 0.914$); the dashed
+horizontal line is the random baseline.}
+\label{fig:scale}
+\end{figure}
 
 \textbf{Zero-shot tagging.} Embedding tag names with the text tower and scoring
 them against clip graph embeddings --- using no tag supervision at any point ---
@@ -787,40 +890,54 @@ indicator of a working fusion. A five-seed paired sweep confirms the effect
 next step is to tune the graph-branch learning rate properly rather than
 accepting the first value we tried.
 
-\textbf{Segment graphs may be the wrong structure.} Our nodes are fixed
-1.5\,s windows. The specification also suggests beat-synchronous segmentation
-and chord-transition graphs, both of which we build but do not use as the
-primary GNN input. A 19-node graph over uniform windows may simply not encode
-much beyond a smoothed timeline.
+\textbf{Segment graphs may be the wrong structure, and the alternative is
+worse.} Our nodes are fixed $1.5$\,s windows. Table~\ref{tab:graphtype} shows
+the chord-transition graph the specification also names performs $0.110$
+Macro-F1 below it, so the segment graph is the better of the two structures we
+built --- but a $19$-node graph over uniform windows may still encode little
+beyond a smoothed timeline, and beat-synchronous segmentation, which we
+implement but did not train on, remains untested. The chord result suggests the
+limitation is in the node features rather than in message passing.
 
-\textbf{Two evaluations we did not run.} The specification asks for a human
+\textbf{The evaluation we did not run.} The specification asks for a human
 study on Task 4 --- at least five listeners rating retrieved clips $1$--$5$ for
 whether the clip matches the query caption. We did not run it, so our retrieval
-claims rest entirely on R@K against a $2{,}773$-clip gallery; with $R@10$ at
-$0.022$ a human study would mostly be measuring near-misses, but it remains a
-gap against the brief rather than a considered omission. Separately, the DEAM
-multi-task numbers in Table~6 were scored at the final epoch, before we adopted
-best-validation checkpointing everywhere else; the metadata archive that
-supplies DEAM's pseudo-captions is no longer retrievable from any surviving
-mirror, so that run could not be repeated under the corrected policy. Both
-comparisons in that table share the methodology, so the reported delta stands
-even though the absolute values are not directly comparable with Table~4.
+claims rest entirely on R@K against a $2{,}773$-clip gallery. The instrument is
+built (\texttt{src/human\_eval.py} generates the rating sheet and aggregates
+returned ratings, refusing to score fewer than five raters), but the study
+itself needs listeners we did not have, and it remains a gap against the brief
+rather than a considered omission.
+
+\textbf{Single seeds.} Every result in this report except the Task 3
+learning-rate comparison and the Task 1 curves comes from one seed. Our own
+sweep puts seed-to-seed spread at $\pm0.023$ Macro-F1, which exceeds several of
+the margins in Table~\ref{tab:t3ablation}; those rankings should be read as
+indicative. The data-scale points in Table~\ref{tab:scale} are likewise single
+seed, which is why we treat the flattening in the last interval as noise rather
+than saturation.
 
 \section{Conclusion}
 We implemented all four tasks and report results that are, for the fusion
 model, negative. We regard the diagnosis as the contribution: a measured
 performance ceiling from duplicated inputs, a measured artist leak in a
-standard split, a measured attention collapse, and a measured multi-task
-trade-off. Each of these would have been invisible had we reported only
+standard split, a measured attention collapse, and --- after correcting our own
+checkpoint policy --- a multi-task term that turned out to be roughly free
+rather than costly. Each of these would have been invisible had we reported only
 headline F1 against no baseline --- and in one case (raw-caption tagging) doing
 so would have overstated our result roughly fivefold. Cross-modal fusion for
 music context understanding remains plausible; this work delimits the
 conditions under which it can be demonstrated.
 
 \section*{Reproducibility}
-Code, seeded configurations, per-run metrics, $155$ example graphs, the t-SNE
-projection and all training logs are in the project repository. Every reported
-number is regenerable from the committed configuration.
+Code, seeded configurations, per-run metrics, $155$ example graphs
+($50$ FMA, $105$ MagnaTagATune, each as both \texttt{.pt} and \texttt{.json}
+with an index manifest), the t-SNE projection and all training logs are in the
+project repository. Every number in this report is lifted from
+\texttt{results/metrics.json} into \texttt{report/\_numbers.json} by
+\texttt{src/aggregate\_metrics.py} and \texttt{src/make\_report\_numbers.py},
+so the paper's reference values cannot be older than the runs they describe.
+Training requires a GPU; every evaluation, plot and notebook in the repository
+runs on CPU in seconds from the committed artifacts.
 
 \begin{thebibliography}{9}\small
 \bibitem{fma} M. Defferrard et al., ``FMA: A Dataset For Music Analysis,''

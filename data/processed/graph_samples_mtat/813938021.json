@@ -1,0 +1,38 @@
+{
+  "track_id": 813938021,
+  "genre": "",
+  "segment_graph": {
+    "n_nodes": 6,
+    "n_edges": 10,
+    "avg_degree": 1.667,
+    "density": 0.3333
+  },
+  "chord_graph": {
+    "n_nodes": 22,
+    "n_edges": 123,
+    "chords": [
+      "A#:maj",
+      "A#:min",
+      "A:maj",
+      "A:min",
+      "B:maj",
+      "B:min",
+      "C#:min",
+      "C:maj",
+      "C:min",
+      "D#:maj",
+      "D#:min",
+      "D:maj",
+      "D:min",
+      "E:maj",
+      "E:min",
+      "F#:maj",
+      "F#:min",
+      "F:maj",
+      "G#:maj",
+      "G#:min",
+      "G:maj",
+      "G:min"
+    ]
+  }
+}

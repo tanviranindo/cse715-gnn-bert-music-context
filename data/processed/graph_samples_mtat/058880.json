@@ -1,0 +1,30 @@
+{
+  "track_id": 58880,
+  "genre": "ambient",
+  "segment_graph": {
+    "n_nodes": 19,
+    "n_edges": 38,
+    "avg_degree": 2.0,
+    "density": 0.1111
+  },
+  "chord_graph": {
+    "n_nodes": 14,
+    "n_edges": 72,
+    "chords": [
+      "A:maj",
+      "A:min",
+      "B:maj",
+      "B:min",
+      "C#:min",
+      "C:maj",
+      "D#:min",
+      "D:maj",
+      "D:min",
+      "E:maj",
+      "E:min",
+      "F#:min",
+      "G:maj",
+      "G:min"
+    ]
+  }
+}

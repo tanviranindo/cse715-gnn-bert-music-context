@@ -1,0 +1,33 @@
+{
+  "track_id": 268330136,
+  "genre": "",
+  "segment_graph": {
+    "n_nodes": 6,
+    "n_edges": 10,
+    "avg_degree": 1.667,
+    "density": 0.3333
+  },
+  "chord_graph": {
+    "n_nodes": 17,
+    "n_edges": 60,
+    "chords": [
+      "A#:maj",
+      "A#:min",
+      "A:maj",
+      "A:min",
+      "B:maj",
+      "C#:maj",
+      "C#:min",
+      "C:maj",
+      "C:min",
+      "D#:min",
+      "D:min",
+      "E:maj",
+      "E:min",
+      "F:maj",
+      "F:min",
+      "G#:maj",
+      "G#:min"
+    ]
+  }
+}

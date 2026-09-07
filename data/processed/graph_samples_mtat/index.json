@@ -1,0 +1,3861 @@
+[
+  {
+    "track_id": 2017,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 72,
+      "avg_degree": 3.6,
+      "density": 0.1895
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 167,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2018,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 62,
+      "avg_degree": 3.1,
+      "density": 0.1632
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 149,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2019,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 64,
+      "avg_degree": 3.2,
+      "density": 0.1684
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 119,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2020,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 84,
+      "avg_degree": 4.2,
+      "density": 0.2211
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 175,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2021,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 84,
+      "avg_degree": 4.2,
+      "density": 0.2211
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 203,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2022,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 86,
+      "avg_degree": 4.3,
+      "density": 0.2263
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 188,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2023,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 84,
+      "avg_degree": 4.2,
+      "density": 0.2211
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 93,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2024,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 108,
+      "avg_degree": 5.4,
+      "density": 0.2842
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 240,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2025,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 86,
+      "avg_degree": 4.3,
+      "density": 0.2263
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 152,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2026,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 74,
+      "avg_degree": 3.7,
+      "density": 0.1947
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 221,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2027,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 86,
+      "avg_degree": 4.3,
+      "density": 0.2263
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 185,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2028,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 74,
+      "avg_degree": 3.7,
+      "density": 0.1947
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 172,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2029,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 60,
+      "avg_degree": 3.0,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 182,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2030,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 68,
+      "avg_degree": 3.4,
+      "density": 0.1789
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 95,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2031,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 86,
+      "avg_degree": 4.3,
+      "density": 0.2263
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 108,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2032,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 66,
+      "avg_degree": 3.3,
+      "density": 0.1737
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 310,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2040,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 80,
+      "avg_degree": 4.0,
+      "density": 0.2105
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 230,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2041,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 56,
+      "avg_degree": 2.8,
+      "density": 0.1474
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 128,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2042,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 52,
+      "avg_degree": 2.6,
+      "density": 0.1368
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 78,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2043,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 46,
+      "avg_degree": 2.3,
+      "density": 0.1211
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 125,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2044,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 82,
+      "avg_degree": 4.1,
+      "density": 0.2158
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 145,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2045,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 80,
+      "avg_degree": 4.0,
+      "density": 0.2105
+    },
+    "chord_graph": {
+      "n_nodes": 18,
+      "n_edges": 67,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 2046,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 84,
+      "avg_degree": 4.2,
+      "density": 0.2211
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 148,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2047,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 64,
+      "avg_degree": 3.2,
+      "density": 0.1684
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 144,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 2048,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 74,
+      "avg_degree": 3.7,
+      "density": 0.1947
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 150,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 52202,
+    "genre": "jazz",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 52,
+      "avg_degree": 2.737,
+      "density": 0.152
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 176,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 52835,
+    "genre": "jazzy",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 68,
+      "avg_degree": 3.579,
+      "density": 0.1988
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 132,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 53005,
+    "genre": "eastern",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 36,
+      "avg_degree": 1.895,
+      "density": 0.1053
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 171,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 53126,
+    "genre": "eastern",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 56,
+      "avg_degree": 2.947,
+      "density": 0.1637
+    },
+    "chord_graph": {
+      "n_nodes": 16,
+      "n_edges": 63,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 54706,
+    "genre": "female vocals",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 50,
+      "avg_degree": 2.632,
+      "density": 0.1462
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 73,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 55270,
+    "genre": "bass",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 54,
+      "avg_degree": 2.842,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 229,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 55539,
+    "genre": "electric",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 46,
+      "avg_degree": 2.421,
+      "density": 0.1345
+    },
+    "chord_graph": {
+      "n_nodes": 13,
+      "n_edges": 63,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F:maj",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 55637,
+    "genre": "dance",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 62,
+      "avg_degree": 3.263,
+      "density": 0.1813
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 99,
+      "chords": [
+        "A#:maj",
+        "A:min",
+        "B:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "D:min",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 56772,
+    "genre": "hard rock",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 102,
+      "avg_degree": 5.368,
+      "density": 0.2982
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 176,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 56842,
+    "genre": "electronic",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 60,
+      "avg_degree": 3.158,
+      "density": 0.1754
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 207,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 56954,
+    "genre": "beat",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 42,
+      "avg_degree": 2.211,
+      "density": 0.1228
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 209,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 57388,
+    "genre": "foreign",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 46,
+      "avg_degree": 2.421,
+      "density": 0.1345
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 278,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 57570,
+    "genre": "drum",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 108,
+      "avg_degree": 5.684,
+      "density": 0.3158
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 265,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 57896,
+    "genre": "flute",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 78,
+      "avg_degree": 4.105,
+      "density": 0.2281
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 101,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58102,
+    "genre": "country",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 62,
+      "avg_degree": 3.263,
+      "density": 0.1813
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 159,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58476,
+    "genre": "choir",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 48,
+      "avg_degree": 2.526,
+      "density": 0.1404
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 139,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58515,
+    "genre": "fast",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 56,
+      "avg_degree": 2.947,
+      "density": 0.1637
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 111,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58554,
+    "genre": "harpsichord",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 36,
+      "avg_degree": 1.895,
+      "density": 0.1053
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 103,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58584,
+    "genre": "cello",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 54,
+      "avg_degree": 2.842,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 121,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58588,
+    "genre": "baroque",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 36,
+      "avg_degree": 1.895,
+      "density": 0.1053
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 140,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58609,
+    "genre": "guitar",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 36,
+      "avg_degree": 1.895,
+      "density": 0.1053
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 118,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58610,
+    "genre": "classical",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 36,
+      "avg_degree": 1.895,
+      "density": 0.1053
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 111,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58629,
+    "genre": "harpsichord",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 52,
+      "avg_degree": 2.737,
+      "density": 0.152
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 106,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58638,
+    "genre": "harp",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 48,
+      "avg_degree": 2.526,
+      "density": 0.1404
+    },
+    "chord_graph": {
+      "n_nodes": 18,
+      "n_edges": 78,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:min",
+        "E:maj",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58757,
+    "genre": "baroque",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 76,
+      "avg_degree": 4.0,
+      "density": 0.2222
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 127,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 58845,
+    "genre": "india",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 50,
+      "avg_degree": 2.632,
+      "density": 0.1462
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 136,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58870,
+    "genre": "female vocal",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 54,
+      "avg_degree": 2.842,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 304,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58875,
+    "genre": "guitar",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 66,
+      "avg_degree": 3.474,
+      "density": 0.193
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 97,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58880,
+    "genre": "ambient",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 38,
+      "avg_degree": 2.0,
+      "density": 0.1111
+    },
+    "chord_graph": {
+      "n_nodes": 14,
+      "n_edges": 72,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 58897,
+    "genre": "classical",
+    "segment_graph": {
+      "n_nodes": 19,
+      "n_edges": 56,
+      "avg_degree": 2.947,
+      "density": 0.1637
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 86,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 143936692,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 12,
+      "avg_degree": 2.0,
+      "density": 0.4
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 74,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 153770545,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 70,
+      "avg_degree": 3.5,
+      "density": 0.1842
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 181,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 178080014,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 15,
+      "n_edges": 53,
+      "chords": [
+        "A#:maj",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 180163568,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 12,
+      "avg_degree": 2.0,
+      "density": 0.4
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 51,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 187002833,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 42,
+      "avg_degree": 2.1,
+      "density": 0.1105
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 171,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 20864451,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 63,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 224827270,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 16,
+      "n_edges": 38,
+      "chords": [
+        "A#:min",
+        "A:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 227144019,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 48,
+      "avg_degree": 2.4,
+      "density": 0.1263
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 130,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 253685199,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 63,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 25523088,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 40,
+      "avg_degree": 2.0,
+      "density": 0.1053
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 123,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 268330136,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 60,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:min",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min"
+      ]
+    }
+  },
+  {
+    "track_id": 290637170,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 58,
+      "avg_degree": 2.9,
+      "density": 0.1526
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 142,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 318073235,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 88,
+      "avg_degree": 4.4,
+      "density": 0.2316
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 74,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 356644369,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 8,
+      "n_edges": 16,
+      "chords": [
+        "A:min",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "F:maj",
+        "F:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 425959081,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 90,
+      "avg_degree": 4.5,
+      "density": 0.2368
+    },
+    "chord_graph": {
+      "n_nodes": 10,
+      "n_edges": 25,
+      "chords": [
+        "B:min",
+        "C:maj",
+        "C:min",
+        "D:maj",
+        "E:maj",
+        "F#:min",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 427223877,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 56,
+      "avg_degree": 2.8,
+      "density": 0.1474
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 54,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 445266036,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 148,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 45689435,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 58,
+      "avg_degree": 2.9,
+      "density": 0.1526
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 60,
+      "chords": [
+        "A#:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 511629104,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 38,
+      "avg_degree": 1.9,
+      "density": 0.1
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 146,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 545811487,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 12,
+      "avg_degree": 2.0,
+      "density": 0.4
+    },
+    "chord_graph": {
+      "n_nodes": 12,
+      "n_edges": 29,
+      "chords": [
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 583378464,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 48,
+      "avg_degree": 2.4,
+      "density": 0.1263
+    },
+    "chord_graph": {
+      "n_nodes": 16,
+      "n_edges": 60,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 59289224,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 60,
+      "avg_degree": 3.0,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 171,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 623080212,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 44,
+      "avg_degree": 2.2,
+      "density": 0.1158
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 148,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 629892689,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 64,
+      "avg_degree": 3.2,
+      "density": 0.1684
+    },
+    "chord_graph": {
+      "n_nodes": 16,
+      "n_edges": 38,
+      "chords": [
+        "A#:min",
+        "A:min",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 687707118,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 52,
+      "avg_degree": 2.6,
+      "density": 0.1368
+    },
+    "chord_graph": {
+      "n_nodes": 8,
+      "n_edges": 16,
+      "chords": [
+        "A:min",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "F:maj",
+        "F:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 68811761,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 181,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 693882895,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 38,
+      "avg_degree": 1.9,
+      "density": 0.1
+    },
+    "chord_graph": {
+      "n_nodes": 16,
+      "n_edges": 53,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "D:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 707978944,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 38,
+      "avg_degree": 1.9,
+      "density": 0.1
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 101,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 71568938,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 60,
+      "avg_degree": 3.0,
+      "density": 0.1579
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 60,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:min",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min"
+      ]
+    }
+  },
+  {
+    "track_id": 727582915,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 154,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 779670773,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 101,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 784590031,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 66,
+      "avg_degree": 3.3,
+      "density": 0.1737
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 47,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 786682675,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 44,
+      "avg_degree": 2.2,
+      "density": 0.1158
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 190,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 787737544,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 156,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 790706237,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 54,
+      "avg_degree": 2.7,
+      "density": 0.1421
+    },
+    "chord_graph": {
+      "n_nodes": 15,
+      "n_edges": 57,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "B:maj",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 813938021,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 123,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 817556990,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 15,
+      "n_edges": 63,
+      "chords": [
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 817577921,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 44,
+      "avg_degree": 2.2,
+      "density": 0.1158
+    },
+    "chord_graph": {
+      "n_nodes": 19,
+      "n_edges": 63,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 824905793,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 130,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 860290814,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 24,
+      "n_edges": 145,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 888368208,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 47,
+      "chords": [
+        "A#:maj",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C:maj",
+        "C:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 899432911,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 15,
+      "n_edges": 57,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "B:maj",
+        "C#:maj",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 905010312,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 23,
+      "n_edges": 142,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 914188849,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 63,
+      "chords": [
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 926687609,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 21,
+      "n_edges": 58,
+      "chords": [
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 928440582,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 54,
+      "avg_degree": 2.7,
+      "density": 0.1421
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 63,
+      "chords": [
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 932958221,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 54,
+      "avg_degree": 2.7,
+      "density": 0.1421
+    },
+    "chord_graph": {
+      "n_nodes": 22,
+      "n_edges": 115,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "F:maj",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 946969617,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 20,
+      "n_edges": 58,
+      "avg_degree": 2.9,
+      "density": 0.1526
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 51,
+      "chords": [
+        "A:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "E:maj",
+        "E:min",
+        "F#:maj",
+        "F#:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  },
+  {
+    "track_id": 963901877,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 20,
+      "n_edges": 60,
+      "chords": [
+        "A#:maj",
+        "A:min",
+        "B:maj",
+        "B:min",
+        "C#:maj",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:min",
+        "F#:maj",
+        "F:maj",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj",
+        "G:min"
+      ]
+    }
+  },
+  {
+    "track_id": 970300772,
+    "genre": "",
+    "segment_graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "avg_degree": 1.667,
+      "density": 0.3333
+    },
+    "chord_graph": {
+      "n_nodes": 17,
+      "n_edges": 56,
+      "chords": [
+        "A#:maj",
+        "A#:min",
+        "A:maj",
+        "B:maj",
+        "B:min",
+        "C#:min",
+        "C:maj",
+        "C:min",
+        "D#:maj",
+        "D#:min",
+        "D:maj",
+        "D:min",
+        "E:min",
+        "F:min",
+        "G#:maj",
+        "G#:min",
+        "G:maj"
+      ]
+    }
+  }
+]

@@ -107,6 +107,7 @@
       "val_test": 0
     },
     "chance_accuracy": 0.125,
+    "graph_input": "segment",
     "models": {
       "sage": {
         "params": 49416,
@@ -127,6 +128,26 @@
         "params": 5256,
         "test_accuracy": 0.37875,
         "test_macro_f1": 0.37081853141803006
+      }
+    },
+    "chord_graph_input": {
+      "note": "Chord-transition graph as the GNN input, same splits/labels as the segment-similarity graphs above. Nodes are chords from a 24-triad vocabulary, features are the chord's pitch-class template, so all timbre is discarded.",
+      "artist_leakage": {
+        "train_test": 0,
+        "train_val": 0,
+        "val_test": 0
+      },
+      "models": {
+        "sage": {
+          "params": 37896,
+          "test_accuracy": 0.33875,
+          "test_macro_f1": 0.31583167769998843
+        },
+        "gat": {
+          "params": 20360,
+          "test_accuracy": 0.3025,
+          "test_macro_f1": 0.271482066535694
+        }
       }
     }
   },
@@ -251,7 +272,23 @@
       }
     },
     "multitask_deam": {
-      "note": "final-epoch scoring; not re-run under the best-val checkpoint policy",
+      "note": "best-validation checkpointing, same policy as the ablation above; directly comparable with the crossattn arm",
+      "tags": {
+        "test_macro_f1": 0.18583545991062123,
+        "test_micro_f1": 0.3656827735840528,
+        "test_auc_pr": 0.2119702098534004
+      },
+      "valence": {
+        "mae": 0.628829978183025,
+        "r2": 0.38965038728188184
+      },
+      "arousal": {
+        "mae": 0.6619848489331511,
+        "r2": 0.19074616064580974
+      }
+    },
+    "multitask_deam_superseded_final_epoch": {
+      "note": "final-epoch scoring; superseded by the best-val re-run and kept only for continuity with the first report draft",
       "tags": {
         "test_macro_f1": 0.11602719260704689,
         "test_micro_f1": 0.27865340963585794,
@@ -276,24 +313,107 @@
       "test": 2773
     },
     "gallery_size": 2773,
-    "best_epoch": 16,
-    "caption_to_audio": {
-      "R@1": 0.0028849621303379536,
-      "R@5": 0.010818608105182648,
-      "R@10": 0.021997835487127304
-    },
-    "audio_to_caption": {
-      "R@1": 0.002163721714168787,
-      "R@5": 0.012621709145605564,
-      "R@10": 0.022358456626534462
-    },
-    "median_rank": {
-      "caption_to_audio": 527.0,
-      "audio_to_caption": 538.0
-    },
     "random_baseline": {
       "R@1": 0.0003606202668589975,
       "R@10": 0.003606202668589975
+    },
+    "headline": "gnn_lr_1e-3",
+    "runs": {
+      "shared_lr": {
+        "best_epoch": 16,
+        "caption_to_audio": {
+          "R@1": 0.0028849621303379536,
+          "R@5": 0.010818608105182648,
+          "R@10": 0.021997835487127304
+        },
+        "audio_to_caption": {
+          "R@1": 0.002163721714168787,
+          "R@5": 0.012621709145605564,
+          "R@10": 0.022358456626534462
+        },
+        "median_rank": {
+          "caption_to_audio": 527.0,
+          "audio_to_caption": 538.0
+        }
+      },
+      "gnn_lr_1e-3": {
+        "best_epoch": 23,
+        "caption_to_audio": {
+          "R@1": 0.005769924260675907,
+          "R@5": 0.017309773713350296,
+          "R@10": 0.033898305147886276
+        },
+        "audio_to_caption": {
+          "R@1": 0.005409304052591324,
+          "R@5": 0.01839163340628147,
+          "R@10": 0.03173458203673363
+        },
+        "median_rank": {
+          "caption_to_audio": 400.0,
+          "audio_to_caption": 400.0
+        }
+      }
+    },
+    "caption_to_audio": {
+      "R@1": 0.005769924260675907,
+      "R@5": 0.017309773713350296,
+      "R@10": 0.033898305147886276
+    },
+    "audio_to_caption": {
+      "R@1": 0.005409304052591324,
+      "R@5": 0.01839163340628147,
+      "R@10": 0.03173458203673363
+    },
+    "median_rank": {
+      "caption_to_audio": 400.0,
+      "audio_to_caption": 400.0
+    },
+    "best_epoch": 23,
+    "data_scale_ablation": {
+      "note": "Task 4 retrieval against training-set size. Only the train split is subsampled; val, test and the gallery are held fixed so R@K is comparable across points. Single seed per point.",
+      "points": [
+        {
+          "fraction": 0.25,
+          "n_train": 549,
+          "c2a_R@10": 0.015506671741604805,
+          "a2c_R@10": 0.01622791215777397
+        },
+        {
+          "fraction": 0.5,
+          "n_train": 1098,
+          "c2a_R@10": 0.02055535465478897,
+          "a2c_R@10": 0.021637216210365295
+        },
+        {
+          "fraction": 0.75,
+          "n_train": 1646,
+          "c2a_R@10": 0.03245582431554794,
+          "a2c_R@10": 0.027407139539718628
+        },
+        {
+          "fraction": 1.0,
+          "n_train": 2195,
+          "c2a_R@10": 0.033898305147886276,
+          "a2c_R@10": 0.03173458203673363
+        }
+      ],
+      "log_linear_fit_R@10_vs_ln_n": {
+        "slope_per_ln_unit": 0.01433,
+        "gain_per_doubling": 0.00993,
+        "intercept": -0.07614,
+        "r_squared": 0.9141
+      },
+      "extrapolation": {
+        "target_R@10": 0.1,
+        "pairs_required": 218766,
+        "multiple_of_available": 99.7,
+        "caveat": "A log-linear extrapolation over one order of magnitude is indicative, not a prediction; it is reported to characterise the regime, not to forecast a specific corpus size."
+      },
+      "saturation_check": {
+        "gain_50_to_75": 0.0119,
+        "gain_75_to_100": 0.00144,
+        "reading": "possible flattening in the last interval, but single-seed noise is the same order as this difference"
+      }
     },
     "zero_shot_tagging": {
       "n_tags": 50,
