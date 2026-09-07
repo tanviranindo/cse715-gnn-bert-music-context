@@ -295,16 +295,9 @@
       "detail": "Spec S6 asks for >=5 listeners rating retrieved-clip/caption match on 1-5. Requires real listeners; cannot be synthesised. Open gap against the PDF.",
       "impact": "medium - an explicit spec deliverable",
       "status": "open"
-    },
-    {
-      "title": "Single-seed results",
-      "detail": "The separate-GNN-lr result (+0.075 Macro-F1 over BERT-only) is the largest effect in the project but comes from one seed; variance unmeasured.",
-      "impact": "medium - affects strength of the central claim",
-      "status": "open"
     }
   ],
   "next_session_checklist": [
-    "Optional: seed sweep (3-5 seeds) on train_fusion --gnn-lr 1e-3 to put error bars on the headline Task 3 result",
     "Optional: if a DEAM metadata.zip source appears, rebuild deam_graphs.pt and re-run the multi-task row under best-val checkpoints",
     "Optional: arrange >=5 listeners for the Task 4 human evaluation (spec S6)",
     "Fix the GitHub Project board token scope: gh auth refresh -s project,read:project",
@@ -326,7 +319,9 @@
     "python -m src.train_fusion --mode crossattn --epochs 8 --freeze-bert --deam-cache /nonexistent --out-dir results/_freeze",
     "python -m src.train_contrastive --cache /data/processed/musiccaps_graphs.pt --epochs 30 --out-dir results",
     "python -m src.analyze_fusion --checkpoint results/task3_crossattn.pt --cache /data/processed/mtat_graphs.pt --out-dir results",
-    "python -m src.make_plots --results results --out results/plots"
+    "python -m src.make_plots --results results --out results/plots",
+    "bash sweep: for s in 42 1 2 3 4; do for arm in shared gnnlr; do python -m src.train_fusion --mode crossattn --epochs 8 --seed $s [--gnn-lr 1e-3 if gnnlr] --deam-cache /nonexistent --out-dir results/_sweep/${arm}_s${s}; done; done",
+    "python src/aggregate_sweep.py results/_sweep"
   ],
   "compute": {
     "provider": "Vast.ai",

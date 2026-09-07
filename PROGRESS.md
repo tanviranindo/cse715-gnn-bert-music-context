@@ -413,3 +413,38 @@ the gallery is 5.2x larger (2773 vs 536) and training pairs halved (2195 vs
 - t-SNE and case studies regenerated from the new cross-attention checkpoint.
 - 50 graph samples (25 FMA across 8 genres + 25 MTAT), index rebuilt.
 - **Not submitted, not merged, not published.**
+
+## Seed sweep (2026-09-07, instance 50118002)
+
+Tesla V100 16GB, 72 cores, $0.0877/hr. The Task 3 learning-rate result was the
+project's central positive claim and rested on one seed, so both arms were
+re-run over five seeds (42, 1, 2, 3, 4) on a single machine. The arms share
+seeds, so the per-seed difference is paired and tested with a paired t-test.
+
+| cross-attention | shared lr 2e-5 | separate GNN lr 1e-3 | paired delta | p |
+|---|---|---|---|---|
+| macro-F1 | 0.1724 ± 0.0228 | 0.2398 ± 0.0197 | **+0.0674 ± 0.0226** | 0.0026 |
+| micro-F1 | 0.3347 ± 0.0243 | 0.4155 ± 0.0275 | **+0.0808 ± 0.0184** | 0.0006 |
+| AUC-PR | 0.1813 ± 0.0148 | 0.2598 ± 0.0180 | **+0.0786 ± 0.0104** | 0.0001 |
+
+Per-seed macro-F1 deltas: +0.0716, +0.0401, +0.0766, +0.0977, +0.0510 —
+**positive on every seed**, ~3x the seed-to-seed spread.
+
+Two things this also established, both worth keeping:
+
+- **Seed variance (±0.023 macro-F1) exceeds several between-ablation margins in
+  the main Task 3 table.** The BERT-only vs early-concat vs cross-attention
+  differences at a shared learning rate should not be read as firm rankings.
+  Only the learning-rate effect is comfortably outside the noise.
+- **Seed 42 reproduced as 0.2537 here vs 0.2457 on the RTX 4060 Ti box** — same
+  code, same seed, different GPU and library build. The third decimal is not
+  portable across machines; the committed single-seed report numbers are from
+  the original box and are, if anything, slightly conservative versus the
+  sweep means.
+
+Artifacts: `results/_sweep/{shared,gnnlr}_s{42,1,2,3,4}/metrics_task3.json`,
+aggregated by `src/aggregate_sweep.py` (paired t-test implemented in-file and
+validated against known t critical values: t=2.776/df=4 -> p=0.0500,
+t=4.604/df=4 -> p=0.0100).
+
+Instance destroyed after pulling artifacts. Still not submitted.

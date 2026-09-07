@@ -41,8 +41,9 @@ covering $61.6\%$ of test clips; (iii) that our cross-attention collapses to
 exactly uniform weights (entropy $1.000$ of the uniform maximum) under a shared
 learning rate, so the fusion degenerates into averaging the caption; and (iv)
 that giving the graph branch its own learning rate un-collapses that attention
-(entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 from $0.192$ to
-$0.246$, the largest single effect we measured. We report every number against
+(entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 by
+$+0.067 \pm 0.023$ over five paired seeds ($p = 0.003$), the largest effect we
+measured. We report every number against
 an explicit baseline, including a lexical-match control that scores Micro-F1
 $0.540$ where our model scores $0.565$ --- a margin small enough that, on
 Macro-F1, the control actually wins.
@@ -434,9 +435,37 @@ predicted. Against BERT-only this is $+0.075$ Macro-F1 and $+0.109$ Micro-F1:
 on this corpus, structural fusion helps once the graph branch is actually
 trained.
 
-We state two caveats plainly. First, these are single-seed runs; the
-learning-rate result is large enough ($+0.109$ Micro-F1) to be unlikely to be
-seed noise, but we have not measured its variance. Second, the earlier draft's
+\textbf{The effect survives a seed sweep.} Because this is the report's central
+positive claim, we re-ran both arms over five seeds (42, 1, 2, 3, 4) on one
+machine. Since the two arms share seeds, the per-seed difference is paired and
+we test it with a paired $t$-test.
+
+\begin{table}[H]
+\centering\small
+\caption{Task 3 seed sweep, cross-attention, $n=5$ paired seeds. Mean $\pm$
+sample standard deviation; $p$ from a two-sided paired $t$-test on the
+per-seed difference.}
+\begin{tabular}{lccc}
+\toprule
+& Shared lr & Separate GNN lr & Paired $\Delta$ \\
+\midrule
+Macro-F1 & $0.172 \pm 0.023$ & $0.240 \pm 0.020$ & $+0.067 \pm 0.023$ ($p{=}0.003$) \\
+Micro-F1 & $0.335 \pm 0.024$ & $0.416 \pm 0.028$ & $+0.081 \pm 0.018$ ($p{=}0.001$) \\
+AUC-PR   & $0.181 \pm 0.015$ & $0.260 \pm 0.018$ & $+0.079 \pm 0.010$ ($p{<}0.001$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The difference is positive for \emph{every} seed (macro-F1 deltas
+$+0.072, +0.040, +0.077, +0.098, +0.051$) and roughly three times the
+seed-to-seed spread, so the gap is not an artifact of a lucky seed. We note
+that seed-to-seed variation ($\pm0.023$ Macro-F1) is itself larger than several
+of the between-ablation margins in Table~3, which is a caution against reading
+those smaller differences too firmly. We also reproduced seed 42 on different
+hardware and obtained $0.254$ rather than $0.246$, so the third decimal is not
+portable across machines.
+
+We state one further caveat plainly. The earlier draft's
 conclusion that ``fusion does not clearly win'' was confounded by evaluating
 every ablation at a fixed epoch~8 rather than at its best validation epoch ---
 GNN-only, for instance, peaks at epoch~1 and has decayed to near-zero
@@ -660,8 +689,10 @@ cutting attention entropy from $1.000$ to $0.695$ of uniform; freezing BERT
 instead produced the sharpest attention of any run but the worst Macro-F1. The
 conclusion is that the shared learning rate, not the architecture, was the
 binding constraint --- and that attention sharpness alone is not a sufficient
-indicator of a working fusion. The natural next step is a seed sweep over the
-separate-learning-rate configuration, which we report from a single seed.
+indicator of a working fusion. A five-seed paired sweep confirms the effect
+($+0.067 \pm 0.023$ Macro-F1, $p = 0.003$, positive on every seed). The natural
+next step is to tune the graph-branch learning rate properly rather than
+accepting the first value we tried.
 
 \textbf{Segment graphs may be the wrong structure.} Our nodes are fixed
 1.5\,s windows. The specification also suggests beat-synchronous segmentation

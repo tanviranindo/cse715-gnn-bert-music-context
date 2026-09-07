@@ -1,0 +1,154 @@
+{
+  "config": {
+    "mtat_cache": "/data/processed/mtat_graphs.pt",
+    "deam_cache": "/data/processed/__no_deam__.pt",
+    "out_dir": "results/_sweep/shared_s4",
+    "mode": "crossattn",
+    "epochs": 8,
+    "batch_size": 32,
+    "lr": 2e-05,
+    "hidden": 128,
+    "layers": 2,
+    "conv": "gat",
+    "attn_dim": 256,
+    "dropout": 0.3,
+    "alpha": 1.0,
+    "beta": 1.0,
+    "max_length": 64,
+    "freeze_bert": false,
+    "gnn_lr": null,
+    "seed": 4
+  },
+  "n_tags": 50,
+  "vocab": [
+    "guitar",
+    "classical",
+    "slow",
+    "vocal",
+    "techno",
+    "string",
+    "drum",
+    "electronic",
+    "no vocal",
+    "rock",
+    "fast",
+    "beat",
+    "piano",
+    "male vocal",
+    "female vocal",
+    "ambient",
+    "violin",
+    "synth",
+    "india",
+    "opera",
+    "harpsichord",
+    "loud",
+    "quiet",
+    "flute",
+    "pop",
+    "soft",
+    "sitar",
+    "choir",
+    "solo",
+    "new age",
+    "dance",
+    "weird",
+    "harp",
+    "cello",
+    "country",
+    "metal",
+    "male vocals",
+    "jazz",
+    "eastern",
+    "female vocals",
+    "bass",
+    "modern",
+    "no piano",
+    "jazzy",
+    "baroque",
+    "foreign",
+    "orchestra",
+    "hard rock",
+    "electric",
+    "trance"
+  ],
+  "split_sizes": {
+    "train": 15593,
+    "val": 3086,
+    "test": 2636
+  },
+  "runs": {
+    "crossattn": {
+      "mode": "crossattn",
+      "params": 66834740,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.26254356295236797,
+          "val_macro_f1": 0.018553260120393232,
+          "val_micro_f1": 0.11934604904632153,
+          "seconds": 38.2
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.17347459614154745,
+          "val_macro_f1": 0.03766952607371527,
+          "val_micro_f1": 0.19593104011765666,
+          "seconds": 37.7
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.1538408365802931,
+          "val_macro_f1": 0.048363318920994464,
+          "val_micro_f1": 0.19191170414298658,
+          "seconds": 37.7
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.1444430756458982,
+          "val_macro_f1": 0.06835458820960282,
+          "val_micro_f1": 0.22263036013734727,
+          "seconds": 37.6
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.1383448757506052,
+          "val_macro_f1": 0.08750801114890808,
+          "val_micro_f1": 0.2534047436878347,
+          "seconds": 37.5
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.13408730197392527,
+          "val_macro_f1": 0.07931050653220277,
+          "val_micro_f1": 0.2377320699483861,
+          "seconds": 37.4
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.13058043182751194,
+          "val_macro_f1": 0.09794900041265218,
+          "val_micro_f1": 0.2706353919239905,
+          "seconds": 37.3
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.12789460995280352,
+          "val_macro_f1": 0.1001376958914446,
+          "val_micro_f1": 0.2640788119394207,
+          "seconds": 37.4
+        }
+      ],
+      "selected_epoch": 8,
+      "selected_val_macro_f1": 0.1001376958914446,
+      "threshold": 0.2,
+      "test_macro_f1": 0.15669190636676197,
+      "test_micro_f1": 0.32605786059919695,
+      "test_auc_pr": 0.17779157834938658,
+      "attention": {
+        "entropy_vs_uniform": 0.9998406860046088,
+        "peak_over_uniform": 1.0354789912700653
+      }
+    }
+  }
+}
