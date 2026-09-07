@@ -40,7 +40,8 @@
       "difficulty": "Advanced",
       "points": 18,
       "status": "done",
-      "week": 6
+      "week": 6,
+      "note": "retrieval/zero-shot done on the official AudioSet eval split; the spec's human evaluation (>=5 listeners) is still outstanding"
     },
     {
       "id": "report",
@@ -48,7 +49,8 @@
       "difficulty": "\u2014",
       "points": 20,
       "status": "in_progress",
-      "week": 7
+      "week": 7,
+      "note": "report written (7pp) and repo reproducible; kept in_progress only because the project has deliberately not been submitted"
     }
   ],
   "roadmap": [
@@ -326,24 +328,42 @@
   "compute": {
     "provider": "Vast.ai",
     "instance": null,
-    "note": "all 4 tasks done; report written; notebooks done; only Task 3 follow-up runs outstanding",
+    "note": "all 4 tasks done on official splits with best-validation checkpoints; 5-seed paired sweep confirms the Task 3 learning-rate result; report 7pp; no instance running; not submitted",
     "credit_remaining": 3.667,
     "results": {
-      "task1_musiccaps_stripped": 0.608,
-      "task1_mtat": 0.258,
-      "task2_gat_macro_f1": 0.432,
-      "task2_cnn_acc": 0.443,
-      "task3_bert_macro_f1": 0.1864,
-      "task3_crossattn_macro_f1": 0.1817,
-      "task3_crossattn_micro_f1": 0.323,
-      "task4_c2a_R@10": 0.1269,
-      "task4_a2c_R@10": 0.1325,
-      "task4_median_rank": 68,
-      "task4_gallery": 536,
-      "task4_zeroshot_micro_f1": 0.1171,
-      "task3_multitask_macro_f1": 0.116,
-      "task3_valence_r2": 0.181,
-      "task3_arousal_r2": 0.085
+      "_note": "regenerated from results/*.json on 2026-09-07 after the official-split, best-checkpoint and seed-sweep corrections. MusicCaps rows are the OFFICIAL AudioSet eval split; MTAT rows are artist-grouped.",
+      "task1_mtat_micro": 0.2751,
+      "task1_mtat_macro": 0.1923,
+      "task1_musiccaps_micro": 0.5647,
+      "task1_musiccaps_lexical_macro": 0.5499,
+      "task1_musiccaps_stripped_micro": 0.4877,
+      "task2_sage_acc": 0.3962,
+      "task2_gat_acc": 0.4325,
+      "task2_gat_macro_f1": 0.4259,
+      "task2_cnn_acc": 0.4825,
+      "task2_cnn_macro_f1": 0.4794,
+      "task2_b4_pca_acc": 0.3787,
+      "task3_bert_macro_f1": 0.1709,
+      "task3_gnn_macro_f1": 0.1228,
+      "task3_concat_macro_f1": 0.1681,
+      "task3_crossattn_macro_f1": 0.1925,
+      "task3_crossattn_micro_f1": 0.3245,
+      "task3_freeze_bert_macro_f1": 0.1176,
+      "task3_gnnlr_macro_f1": 0.2457,
+      "task3_gnnlr_micro_f1": 0.4152,
+      "task3_sweep_macro_f1_delta": "+0.0674 +/- 0.0226 (n=5 paired seeds, p=0.0026)",
+      "task3_sweep_shared_macro_f1": "0.1724 +/- 0.0228",
+      "task3_sweep_gnnlr_macro_f1": "0.2398 +/- 0.0197",
+      "task4_split": "official_audioset_eval",
+      "task4_gallery": 2773,
+      "task4_c2a_R@10": 0.022,
+      "task4_a2c_R@10": 0.0224,
+      "task4_median_rank": 527.0,
+      "task4_zeroshot_micro_f1": 0.107,
+      "task3_multitask_macro_f1_STALE": 0.116,
+      "task3_valence_r2_STALE": 0.1813,
+      "task3_arousal_r2_STALE": 0.0845,
+      "_stale_note": "the *_STALE multitask rows were NOT re-run under the corrected best-validation-checkpoint policy; DEAM metadata.zip is unobtainable."
     }
   }
 }
