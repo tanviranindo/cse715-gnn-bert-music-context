@@ -1,0 +1,9 @@
+{
+  "name": "gnn-bert-listening-study",
+  "private": true,
+  "type": "module",
+  "description": "Task 4 human evaluation: 5+ listeners rate whether each retrieved clip matches its query caption.",
+  "dependencies": {
+    "@vercel/blob": "^0.27.0"
+  }
+}

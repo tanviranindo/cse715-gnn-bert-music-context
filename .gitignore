@@ -39,3 +39,7 @@ notebooks/_exec_*.ipynb
 report/*.aux
 report/*.log
 report/*.out
+
+# Vercel CLI link + pulled env (never commit tokens)
+.vercel/
+*.env.local

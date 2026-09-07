@@ -39,180 +39,419 @@ MIN_RATERS = 5
 # build
 # --------------------------------------------------------------------------
 
-PAGE = """<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
+PAGE = r"""<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Task 4 retrieval rating sheet</title>
+<meta name="robots" content="noindex">
+<title>Does the clip match the description?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
- :root { color-scheme: light dark; }
- body { font: 15px/1.55 system-ui, -apple-system, sans-serif; max-width: 820px;
-        margin: 0 auto; padding: 2rem 1.25rem 5rem; }
- h1 { font-size: 1.35rem; margin: 0 0 .25rem; }
- .lede { color: #666; margin: 0 0 1.5rem; }
- fieldset { border: 1px solid #bbb; margin: 0 0 1.5rem; padding: 1rem 1.15rem; }
- legend { font-weight: 600; padding: 0 .4rem; }
- .caption { background: rgba(127,127,127,.10); padding: .7rem .85rem; margin: 0 0 1rem; }
- .clip { border-top: 1px solid #ddd; padding: .9rem 0; }
- .clip:first-of-type { border-top: 0; }
- iframe { border: 0; width: 100%; max-width: 420px; aspect-ratio: 16/9; }
- .noaudio { color: #a33; font-size: .85rem; }
- .fallback { font-size: .85rem; color: #666; margin: .35rem 0 0; }
- .filenote { border: 1px solid #c90; background: rgba(200,150,0,.10);
-   padding: .7rem .85rem; font-size: .9rem; margin: 0 0 1.25rem; }
- .scale { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .6rem; }
- .scale label { border: 1px solid #999; padding: .3rem .6rem; cursor: pointer; }
- .scale input { margin-right: .35rem; }
- .bar { position: sticky; bottom: 0; background: Canvas; border-top: 1px solid #999;
-        padding: .85rem 0; display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; }
- button { font: inherit; padding: .45rem 1rem; cursor: pointer; }
- input[type=text] { font: inherit; padding: .4rem .5rem; }
- code { background: rgba(127,127,127,.15); padding: .1rem .3rem; }
-</style></head><body>
-<h1>Task 4 — does the retrieved clip match the caption?</h1>
-<p class="lede">Ten query captions, each with the three clips the model retrieved
-for it. Play each clip and rate <strong>how well it matches the caption you were
-shown</strong>, from 1 (no relation) to 5 (an excellent match). Rate what you
-hear, not whether you like it. Roughly 15 minutes.</p>
-<p class="lede"><strong>Each clip is a ten-second excerpt</strong>, and the
-player is set to start at the right moment. If a player shows an error or stays
-blank, use the “Open on YouTube” link under it — that always works — and listen
-for ten seconds from where it starts. If a video is unavailable in your country
-or has been deleted, <strong>leave that one unrated</strong> rather than
-guessing; a missing rating is fine, an invented one is not.</p>
-<p class="lede"><strong>Scale.</strong> 1 = unrelated · 2 = shares little ·
-3 = shares mood or instrumentation · 4 = a good match with minor differences ·
-5 = matches the description closely.</p>
-__WARNING__
-<p class="filenote" id="filenote" hidden><strong>Heads up:</strong> you opened this
-file directly, and YouTube blocks its inline player in that mode (it shows
-“Video player configuration error”). Use the <strong>Open on YouTube</strong>
-link under each clip instead — each one jumps straight to the right ten seconds.
-Everything else on this page works normally.</p>
-<form id="sheet">__ITEMS__</form>
-<div class="bar">
-  <label>Your name or initials <input type="text" id="rater" required></label>
-  <button type="button" id="save">Download my ratings</button>
-  <span id="status"></span>
-</div>
-<script>
-// Opened as file:// ? The embedded players cannot work (null origin), so point
-// raters at the direct links rather than letting them hit error 153 thirty times.
-if (location.protocol === "file:") {
-  var fn = document.getElementById("filenote");
-  if (fn) fn.hidden = false;
+:root {
+  color-scheme: light;
+  --ground: #E9EDEC;
+  --surface: #FFFFFF;
+  --ink: #14181B;
+  --ink-soft: #5A656C;
+  --ink-faint: #8A9399;
+  --rule: #D3DAD8;
+  --accent: #1F6156;
+  --accent-tint: #DCEAE5;
+  --flag: #A8471F;
+  --serif: Newsreader, Georgia, "Times New Roman", serif;
+  --sans: "Inter Tight", system-ui, -apple-system, sans-serif;
 }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+.bar { position: sticky; top: 0; z-index: 20; background: var(--ground);
+  border-bottom: 1px solid var(--rule); }
+.bar-in { max-width: 42rem; margin: 0 auto; padding: .7rem 1.15rem .55rem;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.bar-name { font-weight: 600; font-size: .95rem; letter-spacing: -.01em; }
+.bar-step { font-size: .85rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.track { height: 2px; background: var(--rule); }
+.track > i { display: block; height: 100%; width: 0; background: var(--accent);
+  transition: width .3s ease; }
+main { max-width: 42rem; margin: 0 auto; padding: 1.5rem 1.15rem 6rem; }
+h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 5vw, 2.3rem);
+  line-height: 1.2; margin: .4rem 0 .8rem; letter-spacing: -.01em; }
+h2 { font-family: var(--sans); font-size: 1rem; font-weight: 600; margin: 0 0 .5rem; }
+p { margin: 0 0 1rem; max-width: 34rem; }
+.lede { color: var(--ink-soft); }
+.quiet { color: var(--ink-soft); font-size: .9rem; }
+.caption {
+  font-family: var(--serif); font-size: clamp(1.25rem, 3.6vw, 1.6rem);
+  line-height: 1.42; margin: 0; color: var(--ink);
+}
+.caption-wrap { background: var(--surface); border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent); padding: 1.15rem 1.25rem; margin: 0 0 1.6rem; }
+.ask { font-size: .95rem; color: var(--ink-soft); margin: 0 0 1.75rem; }
+.clip { border-top: 1px solid var(--rule); padding: 1.4rem 0 .35rem; }
+.clip:first-of-type { border-top: 0; padding-top: .35rem; }
+.clip-head { display: flex; align-items: baseline; justify-content: space-between;
+  gap: 1rem; margin: 0 0 .7rem; }
+.clip-name { font-weight: 600; font-size: .95rem; }
+.player { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #0d1113;
+  border: 1px solid var(--rule); }
+.player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.altlink { font-size: .85rem; margin: .5rem 0 0; }
+.altlink a { color: var(--accent); }
+.scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: .4rem;
+  margin: .9rem 0 .3rem; }
+.scale button {
+  font: inherit; font-size: .95rem; font-weight: 500;
+  min-height: 2.9rem; padding: .3rem;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--rule); border-radius: 2px; cursor: pointer;
+}
+.scale button:hover { border-color: var(--accent); }
+.scale button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.scale button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent);
+  color: #fff; }
+.legend { display: flex; justify-content: space-between; font-size: .78rem;
+  color: var(--ink-faint); }
+.skip { margin: .55rem 0 0; font-size: .85rem; }
+.skip button { font: inherit; font-size: .85rem; background: none; border: 0;
+  color: var(--ink-soft); text-decoration: underline; cursor: pointer; padding: 0; }
+.skip button[aria-pressed="true"] { color: var(--flag); font-weight: 500; }
+.nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface);
+  border-top: 1px solid var(--rule); }
+.nav-in { max-width: 42rem; margin: 0 auto; padding: .75rem 1.15rem;
+  display: flex; align-items: center; gap: .8rem;
+  padding-bottom: calc(.75rem + env(safe-area-inset-bottom)); }
+.nav .spacer { flex: 1; }
+button.primary, button.ghost {
+  font: inherit; font-weight: 500; font-size: .95rem; cursor: pointer;
+  padding: .65rem 1.35rem; border-radius: 2px; min-height: 2.75rem;
+}
+button.primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+button.primary:disabled { background: var(--rule); border-color: var(--rule);
+  color: var(--ink-faint); cursor: not-allowed; }
+button.ghost { background: transparent; color: var(--ink-soft); border: 1px solid transparent; }
+button.ghost:hover { color: var(--ink); }
+button.primary:focus-visible, button.ghost:focus-visible { outline: 2px solid var(--ink);
+  outline-offset: 2px; }
+.note { font-size: .9rem; color: var(--ink-soft); }
+label.field { display: block; margin: 0 0 1.5rem; max-width: 22rem; }
+label.field span { display: block; font-weight: 500; font-size: .9rem; margin: 0 0 .35rem; }
+input[type=text] { font: inherit; width: 100%; padding: .6rem .7rem; min-height: 2.75rem;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: 2px; color: var(--ink); }
+input[type=text]:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.facts { border-top: 1px solid var(--rule); margin: 1.75rem 0 0; padding: 1rem 0 0; }
+.facts div { display: flex; gap: 1rem; padding: .3rem 0; font-size: .9rem; }
+.facts dt { color: var(--ink-soft); flex: 0 0 8.5rem; }
+.facts dd { margin: 0; }
+.status { font-size: .9rem; margin: 1rem 0 0; }
+.status.err { color: var(--flag); }
+.tick { font-family: var(--serif); font-size: 2.6rem; line-height: 1; color: var(--accent);
+  margin: 0 0 .6rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head><body>
 
-const TOTAL = __TOTAL__;
-function collect() {
-  const out = [];
-  document.querySelectorAll("[data-pair]").forEach(function (el) {
-    const picked = el.querySelector("input[type=radio]:checked");
-    out.push({
-      query_index: Number(el.dataset.query),
-      rank: Number(el.dataset.rank),
-      clip_id: el.dataset.clip,
-      rating: picked ? Number(picked.value) : null
+<header class="bar">
+  <div class="bar-in">
+    <span class="bar-name">Music description study</span>
+    <span class="bar-step" id="step"></span>
+  </div>
+  <div class="track"><i id="fill"></i></div>
+</header>
+
+<main id="view"></main>
+
+<div class="nav"><div class="nav-in" id="nav"></div></div>
+
+<script>
+const STUDY = __DATA__;
+const ENDPOINT = "__ENDPOINT__";
+const state = { rater: "", i: -1, ratings: {}, skipped: {}, sent: false };
+const view = document.getElementById("view");
+const nav = document.getElementById("nav");
+const stepEl = document.getElementById("step");
+const fillEl = document.getElementById("fill");
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+function key(qi, rank) { return qi + ":" + rank; }
+function mmss(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+
+function answered(qi) {
+  return STUDY.queries[qi].clips.every(function (c) {
+    return state.ratings[key(qi, c.rank)] != null || state.skipped[key(qi, c.rank)];
+  });
+}
+function totalDone() {
+  let n = 0;
+  STUDY.queries.forEach(function (q, qi) {
+    q.clips.forEach(function (c) {
+      if (state.ratings[key(qi, c.rank)] != null || state.skipped[key(qi, c.rank)]) n++;
     });
   });
-  return out;
+  return n;
 }
-document.getElementById("save").addEventListener("click", function () {
-  const rater = document.getElementById("rater").value.trim();
-  const status = document.getElementById("status");
-  if (!rater) { status.textContent = "Enter your name first."; return; }
-  const rows = collect();
-  const done = rows.filter(function (r) { return r.rating !== null; }).length;
-  if (done < TOTAL) {
-    status.textContent = "Rated " + done + " of " + TOTAL + " — please finish all of them.";
-    return;
-  }
-  const blob = new Blob([JSON.stringify({ rater: rater, ratings: rows }, null, 2)],
-                        { type: "application/json" });
+
+function render() {
+  if (state.i < 0) return renderWelcome();
+  if (state.i >= STUDY.queries.length) return renderDone();
+  return renderQuery(state.i);
+}
+
+function renderWelcome() {
+  stepEl.textContent = "";
+  fillEl.style.width = "0%";
+  view.innerHTML =
+    '<h1>Does the music match the description?</h1>' +
+    '<p class="lede">You will see ten short written descriptions of music. Each one ' +
+    'comes with three clips that a machine-learning model picked out as matching it. ' +
+    'Your job is to say how well each clip actually fits the words.</p>' +
+    '<p class="lede">There are no right answers and nothing is being tested about you. ' +
+    'Rate what you hear, not whether you like the music.</p>' +
+    '<label class="field"><span>Your name or initials</span>' +
+    '<input type="text" id="rater" autocomplete="name" placeholder="e.g. A. Rahman"></label>' +
+    '<dl class="facts">' +
+      '<div><dt>Time needed</dt><dd>About 15 minutes</dd></div>' +
+      '<div><dt>What we record</dt><dd>Your ratings and the name you type. Nothing else.</dd></div>' +
+      '<div><dt>Purpose</dt><dd>Evaluating a music retrieval model for a university ' +
+        'neural networks course project</dd></div>' +
+      '<div><dt>Audio</dt><dd>Plays from YouTube, cued to the exact ten seconds each ' +
+        'description refers to</dd></div>' +
+    '</dl>';
+  nav.innerHTML = '<span class="spacer"></span>' +
+    '<button class="primary" id="go">Start rating</button>';
+  const input = document.getElementById("rater");
+  input.value = state.rater;
+  input.addEventListener("input", function () { state.rater = input.value; });
+  document.getElementById("go").addEventListener("click", function () {
+    if (!input.value.trim()) { input.focus(); return; }
+    state.rater = input.value.trim();
+    state.i = 0; render(); window.scrollTo(0, 0);
+  });
+}
+
+function renderQuery(qi) {
+  const q = STUDY.queries[qi];
+  stepEl.textContent = "Description " + (qi + 1) + " of " + STUDY.queries.length;
+  fillEl.style.width = ((totalDone() / STUDY.total) * 100).toFixed(1) + "%";
+
+  let html =
+    '<div class="caption-wrap"><p class="caption">' + esc(q.caption) + '</p></div>' +
+    '<p class="ask">How well does each clip below fit that description?</p>';
+
+  q.clips.forEach(function (c, idx) {
+    const k = key(qi, c.rank);
+    const chosen = state.ratings[k];
+    const skipped = !!state.skipped[k];
+    let player;
+    if (c.ytid && c.start_s != null) {
+      player =
+        '<div class="player"><iframe src="https://www.youtube-nocookie.com/embed/' +
+        encodeURIComponent(c.ytid) + '?start=' + c.start_s + '&end=' + c.end_s +
+        '" allow="encrypted-media" referrerpolicy="strict-origin-when-cross-origin" ' +
+        'title="Clip ' + (idx + 1) + '" loading="lazy"></iframe></div>' +
+        '<p class="altlink">Not playing? <a href="https://www.youtube.com/watch?v=' +
+        encodeURIComponent(c.ytid) + '&t=' + c.start_s + 's" target="_blank" ' +
+        'rel="noopener">Open it on YouTube at ' + mmss(c.start_s) + '</a> and listen ' +
+        'for ten seconds.</p>';
+    } else {
+      player = '<p class="altlink">This clip has no audio available. Please skip it.</p>';
+    }
+    html +=
+      '<section class="clip" data-q="' + qi + '" data-rank="' + c.rank + '">' +
+        '<div class="clip-head"><span class="clip-name">Clip ' + (idx + 1) + ' of 3</span></div>' +
+        player +
+        '<div class="scale">' +
+          [1, 2, 3, 4, 5].map(function (v) {
+            return '<button type="button" data-v="' + v + '" aria-pressed="' +
+              (chosen === v) + '">' + v + '</button>';
+          }).join("") +
+        '</div>' +
+        '<div class="legend"><span>1 — unrelated</span><span>5 — matches closely</span></div>' +
+        '<p class="skip"><button type="button" data-skip="1" aria-pressed="' + skipped +
+          '">' + (skipped ? "Marked as could not listen" : "I could not listen to this clip") +
+          '</button></p>' +
+      '</section>';
+  });
+  view.innerHTML = html;
+
+  view.querySelectorAll(".clip").forEach(function (sec) {
+    const qq = Number(sec.dataset.q), rank = Number(sec.dataset.rank), k = key(qq, rank);
+    sec.querySelectorAll(".scale button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        state.ratings[k] = Number(b.dataset.v);
+        delete state.skipped[k];
+        render();
+      });
+    });
+    sec.querySelector("[data-skip]").addEventListener("click", function () {
+      if (state.skipped[k]) { delete state.skipped[k]; }
+      else { state.skipped[k] = true; delete state.ratings[k]; }
+      render();
+    });
+  });
+
+  const last = qi === STUDY.queries.length - 1;
+  nav.innerHTML =
+    (qi > 0 ? '<button class="ghost" id="back">Back</button>' : '') +
+    '<span class="spacer"></span>' +
+    '<button class="primary" id="next"' + (answered(qi) ? '' : ' disabled') + '>' +
+    (last ? "Finish and send" : "Continue") + '</button>';
+  const back = document.getElementById("back");
+  if (back) back.addEventListener("click", function () {
+    state.i--; render(); window.scrollTo(0, 0);
+  });
+  document.getElementById("next").addEventListener("click", function () {
+    state.i++; render(); window.scrollTo(0, 0);
+  });
+}
+
+function payload() {
+  const rows = [];
+  STUDY.queries.forEach(function (q, qi) {
+    q.clips.forEach(function (c) {
+      const k = key(qi, c.rank);
+      rows.push({
+        query_index: qi, rank: c.rank, clip_id: c.clip_id,
+        rating: state.ratings[k] != null ? state.ratings[k] : null
+      });
+    });
+  });
+  return { rater: state.rater, ratings: rows };
+}
+
+function download() {
+  const blob = new Blob([JSON.stringify(payload(), null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "rating_" + rater.replace(/[^A-Za-z0-9_-]/g, "_") + ".json";
+  a.download = "rating_" + state.rater.replace(/[^A-Za-z0-9_-]/g, "_") + ".json";
   a.click();
-  status.textContent = "Saved. Send the file back to the study author.";
+}
+
+function renderDone() {
+  stepEl.textContent = "Finished";
+  fillEl.style.width = "100%";
+  const rated = Object.keys(state.ratings).length;
+  view.innerHTML =
+    '<p class="tick">Thank you</p>' +
+    '<h1>Your ratings are recorded</h1>' +
+    '<p class="lede" id="msg">Sending your ' + rated + ' ratings…</p>' +
+    '<p class="quiet">You can close this page once it says they are saved. ' +
+    'If sending fails you can download the file instead and send it to the researcher.</p>' +
+    '<p class="status" id="status"></p>';
+  nav.innerHTML = '<span class="spacer"></span>' +
+    '<button class="ghost" id="dl">Download a copy</button>' +
+    '<button class="primary" id="retry" hidden>Try sending again</button>';
+  document.getElementById("dl").addEventListener("click", download);
+  document.getElementById("retry").addEventListener("click", send);
+  send();
+}
+
+function send() {
+  const msg = document.getElementById("msg");
+  const status = document.getElementById("status");
+  const retry = document.getElementById("retry");
+  if (!ENDPOINT) {
+    msg.textContent = "Your ratings are ready to send.";
+    status.className = "status";
+    status.textContent = "Download the file and send it to the researcher.";
+    return;
+  }
+  status.className = "status";
+  status.textContent = "";
+  fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload())
+  }).then(function (r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }).then(function () {
+    state.sent = true;
+    msg.textContent = "Saved. Nothing else is needed from you.";
+    status.textContent = "";
+    retry.hidden = true;
+  }).catch(function (e) {
+    msg.textContent = "Your ratings could not be sent automatically.";
+    status.className = "status err";
+    status.textContent = "Download a copy and send it to the researcher. (" + e.message + ")";
+    retry.hidden = false;
+  });
+}
+
+window.addEventListener("beforeunload", function (e) {
+  if (state.i >= 0 && !state.sent && totalDone() > 0) { e.preventDefault(); e.returnValue = ""; }
 });
+
+render();
 </script>
 </body></html>
 """
 
 
-def build(examples_path):
-    examples = json.loads(pathlib.Path(examples_path).read_text())
-    has_audio = any(c.get("ytid") for ex in examples for c in ex["top3"])
+def build(examples_path, endpoint="", out_dir=None):
+    """Render the self-contained rating page.
 
-    blocks, total = [], 0
-    for qi, ex in enumerate(examples):
+    The stimuli are embedded as JSON and the page renders one description per
+    screen, so a rater never scrolls past three clips. `endpoint` is the URL the
+    finished ratings POST to; with it empty the page falls back to a download,
+    which is what a `file://` copy gets.
+    """
+    examples = json.loads(pathlib.Path(examples_path).read_text())
+
+    queries, total, no_audio = [], 0, 0
+    for ex in examples:
         clips = []
         for rank, c in enumerate(ex["top3"], start=1):
             total += 1
-            ytid = c.get("ytid", "")
-            if ytid:
-                # MusicCaps captions describe a specific 10 s window, often well
-                # into the video, so the offset is not decoration: without it a
-                # rater judges the wrong audio and the study silently measures
-                # nothing. Refuse to imply 0:00 is correct when we do not know.
-                start = c.get("start_s")
-                if start is None:
-                    player = (
-                        '<p class="noaudio">No start offset for this clip, so the '
-                        'rated 10-second window is unknown — skip it rather than '
-                        'guess. Rebuild the examples with a MusicCaps CSV to fix.</p>'
-                    )
-                else:
-                    start = int(start)
-                    end = int(c.get("end_s", start + 10))
-                    watch = ("https://www.youtube.com/watch?v=%s&t=%ds" % (ytid, start))
-                    player = (
-                        '<iframe src="https://www.youtube-nocookie.com/embed/%s'
-                        '?start=%d&end=%d" allow="encrypted-media" '
-                        'title="clip %d"></iframe>'
-                        '<p class="fallback">Player blank or showing an error? '
-                        '<a href="%s" target="_blank" rel="noopener">Open on YouTube '
-                        'at %d:%02d</a> and listen for ten seconds from there.</p>'
-                        % (ytid, start, end, rank, watch, start // 60, start % 60)
-                    )
-            else:
-                player = ('<p class="noaudio">No audio link for this clip — rate from '
-                          'its description below.</p>')
-            scale = "".join(
-                '<label><input type="radio" name="q%d_r%d" value="%d">%d</label>'
-                % (qi, rank, v, v) for v in range(1, 6)
-            )
-            clips.append(
-                '<div class="clip" data-pair data-query="%d" data-rank="%d" data-clip="%s">'
-                '<p><strong>Clip %d</strong></p>%s'
-                '<p><em>%s</em></p><div class="scale">%s</div></div>'
-                % (qi, rank, c["clip_id"], rank, player,
-                   c["caption"].replace("<", "&lt;"), scale)
-            )
-        blocks.append(
-            '<fieldset><legend>Query %d of %d</legend>'
-            '<p class="caption">%s</p>%s</fieldset>'
-            % (qi + 1, len(examples), ex["query_caption"].replace("<", "&lt;"),
-               "".join(clips))
-        )
+            # A caption describes one ten-second window, usually not at 0:00.
+            # Without the offset we cannot point a rater at the right audio, so
+            # the clip is offered without a player rather than with a wrong one.
+            start_s = c.get("start_s")
+            if not c.get("ytid") or start_s is None:
+                no_audio += 1
+                start_s = None
+            clips.append({
+                "rank": rank,
+                "clip_id": c.get("clip_id", ""),
+                "ytid": c.get("ytid", ""),
+                "start_s": start_s,
+                "end_s": c.get("end_s", (start_s + 10) if start_s is not None else None),
+            })
+        queries.append({"caption": ex["query_caption"], "clips": clips})
 
-    warning = "" if has_audio else (
-        '<p class="noaudio"><strong>Caption-only mode.</strong> This examples file '
-        'carries no YouTube ids, so raters judge caption-against-caption rather than '
-        'by listening. Rebuild the examples with src/train_contrastive.py to get a '
-        'true listening study, and label the result accordingly in the report.</p>'
-    )
+    data = json.dumps({"queries": queries, "total": total}, indent=1)
+    page = (PAGE.replace("__DATA__", data)
+                .replace("__ENDPOINT__", endpoint))
 
     STUDY.mkdir(parents=True, exist_ok=True)
     RATINGS.mkdir(parents=True, exist_ok=True)
-    page = (PAGE.replace("__ITEMS__", "".join(blocks))
-                .replace("__WARNING__", warning)
-                .replace("__TOTAL__", str(total)))
-    out = STUDY / "rating_sheet.html"
-    out.write_text(page)
-    print("wrote %s — %d clips across %d queries, audio=%s"
-          % (out, total, len(examples), has_audio))
-    print("Send it to at least %d listeners; collect their JSON into %s/"
-          % (MIN_RATERS, RATINGS))
+    written = [STUDY / "rating_sheet.html"]
+    if out_dir:
+        d = pathlib.Path(out_dir)
+        d.mkdir(parents=True, exist_ok=True)
+        written.append(d / "index.html")
+    for p in written:
+        p.write_text(page)
+
+    print("built %d clips across %d descriptions%s"
+          % (total, len(examples),
+             "" if not no_audio else " (%d without audio)" % no_audio))
+    for p in written:
+        print("  wrote %s" % p)
+    print("submissions: %s" % (endpoint or "download only (no endpoint set)"))
+    print("needs at least %d raters before `score` will run" % MIN_RATERS)
 
 
 # --------------------------------------------------------------------------
@@ -311,9 +550,18 @@ def score(examples_path):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("mode", choices=["build", "score"])
-    ap.add_argument("--examples", default="results/retrieval_examples/task4_examples.json")
+    ap.add_argument("--examples",
+                    default="results/retrieval_examples/task4_examples_gnnlr.json")
+    ap.add_argument("--endpoint", default="",
+                    help="URL the finished ratings POST to; empty means the page "
+                         "offers a download instead")
+    ap.add_argument("--out-dir", default=None,
+                    help="also write index.html here (the deployable site)")
     args = ap.parse_args()
-    (build if args.mode == "build" else score)(args.examples)
+    if args.mode == "build":
+        build(args.examples, endpoint=args.endpoint, out_dir=args.out_dir)
+    else:
+        score(args.examples)
 
 
 if __name__ == "__main__":
