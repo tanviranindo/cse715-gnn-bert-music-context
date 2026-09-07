@@ -42,6 +42,10 @@ def load_cache(path, tokenizer, max_length: int):
         d.attention_mask = enc["attention_mask"]
         d.artist = r.get("artist", "")
         d.clip_id = str(r.get("track_id", ""))
+        # MusicCaps' YouTube id, carried through so a listening study can
+        # resolve a retrieved clip back to its source audio. Without it the
+        # Task 4 rating sheet degrades to judging captions against captions.
+        d.ytid = str(r.get("ytid", "") or "")
         d.genre = r.get("genre", "")
         d.text = r.get("text", "")
         d.is_eval = bool(r.get("is_eval", False))

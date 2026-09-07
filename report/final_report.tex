@@ -67,7 +67,7 @@ alone.
 We test that premise rather than assume it. Our contributions are:
 
 \begin{itemize}\itemsep2pt
-\item Complete implementations of all four tasks, with $107$ unit
+\item Complete implementations of all four tasks, with $109$ unit
 tests and every result reproducible from a seeded configuration recorded
 alongside it.
 \item Two dataset integrity findings that change how the numbers must be read:
@@ -903,10 +903,11 @@ limitation is in the node features rather than in message passing.
 study on Task 4 --- at least five listeners rating retrieved clips $1$--$5$ for
 whether the clip matches the query caption. We did not run it, so our retrieval
 claims rest entirely on R@K against a $2{,}773$-clip gallery. The instrument is
-built (\texttt{src/human\_eval.py} generates the rating sheet and aggregates
-returned ratings, refusing to score fewer than five raters), but the study
-itself needs listeners we did not have, and it remains a gap against the brief
-rather than a considered omission.
+complete: \texttt{src/human\_eval.py} builds a self-contained rating sheet that
+embeds all $30$ retrieved clips as playable YouTube segments and aggregates
+returned ratings with per-rank means, refusing to score fewer than five raters.
+What is missing is only the listeners. We record this as a gap against the
+brief rather than a considered omission.
 
 \textbf{Single seeds.} Every result in this report except the Task 3
 learning-rate comparison and the Task 1 curves comes from one seed. Our own
@@ -936,6 +937,9 @@ project repository. Every number in this report is lifted from
 \texttt{results/metrics.json} into \texttt{report/\_numbers.json} by
 \texttt{src/aggregate\_metrics.py} and \texttt{src/make\_report\_numbers.py},
 so the paper's reference values cannot be older than the runs they describe.
+The train/validation/test manifests for all three corpora are committed under
+\texttt{data/splits/}, so the exact partition behind every number can be
+inspected without re-running preprocessing.
 Training requires a GPU; every evaluation, plot and notebook in the repository
 runs on CPU in seconds from the committed artifacts.
 

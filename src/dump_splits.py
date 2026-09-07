@@ -17,11 +17,20 @@ import json
 import pathlib
 
 
-def manifest(by_split: dict[str, list], id_key: str) -> dict:
+def _clip_id(record) -> str:
+    """Corpora disagree on the id field: FMA has track_id, MusicCaps ytid."""
+    for key in ("clip_id", "track_id", "ytid"):
+        if key in record and record[key] is not None:
+            return str(record[key])
+    raise KeyError("record carries no clip_id / track_id / ytid: %r" % sorted(record))
+
+
+def manifest(by_split: dict[str, list], kind: str) -> dict:
     """Sorted clip ids per split, plus the sizes, from {'train': [...], ...}."""
-    doc = {"sizes": {k: len(v) for k, v in by_split.items()}}
+    doc = {"split_kind": kind,
+           "sizes": {k: len(v) for k, v in by_split.items()}}
     for name, recs in by_split.items():
-        doc[name] = sorted(str(r[id_key]) for r in recs)
+        doc[name] = sorted(_clip_id(r) for r in recs)
     return doc
 
 
@@ -41,14 +50,24 @@ def main() -> None:
     if args.dataset == "fma_small":
         from src import fma_data
         by_split = fma_data.official_splits(records)
-        id_key = "track_id"
+        kind = "official_fma_split"
+    elif args.dataset == "musiccaps":
+        # Task 4 keeps the published AudioSet eval partition as test and splits
+        # only the remaining pool, exactly as train_contrastive.py does.
+        eval_items = [r for r in records if r.get("is_eval")]
+        if not eval_items:
+            raise SystemExit("cache predates is_eval; cannot reproduce the official split")
+        pool = [r for r in records if not r.get("is_eval")]
+        n_val = max(1, int(0.15 * len(pool)))
+        by_split = {"train": pool[n_val:], "val": pool[:n_val], "test": eval_items}
+        kind = "official_audioset_eval"
     else:
         from src import splits as split_mod
         train, val, test = split_mod.artist_grouped_split(records, seed=args.seed)
         by_split = {"train": train, "val": val, "test": test}
-        id_key = "clip_id"
+        kind = "artist_grouped_seed%d" % args.seed
 
-    doc = manifest(by_split, id_key)
+    doc = manifest(by_split, kind)
     out = pathlib.Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     dest = out / f"{args.dataset}.json"

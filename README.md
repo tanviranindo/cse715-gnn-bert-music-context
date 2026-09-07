@@ -110,7 +110,7 @@ evaluation run on CPU in seconds from the committed artifacts.
 ## Tests
 
 ```bash
-pytest -q     # 107 passed
+pytest -q     # 109 passed
 ```
 
 The root `conftest.py` is what puts the repo root on `sys.path` so that
@@ -223,11 +223,12 @@ src/            audio_features, graph_builder, bert_encoder, gnn_model,
                 analyze_scale, attention_viz, human_eval, infer, dump_splits,
                 make_plots, aggregate_sweep, aggregate_metrics,
                 make_report_numbers
-tests/          13 modules / 107 tests, run with pytest
+tests/          14 modules / 109 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
                 retrieval_examples/, case studies, t-SNE
 data/processed/ 155 committed example graphs (.pt + .json) across FMA and MTAT
+data/splits/    train/val/test manifests for all three corpora
 report/         final_report.tex / .pdf, _numbers.json
 infra/          dataset fetch/extract/validate scripts, GPU box notes
 ```
@@ -239,15 +240,13 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes
   `python src/human_eval.py build` produces the rating sheet and `score`
   aggregates the returned files — but it needs five real listeners, so the
   result cannot be produced from this repository alone.
-- The committed `task4_examples.json` predates the `ytid` field, so the rating
-  sheet currently falls back to caption-only judging — which makes it a text
-  similarity study, not a listening one. Rebuilding the examples with
-  `src/train_contrastive.py` (needs the MusicCaps graph cache, so a GPU box)
-  restores the YouTube links first. This is a prerequisite for the human
-  evaluation above, not an optional polish.
-- `data/splits/` is empty. Splits are deterministic — FMA's official partition,
-  artist-grouped at seed 42 elsewhere — and `src/dump_splits.py` writes the
-  manifests, but it needs the graph caches, which are not committed.
+- The rating sheet in `results/human_eval/` now embeds all 30 retrieved clips
+  as playable YouTube segments, so the study is a listening study. Its examples
+  come from `task4_examples_gnnlr.json`, a same-configuration replicate run on
+  different hardware: R@10 is identical to the reported run at 0.0339, while
+  R@1 and R@5 differ in the third decimal (0.0054/0.0177 vs 0.0058/0.0173).
+  The tables in the report and `metrics.json` are the original run throughout,
+  which is also what the data-scale ablation is internally consistent with.
 - No model checkpoint is committed (253 MB each), so a fresh clone can read
   every result but can only run inference if you supply the weights.
 - Single seed everywhere except the Task 3 learning-rate comparison (5 paired

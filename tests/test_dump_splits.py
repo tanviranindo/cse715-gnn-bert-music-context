@@ -13,22 +13,33 @@ def _records():
 
 
 def test_manifest_reports_sizes_per_split():
-    doc = dump_splits.manifest(_records(), "clip_id")
+    doc = dump_splits.manifest(_records(), "artist_grouped_seed42")
     assert doc["sizes"] == {"train": 2, "val": 1, "test": 2}
 
 
 def test_manifest_sorts_ids_so_the_file_is_diffable():
-    doc = dump_splits.manifest(_records(), "clip_id")
+    doc = dump_splits.manifest(_records(), "artist_grouped_seed42")
     assert doc["train"] == ["a", "b"]
     assert doc["test"] == ["d", "e"]
 
 
 def test_manifest_stringifies_numeric_track_ids():
-    doc = dump_splits.manifest({"train": [{"track_id": 12}]}, "track_id")
+    doc = dump_splits.manifest({"train": [{"track_id": 12}]}, "official_fma_split")
     assert doc["train"] == ["12"]
 
 
+def test_clip_id_falls_back_across_the_corpora_id_fields():
+    assert dump_splits._clip_id({"clip_id": "a"}) == "a"
+    assert dump_splits._clip_id({"track_id": 7}) == "7"
+    assert dump_splits._clip_id({"ytid": "-0Gj8-vB1q4"}) == "-0Gj8-vB1q4"
+
+
+def test_manifest_records_which_split_policy_produced_it():
+    doc = dump_splits.manifest({"train": [{"clip_id": "a"}]}, "official_audioset_eval")
+    assert doc["split_kind"] == "official_audioset_eval"
+
+
 def test_splits_are_disjoint_in_the_manifest():
-    doc = dump_splits.manifest(_records(), "clip_id")
+    doc = dump_splits.manifest(_records(), "artist_grouped_seed42")
     ids = doc["train"] + doc["val"] + doc["test"]
     assert len(ids) == len(set(ids))
