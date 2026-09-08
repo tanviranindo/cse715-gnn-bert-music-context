@@ -1,0 +1,263 @@
+[
+  {
+    "clip_id": "139607150",
+    "text": "This song contains digital drums playing a simple groove along with two guitars. One strumming chords along with the snare the other one playing a melody on top. An e-bass is playing the footnote while a piano is playing a major and minor chord progression. A trumpet is playing a loud melody alongside the guitar. All the instruments sound flat and are being played by a keyboard. There are little bongo hits in the background panned to the left side of the speakers. Apart from the music you can hear eating sounds and a stomach rumbling. This song may be playing for an advertisement.",
+    "true_tags": [
+      "acoustic guitar",
+      "backing track",
+      "digital drums",
+      "digital keyboard song",
+      "e-bass",
+      "jazzy",
+      "medium tempo",
+      "piano",
+      "trumpet"
+    ],
+    "top_predictions": [
+      {
+        "tag": "piano",
+        "p": 0.827
+      },
+      {
+        "tag": "e-bass",
+        "p": 0.78
+      },
+      {
+        "tag": "acoustic drums",
+        "p": 0.681
+      },
+      {
+        "tag": "uptempo",
+        "p": 0.634
+      },
+      {
+        "tag": "e-guitar",
+        "p": 0.25
+      },
+      {
+        "tag": "medium tempo",
+        "p": 0.102
+      }
+    ],
+    "graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "degree_sequence": [
+        1,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "busiest_segment": 1
+    },
+    "attention_top_tokens": [
+      {
+        "token": "a",
+        "weight": 0.1705
+      },
+      {
+        "token": "is",
+        "weight": 0.1367
+      },
+      {
+        "token": "a",
+        "weight": 0.0911
+      },
+      {
+        "token": "a",
+        "weight": 0.0857
+      },
+      {
+        "token": "the",
+        "weight": 0.0661
+      },
+      {
+        "token": "contains",
+        "weight": 0.0631
+      },
+      {
+        "token": "with",
+        "weight": 0.0544
+      },
+      {
+        "token": "this",
+        "weight": 0.0477
+      }
+    ]
+  },
+  {
+    "clip_id": "67983052",
+    "text": "This song features a rubber instrument being played. The strumming is fast. The melody is played on one fretted string and other open strings. The melody is played on the lower octave and is later repeated on the higher octave. This song can be played at a folk party.",
+    "true_tags": [
+      "fast tempo",
+      "instrumental",
+      "no other instruments",
+      "no voice",
+      "plucked string instrument",
+      "repetitive melody on different octaves",
+      "rubab instrument"
+    ],
+    "top_predictions": [
+      {
+        "tag": "no voices",
+        "p": 0.944
+      },
+      {
+        "tag": "instrumental",
+        "p": 0.939
+      },
+      {
+        "tag": "fast tempo",
+        "p": 0.847
+      },
+      {
+        "tag": "amateur recording",
+        "p": 0.145
+      },
+      {
+        "tag": "moderate tempo",
+        "p": 0.134
+      },
+      {
+        "tag": "percussion",
+        "p": 0.116
+      }
+    ],
+    "graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "degree_sequence": [
+        1,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "busiest_segment": 1
+    },
+    "attention_top_tokens": [
+      {
+        "token": "this",
+        "weight": 0.5249
+      },
+      {
+        "token": "this",
+        "weight": 0.1807
+      },
+      {
+        "token": "the",
+        "weight": 0.0576
+      },
+      {
+        "token": "the",
+        "weight": 0.0566
+      },
+      {
+        "token": "the",
+        "weight": 0.0191
+      },
+      {
+        "token": "is",
+        "weight": 0.0123
+      },
+      {
+        "token": "is",
+        "weight": 0.0119
+      },
+      {
+        "token": "being",
+        "weight": 0.0119
+      }
+    ]
+  },
+  {
+    "clip_id": "438663957",
+    "text": "This middle eastern folk song features a male voice. This is accompanied by a string instrument called the oud playing the melody in between lines. A variety of middle-eastern percussion instruments are played in the background. A tambourine is played on every count. A darbuka plays a simple beat. This folk song can be played in a movie scene set in a Moroccan market.",
+    "true_tags": [
+      "darbuka",
+      "folk song",
+      "male voice",
+      "middle eastern instruments",
+      "middle eastern song",
+      "moderate tempo",
+      "oud instrument",
+      "traditional song"
+    ],
+    "top_predictions": [
+      {
+        "tag": "male voice",
+        "p": 0.963
+      },
+      {
+        "tag": "moderate tempo",
+        "p": 0.733
+      },
+      {
+        "tag": "percussion",
+        "p": 0.571
+      },
+      {
+        "tag": "bass",
+        "p": 0.016
+      },
+      {
+        "tag": "instrumental",
+        "p": 0.01
+      },
+      {
+        "tag": "slow tempo",
+        "p": 0.009
+      }
+    ],
+    "graph": {
+      "n_nodes": 6,
+      "n_edges": 10,
+      "degree_sequence": [
+        1,
+        2,
+        2,
+        2,
+        2,
+        1
+      ],
+      "busiest_segment": 1
+    },
+    "attention_top_tokens": [
+      {
+        "token": "this",
+        "weight": 0.6728
+      },
+      {
+        "token": "this",
+        "weight": 0.0679
+      },
+      {
+        "token": "is",
+        "weight": 0.0579
+      },
+      {
+        "token": "this",
+        "weight": 0.0517
+      },
+      {
+        "token": "features",
+        "weight": 0.036
+      },
+      {
+        "token": "a",
+        "weight": 0.0317
+      },
+      {
+        "token": "the",
+        "weight": 0.0161
+      },
+      {
+        "token": "is",
+        "weight": 0.0115
+      }
+    ]
+  }
+]

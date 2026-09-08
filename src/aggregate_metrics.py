@@ -143,6 +143,25 @@ def task3():
     # The re-run under best-validation checkpointing is the headline; the
     # original final-epoch run is kept beside it because the report's earlier
     # draft quoted it and a reader may be holding that version.
+    # A control run: the same architecture on MusicCaps, where the text is a
+    # real description rather than track metadata. Kept separate from the
+    # ablation because the corpus and label set differ.
+    mc = RESULTS / "_musiccaps" / "metrics_task3.json"
+    if mc.exists():
+        run = json.loads(mc.read_text())["runs"]["crossattn"]
+        out["text_control_musiccaps"] = {
+            "note": ("Same cross-attention fusion trained on MusicCaps captions "
+                     "instead of MagnaTagATune metadata. The F1 is not "
+                     "comparable with the ablation above (different corpus and "
+                     "labels, and MusicCaps aspects leak into their captions); "
+                     "the attention statistics are."),
+            "split_sizes": json.loads(mc.read_text())["split_sizes"],
+            "test_macro_f1": run["test_macro_f1"],
+            "test_micro_f1": run["test_micro_f1"],
+            "test_auc_pr": run["test_auc_pr"],
+            "attention": run.get("attention"),
+        }
+
     rerun = RESULTS / "_multitask" / "metrics_task3.json"
     if rerun.exists():
         out["multitask_deam"] = _multitask(

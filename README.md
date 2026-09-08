@@ -66,6 +66,14 @@ discarded before the GNN sees anything.
 | + freeze BERT | 0.118 | 0.315 | 0.197 | 0.079 |
 | **+ separate GNN lr 1e-3** | **0.246** | **0.415** | **0.248** | 0.695 |
 
+**Text control** — the same fusion trained on MusicCaps captions instead of
+MTAT metadata reaches attention entropy **0.393** of uniform with peaks at
+**29.4×**, where on MTAT it sat at uniform. The attention collapse is a
+property of the text, not the architecture. The accompanying F1 jump
+(0.246 → 0.673 macro) is *not* claimed as a win: MusicCaps aspects appear
+verbatim in their own captions, which is the same leakage Task 1 measures.
+See `results/_musiccaps/`.
+
 The learning-rate effect is the project's central positive result and is the
 only one confirmed over five paired seeds: +0.067 ± 0.023 Macro-F1, p = 0.0026,
 positive on every seed. Seed variance (±0.023) exceeds several of the other

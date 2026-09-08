@@ -320,6 +320,7 @@ that has already begun to overfit --- is easy to miss in a contrastive setting.
 \section{Results}
 
 \subsection{Task 1: text-based tagging}
+\label{sec:t1results}
 
 \begin{table}[H]
 \centering\small
@@ -901,6 +902,58 @@ case the attention spread is within $3\%$ of uniform, so these predictions are
 driven by the text mean and the graph vector, not by any selective reading of
 the caption. These case studies come from the shared-learning-rate model; the
 separate-learning-rate run does attend selectively (peak $4.19\times$ uniform).
+
+\subsection{A control: the same fusion on text that describes the audio}
+
+Our central Task 3 claim is that the cross-attention collapses because
+MagnaTagATune's text is track-level metadata with nothing to attend to, not
+because the architecture is wrong. That is testable, so we tested it: the
+identical model, hyperparameters and separate graph learning rate, trained on
+MusicCaps graphs and captions over the 50 aspects Task 1 uses
+($3{,}748/803/804$ split).
+
+\begin{table}[H]
+\centering\small
+\caption{The same architecture on two corpora. The F1 rows are \emph{not} a
+like-for-like comparison --- different corpus, labels and difficulty --- and are
+given only so the attention rows, which are comparable, can be read in context.}
+\label{tab:textcontrol}
+\begin{tabular}{lcc}
+\toprule
+& MagnaTagATune & MusicCaps \\
+& (metadata) & (descriptions) \\
+\midrule
+Macro-F1 / Micro-F1 & 0.246 / 0.415 & 0.673 / 0.727 \\
+Attention entropy & 0.695 & \textbf{0.393} \\
+Peak over uniform & $4.19\times$ & $\mathbf{29.4\times}$ \\
+Case-study spread & $1.03$--$1.11\times$ & $3.6$--$58.5\times$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent \textbf{The collapse is a property of the text, not the
+architecture.} Given real captions the same cross-attention becomes sharply
+selective --- entropy $0.393$ of uniform, peaks near $30\times$ --- where on
+MagnaTagATune its case-study weights sat within $3\%$ of uniform. That is the
+control the diagnosis needed.
+
+\textbf{The F1 gap is not a win, and we do not report it as one.} MusicCaps
+aspects appear verbatim in their own captions; Section~\ref{sec:t1results}
+measures a lexical-match baseline at Micro-F1 $0.540$ on this exact material, so
+a model reading them is partly doing substring detection. The attention
+statistics are the result here, not the accuracy.
+
+The case studies are correspondingly richer than Table~\ref{tab:cases}'s, which
+could only align a graph against a track title: a caption describing
+``digital drums \dots\ two guitars \dots\ an e-bass \dots\ a piano'' draws
+\emph{piano} and \emph{e-bass} into the top four, and each of the three cases
+recovers two true aspects. One caveat is visible in the weights themselves --
+the highest-attention tokens are determiners and copulas (\emph{this},
+\emph{is}, \emph{the}), not the musical content words. The attention is sharp
+without being semantic, which is the freeze-BERT lesson of
+Section~\ref{sec:t3results} arriving from the opposite direction: sharpness is
+necessary for the mechanism to be doing anything, and is not evidence that it
+is doing the right thing.
 
 \noindent \textbf{Retrieval behaviour.} Across the official-split gallery of
 $2{,}773$ clips the median true-clip rank is $527$, placing the correct clip in

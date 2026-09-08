@@ -347,6 +347,21 @@
         }
       }
     },
+    "text_control_musiccaps": {
+      "note": "Same cross-attention fusion trained on MusicCaps captions instead of MagnaTagATune metadata. The F1 is not comparable with the ablation above (different corpus and labels, and MusicCaps aspects leak into their captions); the attention statistics are.",
+      "split_sizes": {
+        "train": 3748,
+        "val": 803,
+        "test": 804
+      },
+      "test_macro_f1": 0.6730073865368702,
+      "test_micro_f1": 0.7266004159926046,
+      "test_auc_pr": 0.7171994400022506,
+      "attention": {
+        "entropy_vs_uniform": 0.3932573947637138,
+        "peak_over_uniform": 29.401944607868792
+      }
+    },
     "multitask_deam": {
       "note": "best-validation checkpointing, same policy as the ablation above; directly comparable with the crossattn arm",
       "tags": {

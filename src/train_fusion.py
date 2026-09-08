@@ -29,6 +29,16 @@ def load_cache(path, tokenizer, max_length: int):
     blob = torch.load(path, weights_only=False)
     recs = blob["records"]
     vocab = blob.get("vocab", [])
+    if not vocab:
+        # The MusicCaps cache is built for the contrastive task, which needs no
+        # tag vocabulary, so it ships none. Derive it here with exactly the rule
+        # Task 1 uses -- the 50 most frequent aspects reaching 100 clips -- so a
+        # fusion trained on this cache is scored against the same vocabulary as
+        # the Task 1 model it is compared with.
+        import collections
+        counts = collections.Counter(
+            a for r in recs for a in (r.get("labels") or ()))
+        vocab = [a for a, n in counts.most_common(50) if n >= 100]
     out = []
     for r in recs:
         enc = tokenizer(r.get("text", "") or "[PAD]", truncation=True,
