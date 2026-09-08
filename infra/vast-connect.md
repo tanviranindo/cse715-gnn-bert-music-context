@@ -46,7 +46,10 @@ What must NOT be re-derived — pull these DOWN to the Mac before destroying:
 Cached features (~14 GB) are re-computable in ~1 h of CPU ($0.15); pull them
 only if the connection makes that worthwhile.
 
-## Current rental (2026-08-29)
+## Example rental (2026-08-29, long since destroyed)
+
+Kept as a worked example of the flags and costs. Instance and offer ids are
+single-use and these are dead; look up fresh ones each session.
 - Instance `49151882` | offer `45573262` | machine `143795`
 - Volume **`49151852`** (`22241134_gnnbert_data`), **60 GB** at `/data`
 - 1x RTX 4080 SUPER 16 GB, 64 threads, 62 GB RAM, **$0.143/hr** + volume $0.133/day

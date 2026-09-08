@@ -13,10 +13,9 @@ implemented, run and reported.
 · **Week-by-week log:** [`PROGRESS.md`](PROGRESS.md)
 · **Demo:** [`notebooks/demo_context.ipynb`](notebooks/demo_context.ipynb)
 
-The full design spec lives in the parent CSE715 notes repo at
-`../../docs/superpowers/specs/2026-08-15-gnn-bert-music-context-design.md`.
-This is an independent git repo that happens to sit inside that notes repo;
-the path is gitignored there, so the two never interfere.
+The design plan written before implementation — scope, task breakdown,
+per-task risks and the decisions taken up front — is at
+[`docs/design-spec.md`](docs/design-spec.md).
 
 ## Results at a glance
 

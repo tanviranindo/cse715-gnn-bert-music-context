@@ -9,7 +9,7 @@ its query caption).
 ```bash
 python src/human_eval.py build \
     --examples results/retrieval_examples/task4_examples_gnnlr.json \
-    --endpoint /api/submit \
+    --endpoint https://gnn-bert-listening-study.vercel.app/api/submit \
     --out-dir infra/listening-study
 ```
 
@@ -25,3 +25,11 @@ python src/human_eval.py score --examples results/retrieval_examples/task4_examp
 ```
 
 `score` refuses to run below five raters rather than report a partial study.
+
+The endpoint is absolute so that a downloaded copy of the page submits to the
+same place the hosted one does; a relative path only works when the page is
+served from the site itself.
+
+**This study has been run.** Six listeners, 174 ratings, mean 1.79 ± 1.36 —
+see `results/metrics_task4_human.json` and the per-rater files in
+`results/human_eval/ratings/`.

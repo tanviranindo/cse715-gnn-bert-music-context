@@ -1,6 +1,11 @@
 # Dataset Download Instructions
 
-All datasets are downloaded manually (large, some account-gated) and are
+`infra/fetch_datasets.sh` automates everything below on a fresh GPU box and is
+idempotent, and `infra/validate_datasets.py` checks each corpus against its
+published shape before any preprocessing runs. The manual steps are documented
+here so the sources are traceable, not because you have to follow them by hand.
+
+All datasets are large and some are account-gated, so they are
 git-ignored under `data/raw/`.
 
 ## FMA-medium
@@ -45,15 +50,28 @@ batches; see spec §2.1 before wiring up the multi-task loss.
 
 ## MusicCaps
 
-1. Clone https://github.com/google-research-datasets/musiccaps for the
-   caption CSV (`musiccaps-public.csv`)
-2. Audio clips must be downloaded from YouTube per the CSV's video IDs
-   (use `yt-dlp`); save into `data/raw/musiccaps/audio/`
-3. **Start this early.** A meaningful fraction of the 5,521 YouTube links
-   are dead and rate-limiting is likely, so the scrape takes far longer
-   than its size suggests. Task 4 (Week 6) depends on it.
-4. Record the actual retrieved clip count in `PROGRESS.md` — do not assume
-   all 5,521 exist.
+**What this project actually used, and why it is not a YouTube scrape.**
+MusicCaps ships captions but not audio, and scraping the 5,521 video IDs from a
+rented GPU box does not work: YouTube blocks datacenter IP ranges. We therefore
+read audio from a pre-scraped mirror on the Hugging Face Hub, which
+`infra/fetch_datasets.sh` does automatically:
+
+    mahendra0203/musiccaps_processed_full   # ~3.2 GB, 5,355 clips with audio
+
+That yields **5,355** of the published 5,521 — the shortfall is dead or
+region-locked videos, and `results/metrics_task4*.json` records the count for
+every run rather than assuming the full set.
+
+The official caption CSV (`musiccaps-public.csv`) is still needed separately: it
+carries the `is_audioset_eval` flag that defines the official test partition,
+and the `start_s` / `end_s` window each caption describes. Get it from
+https://github.com/google-research-datasets/musiccaps and pass it as
+`--musiccaps-csv`. Without it the build refuses to run rather than fall back to
+a random split.
+
+Scraping from YouTube with `yt-dlp` remains possible from a residential
+connection if you would rather not use the mirror, but expect dead links and
+rate-limiting.
 
 ## After downloading
 
