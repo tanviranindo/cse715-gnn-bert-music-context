@@ -1,6 +1,9 @@
 # GNN-BERT Music Context Understanding
 
-CSE715 Neural Networks course project. Hybrid BERT + GNN system for
+**Tanvir Rahman — Student ID 22241134**
+CSE715 Neural Networks & Fuzzy Systems · Instructor: Moin Mostakim · BRAC University
+
+Course project. Hybrid BERT + GNN system for
 understanding musical context (genre, mood, emotion) from audio structure
 and text (lyrics/tags/captions). All four tasks in the specification are
 implemented, run and reported.
