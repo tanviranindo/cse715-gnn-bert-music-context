@@ -587,7 +587,7 @@ Mode & Params & Macro & Micro & AUC-PR \\
 BERT-only & 66.4M & 0.171 & 0.306 & 0.168 \\
 GNN-only & 31.8K & 0.123 & 0.124 & 0.084 \\
 Early concat & 66.4M & 0.168 & 0.314 & 0.182 \\
-Cross-attention & 66.8M & 0.192 & 0.325 & 0.177 \\
+Cross-attention & 66.8M & 0.192 & 0.324 & 0.176 \\
 \midrule
 \quad $+$ frozen BERT & 0.5M & 0.118 & 0.315 & 0.197 \\
 \quad $+$ non-BERT lr $10^{-3}$ & 66.8M & \textbf{0.246} & \textbf{0.415} & \textbf{0.248} \\
@@ -614,8 +614,8 @@ fine-tuning ($2\times10^{-5}$).
 \textbf{The second cause is the operative one.} Raising the learning rate of
 every parameter outside the text tower to $10^{-3}$ --- changing no
 architecture, no data and no seed --- raises Macro-F1 from $0.192$ to
-$\mathbf{0.246}$, Micro-F1 from $0.325$ to $\mathbf{0.415}$ and AUC-PR from
-$0.177$ to $\mathbf{0.248}$. The same run's attention entropy falls from
+$\mathbf{0.246}$, Micro-F1 from $0.324$ to $\mathbf{0.415}$ and AUC-PR from
+$0.176$ to $\mathbf{0.248}$. The same run's attention entropy falls from
 $1.000$ to $0.695$ of uniform and its peak rises from $1.03\times$ to
 $4.19\times$. The intervention that fixes the metric is the one that
 demonstrably un-collapses the attention, which is the mechanism our diagnosis

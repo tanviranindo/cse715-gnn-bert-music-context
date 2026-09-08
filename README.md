@@ -37,7 +37,7 @@ The stripped variant is the honest measure of language understanding.
 
 | Model | Params | Accuracy | Macro-F1 |
 |---|---|---|---|
-| B4 PCA+MLP | — | 0.379 | 0.371 |
+| B4 PCA+MLP | 5,256 | 0.379 | 0.371 |
 | GraphSAGE | 49,416 | 0.396 | 0.401 |
 | GAT | 26,120 | 0.433 | 0.426 |
 | **B2 CNN on mel-spectrogram** | 241,992 | **0.483** | **0.479** |
@@ -68,9 +68,9 @@ segments, so the graph builder drops them. Task 1 reads text only and keeps them
 | BERT-only (B3) | 0.171 | 0.306 | 0.168 | — |
 | GNN-only | 0.123 | 0.124 | 0.084 | — |
 | Early concat | 0.168 | 0.314 | 0.182 | — |
-| Cross-attention | 0.193 | 0.325 | 0.177 | 1.000 (collapsed) |
+| Cross-attention | 0.192 | 0.324 | 0.176 | 1.000 (collapsed) |
 | + freeze BERT | 0.118 | 0.315 | 0.197 | 0.079 |
-| **+ separate GNN lr 1e-3** | **0.246** | **0.415** | **0.248** | 0.695 |
+| **+ non-BERT lr 1e-3** | **0.246** | **0.415** | **0.248** | 0.695 |
 
 **Text control** — the same fusion trained on MusicCaps captions instead of
 MTAT metadata reaches attention entropy **0.393** of uniform with peaks at
@@ -80,7 +80,8 @@ property of the text, not the architecture. The accompanying F1 jump
 verbatim in their own captions, which is the same leakage Task 1 measures.
 See `results/_musiccaps/`.
 
-The learning-rate effect is the project's central positive result and is the
+The learning-rate effect — raising the rate on every parameter outside the
+text tower, not the graph encoder alone — is the project's central positive result and is the
 only one confirmed over five paired seeds: +0.067 ± 0.023 Macro-F1, p = 0.0026,
 positive on every seed. Seed variance (±0.023) exceeds several of the other
 between-mode margins, so those should not be read as firm rankings.
@@ -125,10 +126,13 @@ contains.
 
 ## Setup
 
-Python 3.12 (the ML stack does not yet have reliable wheels for 3.13+):
+Any of Python 3.10–3.14 works. The suite is currently developed and run on
+**3.14.6 with torch 2.9.1**; the rented GPU images shipped **3.10.12 with torch
+2.5.1+cu121**, and both pass all 134 tests. 3.12 was the original target, when
+3.13+ wheels were still patchy — that is no longer the constraint it was.
 
 ```bash
-python3.12 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
@@ -136,8 +140,9 @@ pip install -r requirements.txt
 `requirements.txt` pins `numba` / `llvmlite` / `numpy` deliberately — a newer
 pairing segfaults inside librosa's `chroma_stft`. See the comment in that file.
 
-A GPU is needed to reproduce training (we used single rented RTX 4060 Ti /
-4080 SUPER / V100 boxes; see `infra/vast-connect.md`). The notebooks and all
+A GPU is needed to reproduce training. Runs used single rented boxes of
+several kinds — RTX 4060 Ti, 4080 SUPER, 3060, 2080 Ti, A4000 and V100 — and
+nothing depends on which; see `infra/vast-connect.md`. The notebooks and all
 evaluation run on CPU in seconds from the committed artifacts.
 
 ## Tests
@@ -151,10 +156,12 @@ The root `conftest.py` is what puts the repo root on `sys.path` so that
 
 ## Datasets
 
-See [`data/README.md`](data/README.md) for download instructions (FMA,
-MagnaTagATune, DEAM, MusicCaps — all downloaded manually, not committed to
-git). `infra/fetch_datasets.sh` and `infra/extract_datasets.sh` automate this
-on a fresh GPU box and are idempotent.
+See [`data/README.md`](data/README.md) for sources and licences (FMA,
+MagnaTagATune, DEAM, MusicCaps). None of the raw audio is committed — it is
+tens of gigabytes and some of it is account-gated. `infra/fetch_datasets.sh`
+and `infra/extract_datasets.sh` fetch and unpack everything on a fresh GPU box
+and are idempotent; `infra/validate_datasets.py` then checks each corpus
+against its published shape before any preprocessing runs.
 
 ## Reproducing the results
 
@@ -173,8 +180,10 @@ python src/build_graphs.py --dataset fma  --out /data/processed --n-examples 25 
        --audio-root /data/raw/fma_small --tracks-csv /data/raw/fma_metadata/tracks.csv
 python src/build_graphs.py --dataset mtat --out /data/processed --n-examples 25 \
        --audio-root /data/raw/magnatagatune/audio --mtat-dir /data/raw/magnatagatune --no-mel
+# --musiccaps-dir is the directory the HF mirror was pulled into; the builder
+# globs it recursively for parquet, so point it at the root, not a subfolder.
 python src/build_graphs.py --dataset musiccaps --out /data/processed \
-       --musiccaps-dir /data/raw/musiccaps/shards \
+       --musiccaps-dir /data/raw/musiccaps \
        --musiccaps-csv /data/raw/musiccaps/musiccaps-public.csv
 python src/build_graphs.py --dataset deam --out /data/processed \
        --audio-root /data/raw/deam/audio/MEMD_audio
@@ -232,16 +241,22 @@ python src/dump_splits.py --cache /data/processed/fma_small_graphs.pt --dataset 
 # One end-to-end inference example, CPU, from the Task 1 checkpoint
 python -m src.infer --text "A gentle piano ballad with soft female vocals."
 
-# 8. Task 4 human evaluation (needs 5 real listeners; see below)
+# 8. Task 4 human evaluation. Already run — six listeners, 174 ratings, in
+#    results/metrics_task4_human.json. These are the steps that produced it.
 #    Join the MusicCaps clip windows onto the examples first: each caption
 #    describes one 10 s excerpt, often minutes into the video, so a sheet built
 #    without them plays the wrong audio and the study measures nothing.
 python -m src.enrich_examples \
     --examples results/retrieval_examples/task4_examples_gnnlr.json \
     --csv data/raw/musiccaps/musiccaps-public.csv
-python src/human_eval.py build --examples results/retrieval_examples/task4_examples_gnnlr.json
-#   ... send the sheet to >=5 listeners, collect their JSON downloads into
-#       results/human_eval/ratings/, then:
+#    Build the sheet. With --endpoint the page submits on completion; without
+#    it, the page falls back to offering the rater a download.
+python src/human_eval.py build \
+    --examples results/retrieval_examples/task4_examples_gnnlr.json \
+    --endpoint https://gnn-bert-listening-study.vercel.app/api/submit \
+    --out-dir infra/listening-study
+#   ... send the link to >=5 listeners, then pull what they submitted:
+BLOB_READ_WRITE_TOKEN=... python src/fetch_ratings.py   # -> results/human_eval/ratings/
 python src/human_eval.py score     # -> results/metrics_task4_human.json
 ```
 
@@ -257,11 +272,16 @@ cd report && pdflatex final_report.tex && pdflatex final_report.tex
 ## Layout
 
 ```
-src/            audio_features, graph_builder, bert_encoder, gnn_model,
-                fusion_model, contrastive, train*, evaluate, analyze_fusion,
-                analyze_scale, attention_viz, human_eval, infer, dump_splits,
-                make_plots, aggregate_sweep, aggregate_metrics, graph_coherence,
-                make_report_numbers
+src/            data loaders   fma_data, mtat_data, deam_data, musiccaps_data
+                preprocessing  audio_features, graph_builder, build_graphs, splits
+                models         bert_encoder, gnn_model, fusion_model, contrastive
+                training       train, train_gnn, train_b4, train_fusion,
+                               train_contrastive
+                evaluation     evaluate, analyze_fusion, analyze_scale,
+                               attention_viz, graph_coherence, infer
+                human study    human_eval, enrich_examples, fetch_ratings
+                reporting      make_plots, plot_tsne_views, aggregate_sweep,
+                               aggregate_metrics, make_report_numbers, dump_splits
 tests/          18 modules / 134 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
@@ -273,13 +293,14 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes,
                 listening-study/ (the deployed Task 4 human evaluation site)
 ```
 
-## Known gaps
+## Human evaluation
 
-- ~~Task 4 human evaluation~~ — **done**. Six listeners, 174 ratings, mean
-  1.79 ± 1.36 out of 5 (`results/metrics_task4_human.json`). Listeners agree
-  with R@K: the top-3 clips usually are not the right clip. The model's ranking
-  within its own top three does not predict human judgement (r = −0.051).
-- **The listening study is live** at
+Six listeners, 174 ratings, mean **1.79 ± 1.36** out of 5
+(`results/metrics_task4_human.json`). Listeners agree with R@K — the top-3
+clips usually are not the right clip — and the model's ranking within its own
+top three does not predict human judgement (r = −0.051).
+
+- **The study is live** at
   <https://gnn-bert-listening-study.vercel.app> (source in
   `infra/listening-study/`, page generated by `human_eval.py build`). Raters
   submit from the page; `python src/fetch_ratings.py` pulls the submissions into
@@ -298,6 +319,9 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes,
 - The Task 1 MusicCaps checkpoint is **downloadable** (253 MB, link and
   checksum in `artifacts/checkpoints/README.md`); verified end to end from a
   fresh download. The other two are regenerable with one command each.
+
+## Known limitations
+
 - Single seed everywhere except the Task 3 learning-rate comparison (5 paired
   seeds) and the Task 1 curves. Measured seed spread is ±0.023 Macro-F1, which
   exceeds several of the Task 3 ablation margins.
