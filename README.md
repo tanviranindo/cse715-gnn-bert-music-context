@@ -5,7 +5,7 @@ understanding musical context (genre, mood, emotion) from audio structure
 and text (lyrics/tags/captions). All four tasks in the specification are
 implemented, run and reported.
 
-**Report:** [`report/final_report.pdf`](report/final_report.pdf) (8 pages)
+**Report:** [`report/final_report.pdf`](report/final_report.pdf) (10 pages)
 · **All headline numbers:** [`results/metrics.json`](results/metrics.json)
 · **Week-by-week log:** [`PROGRESS.md`](PROGRESS.md)
 · **Demo:** [`notebooks/demo_context.ipynb`](notebooks/demo_context.ipynb)
@@ -96,7 +96,11 @@ than asserted — holding the gallery fixed and subsampling only the training
 pairs, R@10 grows log-linearly in paired examples (R² = 0.914, +0.0099 per
 doubling), putting a usable R@10 of 0.10 about 100× beyond MusicCaps' official
 split. Zero-shot tagging from captions reaches Micro-F1 0.107 against Task 1's
-supervised 0.488 on the same corpus.
+supervised 0.657 — the Task 3 fusion retrained on the *same* official eval
+split and the *same* 50 train-derived tags, which is the comparison the spec
+asks for. Zero-shot recovers ~15% of supervised Micro-F1. The zero-shot
+vocabulary comes from the train split and its threshold from validation; an
+earlier version took both from test, which inflated the score to 0.107.
 
 **Graph coherence** (spec §6, optional): swept over τ because post-ReLU
 embeddings make any low threshold read 1.000. Real edges beat rewired ones
@@ -130,7 +134,7 @@ evaluation run on CPU in seconds from the committed artifacts.
 ## Tests
 
 ```bash
-pytest -q     # 117 passed
+pytest -q     # 126 passed
 ```
 
 The root `conftest.py` is what puts the repo root on `sys.path` so that
@@ -249,7 +253,7 @@ src/            audio_features, graph_builder, bert_encoder, gnn_model,
                 analyze_scale, attention_viz, human_eval, infer, dump_splits,
                 make_plots, aggregate_sweep, aggregate_metrics, graph_coherence,
                 make_report_numbers
-tests/          16 modules / 117 tests, run with pytest
+tests/          17 modules / 126 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
                 retrieval_examples/, case studies, t-SNE
@@ -262,11 +266,6 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes,
 
 ## Known gaps
 
-- **Task 4 human evaluation** (spec §6: ≥5 listeners rating retrieved clips
-  1–5) has not been run. The instrument is built and ready —
-  `python src/human_eval.py build` produces the rating sheet and `score`
-  aggregates the returned files — but it needs five real listeners, so the
-  result cannot be produced from this repository alone.
 - ~~Task 4 human evaluation~~ — **done**. Six listeners, 174 ratings, mean
   1.79 ± 1.36 out of 5 (`results/metrics_task4_human.json`). Listeners agree
   with R@K: the top-3 clips usually are not the right clip. The model's ranking

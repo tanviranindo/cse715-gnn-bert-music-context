@@ -244,6 +244,25 @@ def task4():
     if zs:
         out["zero_shot_tagging"] = zs
 
+    # The supervised counterpart the specification asks zero-shot to be
+    # compared against, trained on the same corpus, the same official eval
+    # split and the same train-derived vocabulary.
+    cmp_path = RESULTS / "_supervised_cmp" / "metrics_task3.json"
+    if cmp_path.exists():
+        doc = json.loads(cmp_path.read_text())
+        run = doc["runs"]["crossattn"]
+        out["supervised_comparison"] = {
+            "note": ("Task 3 cross-attention fusion on MusicCaps under the "
+                     "official AudioSet eval split, scored on the same 50 "
+                     "train-derived tags as the zero-shot run, so the two are "
+                     "directly comparable."),
+            "split_sizes": doc["split_sizes"],
+            "n_tags": doc["n_tags"],
+            "test_micro_f1": run["test_micro_f1"],
+            "test_macro_f1": run["test_macro_f1"],
+            "test_auc_pr": run["test_auc_pr"],
+        }
+
     human = read("metrics_task4_human.json")
     if human:
         out["human_evaluation"] = human

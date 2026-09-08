@@ -508,11 +508,25 @@
     },
     "zero_shot_tagging": {
       "n_tags": 50,
-      "threshold": 0.85,
-      "micro_f1": 0.10696064504511714,
-      "macro_f1": 0.09540822247710516,
-      "auc_pr": 0.06211730788547383,
-      "note": "no tag supervision; compare against Task 1's supervised MusicCaps run in metrics_task1_musiccaps*.json"
+      "threshold": 0.65,
+      "vocabulary_from": "train split",
+      "threshold_from": "val split",
+      "micro_f1": 0.10012599018145482,
+      "macro_f1": 0.09343771416975086,
+      "auc_pr": 0.05771421696393331,
+      "note": "No tag supervision reaches the encoder, and no test label reaches the vocabulary or the threshold. Compare against a supervised model scored on this same vocabulary and split."
+    },
+    "supervised_comparison": {
+      "note": "Task 3 cross-attention fusion on MusicCaps under the official AudioSet eval split, scored on the same 50 train-derived tags as the zero-shot run, so the two are directly comparable.",
+      "split_sizes": {
+        "train": 2195,
+        "val": 387,
+        "test": 2773
+      },
+      "n_tags": 50,
+      "test_micro_f1": 0.656921373200443,
+      "test_macro_f1": 0.5926209738414188,
+      "test_auc_pr": 0.6200019155447535
     },
     "human_evaluation": {
       "note": "Task 4 human evaluation, PDF S6. Listeners rated 1-5 whether each retrieved clip matches its query caption. Ratings are as submitted; no value here is synthetic.",

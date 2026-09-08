@@ -29,16 +29,7 @@ def load_cache(path, tokenizer, max_length: int):
     blob = torch.load(path, weights_only=False)
     recs = blob["records"]
     vocab = blob.get("vocab", [])
-    if not vocab:
-        # The MusicCaps cache is built for the contrastive task, which needs no
-        # tag vocabulary, so it ships none. Derive it here with exactly the rule
-        # Task 1 uses -- the 50 most frequent aspects reaching 100 clips -- so a
-        # fusion trained on this cache is scored against the same vocabulary as
-        # the Task 1 model it is compared with.
-        import collections
-        counts = collections.Counter(
-            a for r in recs for a in (r.get("labels") or ()))
-        vocab = [a for a, n in counts.most_common(50) if n >= 100]
+
     out = []
     for r in recs:
         enc = tokenizer(r.get("text", "") or "[PAD]", truncation=True,
@@ -276,6 +267,12 @@ def main() -> None:
     p.add_argument("--gnn-lr", type=float, default=None,
                    help="separate lr for the graph branch, fusion and heads; "
                         "defaults to --lr")
+    p.add_argument("--split", default="artist",
+                   choices=["artist", "official_eval"],
+                   help="'official_eval' keeps the cache's published eval "
+                        "partition as test, matching train_contrastive.py, so a "
+                        "supervised model can be compared with the zero-shot one "
+                        "on identical clips")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
@@ -291,8 +288,35 @@ def main() -> None:
         _, deam = load_cache(args.deam_cache, tok, args.max_length)
     print(f"[data] mtat={len(mtat)} deam={len(deam)} tags={len(vocab)}")
 
+    if args.split == "official_eval":
+        # Same partition train_contrastive.py uses: the published eval clips are
+        # held out whole, and only the remaining pool is split. Without this a
+        # supervised and a zero-shot model are scored on different clips and the
+        # comparison the specification asks for is not like-for-like.
+        eval_items = [d for d in mtat if getattr(d, "is_eval", False)]
+        if not eval_items:
+            raise SystemExit("--split official_eval needs a cache carrying is_eval")
+        pool = [d for d in mtat if not getattr(d, "is_eval", False)]
+        n_val = max(1, int(0.15 * len(pool)))
+        m_tr, m_va, m_te = pool[n_val:], pool[:n_val], eval_items
+        print(f"[data] official eval split: {len(m_tr)}/{len(m_va)}/{len(m_te)}")
+    else:
+        m_tr, m_va, m_te = artist_split(mtat, args.seed)
+
+    if not vocab:
+        # The MusicCaps cache is built for the contrastive task and ships no tag
+        # vocabulary. Derive it from the TRAINING split only: choosing tags by
+        # frequency over the whole corpus would let the test split influence
+        # which labels the model is scored on, which is the same class of leak
+        # the zero-shot evaluation had. Same rule train_contrastive.py uses, so
+        # the supervised and zero-shot numbers share a vocabulary.
+        import collections
+        counts = collections.Counter(a for d in m_tr for a in (d.labels_set or ()))
+        vocab = [t for t, _ in counts.most_common(50)]
+        print(f"[data] derived {len(vocab)} tags from the training split")
+
     attach_tag_vectors(mtat + deam, vocab)
-    m_tr, m_va, m_te = artist_split(mtat, args.seed)
+
     d_tr, d_va, d_te = artist_split(deam, args.seed) if deam else ([], [], [])
     splits = {"train": m_tr + d_tr, "val": m_va + d_va, "test": m_te + d_te}
     print("[data] splits: " + " ".join(f"{k}={len(v)}" for k, v in splits.items()))

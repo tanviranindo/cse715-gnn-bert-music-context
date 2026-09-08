@@ -19,6 +19,18 @@ report the window length as an ablation axis.
 
 import numpy as np
 
+# Some CPU/image combinations crash inside librosa's tuning estimation --
+# chroma_stft -> estimate_tuning -> piptrack is a numba guvectorize kernel, and
+# it takes the worker process down natively rather than raising. requirements.txt
+# pins numba/llvmlite against one such combination; it is not sufficient on all
+# of them. Setting LIBROSA_SKIP_TUNING=1 passes tuning=0.0, which skips the
+# failing kernel at the cost of assuming concert pitch. Off by default, so the
+# committed caches stay reproducible by the path that built them.
+import os as _os
+_SKIP_TUNING = _os.environ.get("LIBROSA_SKIP_TUNING") == "1"
+_CHROMA_KW = {"tuning": 0.0} if _SKIP_TUNING else {}
+
+
 # 12 pitch classes, sharps
 PITCHES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 
@@ -42,7 +54,7 @@ def segment_features(
     for start in range(0, len(y) - window + 1, window):
         seg = y[start:start + window]
         mfcc = librosa.feature.mfcc(y=seg, sr=sr, n_mfcc=n_mfcc)
-        chroma = librosa.feature.chroma_stft(y=seg, sr=sr)
+        chroma = librosa.feature.chroma_stft(y=seg, sr=sr, **_CHROMA_KW)
         cent = librosa.feature.spectral_centroid(y=seg, sr=sr)
         roll = librosa.feature.spectral_rolloff(y=seg, sr=sr)
         zcr = librosa.feature.zero_crossing_rate(seg)

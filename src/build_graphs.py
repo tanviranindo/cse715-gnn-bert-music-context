@@ -34,6 +34,18 @@ import numpy as np
 
 from src import fma_data, graph_builder as gb
 
+# Some CPU/image combinations crash inside librosa's tuning estimation --
+# chroma_stft -> estimate_tuning -> piptrack is a numba guvectorize kernel, and
+# it takes the worker process down natively rather than raising. requirements.txt
+# pins numba/llvmlite against one such combination; it is not sufficient on all
+# of them. Setting LIBROSA_SKIP_TUNING=1 passes tuning=0.0, which skips the
+# failing kernel at the cost of assuming concert pitch. Off by default, so the
+# committed caches stay reproducible by the path that built them.
+import os as _os
+_SKIP_TUNING = _os.environ.get("LIBROSA_SKIP_TUNING") == "1"
+_CHROMA_KW = {"tuning": 0.0} if _SKIP_TUNING else {}
+
+
 warnings.filterwarnings("ignore")
 
 _CFG: dict = {}
@@ -129,7 +141,7 @@ def _process_track_inner(record: dict, librosa) -> dict | None:
         return None
     edge_index, edge_weight = gb.build_segment_graph(feats, tau=_CFG["tau"])
 
-    chroma = librosa.feature.chroma_stft(y=y, sr=sr)
+    chroma = librosa.feature.chroma_stft(y=y, sr=sr, **_CHROMA_KW)
     chords = gb.estimate_chords(chroma)
     chord_nodes, chord_ei, chord_w = gb.build_chord_graph(chords)
 

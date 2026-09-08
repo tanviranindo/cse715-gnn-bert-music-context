@@ -1,48 +1,45 @@
-\documentclass[10pt,conference]{article}
-\usepackage[margin=0.75in]{geometry}
-\usepackage{times}
+\documentclass[conference]{IEEEtran}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
-\usepackage{multicol}
 \usepackage{float}
 \usepackage[hidelinks]{hyperref}
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf}
-\setlength{\parskip}{0pt}
-\setlength{\columnsep}{0.28in}
 
-\title{\vspace{-1.2em}\textbf{GNN-Based BERT for Understanding Context from Music:\\
-A Measured Account of Where Cross-Modal Fusion Helps and Where It Does Not}}
-\author{Tanvir Rahman \\ \small Student ID 22241134 \\
-\small CSE715 --- Neural Networks \quad Instructor: Moin Mostakim \\
-\small BRAC University}
-\date{\small 31 August 2026}
+\title{GNN-Based BERT for Understanding Context from Music:\\
+A Measured Account of Where Cross-Modal Fusion Helps and Where It Does Not}
+\author{\IEEEauthorblockN{Tanvir Rahman}
+\IEEEauthorblockA{Student ID 22241134\\
+CSE715 --- Neural Networks, Instructor: Moin Mostakim\\
+BRAC University\\
+8 September 2026}}
 
 \begin{document}
 \maketitle
-\vspace{-1.5em}
 
 \begin{abstract}
 \noindent
 We implement the four-task GNN--BERT roadmap for music context understanding:
-a BERT multi-label tag classifier, a GraphSAGE/GAT encoder over music
+a BERT~\cite{bert} multi-label tag classifier, a GraphSAGE/GAT encoder over music
 structure graphs, a cross-attention fusion of the two with an auxiliary
 valence--arousal objective, and a contrastive dual encoder for
 caption--audio retrieval. All four are trained and evaluated end to end.
-Our headline finding is negative and, we argue, more informative than a
-positive one would have been: \emph{cross-modal fusion does not reliably
-outperform its stronger unimodal branch in this setting}, and we identify
-why. We show (i) that the text available for MagnaTagATune is track-level
+Our headline finding is a correction of our own first conclusion. Under a
+single learning rate, fusion does not beat its stronger unimodal branch and its
+cross-attention collapses to uniform weights; with the non-BERT parameters
+trained at their own rate, the same architecture beats BERT-only by $+0.075$
+Macro-F1. The negative result was an optimisation artefact, and we report both
+states because the diagnosis is the contribution. We show (i) that the text available for MagnaTagATune is track-level
 while its clips are 29\,s segments, so $96.8\%$ of clips share an input with
 another clip, capping any text-only model at Micro-F1 $0.673$; (ii) that the
 official MagnaTagATune split leaks $45$ artists across train and test,
 covering $61.6\%$ of test clips; (iii) that our cross-attention collapses to
 exactly uniform weights (entropy $1.000$ of the uniform maximum) under a shared
 learning rate, so the fusion degenerates into averaging the caption; and (iv)
-that giving the graph branch its own learning rate un-collapses that attention
+that raising the learning rate of every non-BERT parameter un-collapses that attention
 (entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 by
 $+0.067 \pm 0.023$ over five paired seeds ($p = 0.003$), the largest effect we
 measured --- and one that transfers: applied to the contrastive dual encoder it
@@ -56,8 +53,6 @@ $0.540$ where our model scores $0.565$ --- a margin small enough that, on
 Macro-F1, the control actually wins.
 \end{abstract}
 
-\vspace{0.5em}
-\begin{multicols}{2}
 
 \section{Introduction}
 Musical ``context'' spans genre, mood, harmonic structure, instrumentation and
@@ -91,7 +86,7 @@ correcting a checkpoint-selection error.
 \end{itemize}
 
 \section{Related Work}
-\textbf{Music auto-tagging.} MagnaTagATune with a top-50 tag vocabulary is the
+\textbf{Music auto-tagging.} MagnaTagATune~\cite{mtat} with a top-50 tag vocabulary is the
 long-standing benchmark for multi-label music tagging, typically approached
 with convolutional networks over log-mel spectrograms. Our CNN baseline (B2)
 follows that lineage. The artist-leakage problem in the conventional split has
@@ -101,20 +96,20 @@ and quantify its extent on our filtered subset.
 \textbf{Graphs for music.} Representing a track as a graph over segments,
 chords or events is motivated by the observation that musical form is
 relational --- repetition, return and contrast --- and not purely sequential.
-GraphSAGE and GAT are the two message-passing families named in the project
+GraphSAGE~\cite{sage} and GAT~\cite{gat} are the two message-passing families named in the project
 specification; we implement both. Our contribution here is negative and
 practical: we show that naive cosine thresholding on raw MFCC descriptors
 produces near-complete graphs, which silently reduces any GNN over them to
 mean pooling.
 
-\textbf{Cross-modal alignment.} Contrastive dual encoders trained with InfoNCE
+\textbf{Cross-modal alignment.} Contrastive dual encoders trained with InfoNCE~\cite{infonce}
 have become the standard recipe for aligning modalities, and MusicCaps supplies
 the expert captions that make audio--text alignment feasible. Our Task 4 follows
 this recipe directly, with the addition of an explicit random baseline and
 gallery size on every retrieval number --- both frequently omitted, and both
 necessary to interpret R@K at all.
 
-\textbf{Multi-task emotion regression.} DEAM provides continuous
+\textbf{Multi-task emotion regression.} DEAM~\cite{deam} provides continuous
 valence--arousal annotations. Because it shares no tracks with the tag corpora,
 joint training requires masking rather than a single joint objective; we
 implement the masked alternating-batch scheme and, unusually, report what it
@@ -208,7 +203,7 @@ silently destroys Macro-F1.
 \subsection{Task 2: GNN on structure graphs}
 Each clip becomes a segment graph: nodes are fixed-length windows carrying
 MFCC, chroma and spectral descriptors; edges are temporal adjacency plus
-cosine similarity above a threshold $\tau$. A GraphSAGE layer updates
+cosine similarity above a threshold $\tau$. A GraphSAGE~\cite{sage} layer updates
 \begin{equation}
 h_i^{(l+1)} = \sigma\!\left(W^{(l)} \cdot \mathrm{CONCAT}\!\left(h_i^{(l)},
 \mathrm{MEAN}_{j \in \mathcal{N}(i)} h_j^{(l)}\right)\right),
@@ -251,8 +246,8 @@ collapse.
 \section{Experimental Setup}
 
 \subsection{Datasets and a leakage audit}
-We use MagnaTagATune (top-50 tags after synonym merging), FMA-small (8 genres),
-DEAM (valence/arousal) and MusicCaps (expert captions).
+We use MagnaTagATune~\cite{mtat} (top-50 tags after synonym merging), FMA-small~\cite{fma} (8 genres),
+DEAM (valence/arousal) and MusicCaps~\cite{musiccaps} (expert captions).
 
 \textbf{The official MagnaTagATune split is unusable for our purpose.} It
 shares $45$ artists between train and test, covering $3{,}284$ of $5{,}329$
@@ -299,7 +294,7 @@ track before computing similarity (median falls to $-0.078$) and use
 $\tau = 0.35$, giving average degree $\approx 3.1$ with no isolated nodes.
 
 \subsection{Training configuration}
-All models use DistilBERT (\texttt{distilbert-base-uncased}) as the text tower
+All models use DistilBERT~\cite{distilbert} (\texttt{distilbert-base-uncased}) as the text tower
 and a 2-layer GAT with hidden width $128$ as the graph tower unless stated
 otherwise. Optimisation is AdamW with weight decay $10^{-4}$; learning rate
 $2\times10^{-5}$ for fusion runs, $3\times10^{-5}$ for Task 1 and Task 4, and
@@ -590,7 +585,7 @@ Early concat & 66.4M & 0.168 & 0.314 & 0.182 \\
 Cross-attention & 66.8M & 0.192 & 0.325 & 0.177 \\
 \midrule
 \quad $+$ frozen BERT & 0.5M & 0.118 & 0.315 & 0.197 \\
-\quad $+$ separate GNN lr $10^{-3}$ & 66.8M & \textbf{0.246} & \textbf{0.415} & \textbf{0.248} \\
+\quad $+$ non-BERT lr $10^{-3}$ & 66.8M & \textbf{0.246} & \textbf{0.415} & \textbf{0.248} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -623,6 +618,8 @@ predicted. Against BERT-only this is $+0.075$ Macro-F1 and $+0.109$ Micro-F1:
 on this corpus, structural fusion helps once the graph branch is actually
 trained.
 
+\noindent \textbf{What this does and does not isolate.} The parameter group is everything outside the text tower --- the graph encoder, the cross-attention block and both heads --- so the result establishes that a higher learning rate on the non-BERT parameters helps, not that the graph encoder specifically was the bottleneck. Separating those factors would need a per-module sweep we did not run. We name the effect after the optimiser change rather than after the module we suspect.
+
 \textbf{The effect survives a seed sweep.} Because this is the report's central
 positive claim, we re-ran both arms over five seeds (42, 1, 2, 3, 4) on one
 machine. Since the two arms share seeds, the per-seed difference is paired and
@@ -636,7 +633,7 @@ per-seed difference.}
 \label{tab:sweep}
 \begin{tabular}{lccc}
 \toprule
-& Shared lr & Separate GNN lr & Paired $\Delta$ \\
+& Shared lr & Non-BERT lr & Paired $\Delta$ \\
 \midrule
 Macro-F1 & $0.172 \pm 0.023$ & $0.240 \pm 0.020$ & $+0.067 \pm 0.023$ ($p{=}0.003$) \\
 Micro-F1 & $0.335 \pm 0.024$ & $0.416 \pm 0.028$ & $+0.081 \pm 0.018$ ($p{=}0.001$) \\
@@ -739,7 +736,7 @@ Random    & ---                 & 0.0004 & --- & 0.0036 \\
 \end{tabular}
 \end{table}
 
-\noindent \textbf{The Task 3 finding transfers.} Giving the graph tower its own
+\noindent \textbf{The Task 3 finding transfers.} Giving the non-BERT parameters their own
 learning rate of $10^{-3}$ --- the intervention that un-collapsed the fusion
 attention in Section~\ref{sec:t3results}, here tested rather than assumed to
 carry over --- doubles R@1 and lifts R@10 from $0.0220$ to $0.0339$, or
@@ -777,8 +774,12 @@ Train pairs & C$\to$A R@10 & A$\to$C R@10 & vs.\ random \\
 convincing sign of saturation --- the last interval flattens, but by less than
 single-seed noise. Extrapolating the fit, reaching a usable R@10 of $0.10$ would
 need on the order of $2\times10^5$ paired clips, roughly $100\times$ what the
-official split provides. We report the extrapolation to characterise the
-regime, not as a forecast: it spans an order of magnitude beyond our data.
+official split provides. That figure characterises a regime; it is not a
+forecast, and we would not defend it as one. It rests on four single-seed
+points spanning less than one order of magnitude, extrapolated across two,
+and it assumes the log-linear trend continues rather than saturating --- which the last interval may already be doing, by less than single-seed
+noise. The defensible claim is the direction and the orderliness of the
+trend, not the number of clips.
 
 The conclusion we draw is specific. Our contrastive result is weak, but it is
 weak in the way a data-starved model is weak rather than a broken one --- the
@@ -796,11 +797,40 @@ horizontal line is the random baseline.}
 \label{fig:scale}
 \end{figure}
 
-\textbf{Zero-shot tagging.} Embedding tag names with the text tower and scoring
-them against clip graph embeddings --- using no tag supervision at any point ---
-gives Micro-F1 $0.107$, against $0.488$ for the supervised stripped-caption
-Task 1 model on the same corpus and the same official split. Contrastive
-alignment alone thus recovers roughly $22\%$ of supervised performance.
+\textbf{Zero-shot tagging, against the supervised model on identical data.}
+The specification asks for zero-shot tagging measured against the Task~3
+supervised model. Doing that fairly requires both to be scored on the same
+clips with the same label set, so we retrained the Task~3 cross-attention
+fusion on MusicCaps under the \emph{official AudioSet eval partition} --- the
+same $2{,}195/387/2{,}773$ split the contrastive model uses --- over the same 50
+tags, derived from the training split alone.
+
+\begin{table}[H]
+\centering\small
+\caption{Zero-shot versus supervised on identical data: same corpus, same
+official eval split, same 50 tags derived from training clips only. Neither the
+zero-shot vocabulary nor its decision threshold sees a test label.}
+\label{tab:zeroshot}
+\begin{tabular}{lccc}
+\toprule
+& Micro-F1 & Macro-F1 & AUC-PR \\
+\midrule
+Task 3, supervised fusion & \textbf{0.657} & \textbf{0.593} & \textbf{0.620} \\
+Task 4, zero-shot & 0.100 & 0.093 & 0.058 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Contrastive alignment alone recovers about $15\%$ of supervised
+Micro-F1. That is a smaller figure than our earlier draft reported, for two
+reasons we record rather than quietly correct. First, that draft compared
+against the Task~1 model, not Task~3 as the specification asks. Second, and more
+seriously, its zero-shot protocol leaked: the tag vocabulary was chosen by
+frequency \emph{in the test split} and the decision threshold was tuned on the
+test labels. The encoder never saw tag supervision, but the evaluation did, and
+both choices flatter the score. Fixing them moves Micro-F1 from $0.107$ to
+$0.100$; the correction is small, but a leak measured after the fact is worth
+less than a protocol that could not leak.
 
 \subsection{Task 4: what listeners said}
 
@@ -997,7 +1027,7 @@ hang: it froze at $4{,}000/8{,}000$ FMA tracks and, on another run, at
 $10{,}500/21{,}318$ MagnaTagATune clips, with every worker asleep on a futex at
 $\approx0$\,s of CPU. The real event was a \emph{segmentation fault} inside a
 numba \texttt{guvectorize} kernel reached through
-\texttt{librosa.chroma\_stft} $\to$ \texttt{estimate\_tuning} $\to$
+\texttt{librosa}~\cite{librosa} \texttt{chroma\_stft} $\to$ \texttt{estimate\_tuning} $\to$
 \texttt{piptrack}, caused by a \texttt{numba} $0.67$ / \texttt{numpy} $2.1$ ABI
 mismatch in the GPU image. The deadlock appearance is a property of
 \texttt{multiprocessing.Pool}: it silently respawns a worker that dies mid-task
@@ -1133,5 +1163,4 @@ Learning with Contrastive Predictive Coding,'' \emph{arXiv:1807.03748}, 2018.
 in Python,'' \emph{SciPy}, 2015.
 \end{thebibliography}
 
-\end{multicols}
 \end{document}

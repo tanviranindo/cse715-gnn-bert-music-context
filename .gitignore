@@ -26,9 +26,13 @@ data/processed/*
 .prev_state.json
 status.json
 
-# Model checkpoints pulled down from rented instances
+# Model checkpoints pulled down from rented instances. The weights themselves
+# are 253 MB each (over GitHub's limit), but their checksums and the exact
+# commands that regenerate them are committed so a grader can verify or rebuild.
 artifacts/checkpoints/*
 !artifacts/checkpoints/.gitkeep
+!artifacts/checkpoints/SHA256SUMS
+!artifacts/checkpoints/README.md
 
 # Notebook execution scratch (EDA downloads ~35 MB of metadata on demand)
 notebooks/_eda_cache/

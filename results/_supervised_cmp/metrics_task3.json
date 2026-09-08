@@ -1,0 +1,155 @@
+{
+  "config": {
+    "mtat_cache": "/data/processed/musiccaps_graphs.pt",
+    "deam_cache": "/nonexistent",
+    "out_dir": "results/_supervised_cmp",
+    "mode": "crossattn",
+    "epochs": 8,
+    "batch_size": 32,
+    "lr": 2e-05,
+    "hidden": 128,
+    "layers": 2,
+    "conv": "gat",
+    "attn_dim": 256,
+    "dropout": 0.3,
+    "alpha": 1.0,
+    "beta": 1.0,
+    "max_length": 64,
+    "freeze_bert": false,
+    "gnn_lr": 0.001,
+    "split": "official_eval",
+    "seed": 42
+  },
+  "n_tags": 50,
+  "vocab": [
+    "low quality",
+    "instrumental",
+    "noisy",
+    "passionate",
+    "emotional",
+    "energetic",
+    "live performance",
+    "medium tempo",
+    "amateur recording",
+    "slow tempo",
+    "mono",
+    "acoustic drums",
+    "groovy",
+    "fast tempo",
+    "groovy bass",
+    "no voices",
+    "moderate tempo",
+    "electric guitar",
+    "bass guitar",
+    "punchy kick",
+    "shimmering hi hats",
+    "percussion",
+    "piano",
+    "male voice",
+    "punchy snare",
+    "no other instruments",
+    "exciting",
+    "acoustic guitar",
+    "bass",
+    "instrumental music",
+    "male vocal",
+    "upbeat",
+    "pop",
+    "flat male vocal",
+    "happy",
+    "uptempo",
+    "e-bass",
+    "cheerful",
+    "rock",
+    "romantic",
+    "classical",
+    "mellow",
+    "joyful",
+    "easygoing",
+    "relaxing",
+    "male singer",
+    "calming",
+    "melodic singing",
+    "soulful",
+    "keyboard"
+  ],
+  "split_sizes": {
+    "train": 2195,
+    "val": 387,
+    "test": 2773
+  },
+  "runs": {
+    "crossattn": {
+      "mode": "crossattn",
+      "params": 66834740,
+      "history": [
+        {
+          "epoch": 1,
+          "train_loss": 0.2175409212924432,
+          "val_macro_f1": 0.15314120003217066,
+          "val_micro_f1": 0.3974522292993631,
+          "seconds": 7.1
+        },
+        {
+          "epoch": 2,
+          "train_loss": 0.13715218709430832,
+          "val_macro_f1": 0.30647878714530313,
+          "val_micro_f1": 0.5449374288964732,
+          "seconds": 6.8
+        },
+        {
+          "epoch": 3,
+          "train_loss": 0.11063061719355376,
+          "val_macro_f1": 0.4389124761237034,
+          "val_micro_f1": 0.6195876288659794,
+          "seconds": 6.8
+        },
+        {
+          "epoch": 4,
+          "train_loss": 0.09378272003453711,
+          "val_macro_f1": 0.58893999768631,
+          "val_micro_f1": 0.6897470039946738,
+          "seconds": 6.8
+        },
+        {
+          "epoch": 5,
+          "train_loss": 0.08124494725379391,
+          "val_macro_f1": 0.6495054632906125,
+          "val_micro_f1": 0.7252252252252253,
+          "seconds": 6.8
+        },
+        {
+          "epoch": 6,
+          "train_loss": 0.07115710143377815,
+          "val_macro_f1": 0.6725810602179871,
+          "val_micro_f1": 0.7413308341143393,
+          "seconds": 6.9
+        },
+        {
+          "epoch": 7,
+          "train_loss": 0.06348932291502538,
+          "val_macro_f1": 0.6955866414334472,
+          "val_micro_f1": 0.7467476149176062,
+          "seconds": 6.9
+        },
+        {
+          "epoch": 8,
+          "train_loss": 0.05620528493022573,
+          "val_macro_f1": 0.6858628330802161,
+          "val_micro_f1": 0.744988344988345,
+          "seconds": 6.9
+        }
+      ],
+      "selected_epoch": 7,
+      "selected_val_macro_f1": 0.6955866414334472,
+      "threshold": 0.55,
+      "test_macro_f1": 0.5926209738414188,
+      "test_micro_f1": 0.656921373200443,
+      "test_auc_pr": 0.6200019155447535,
+      "attention": {
+        "entropy_vs_uniform": 0.2602791116397384,
+        "peak_over_uniform": 40.14407159239054
+      }
+    }
+  }
+}

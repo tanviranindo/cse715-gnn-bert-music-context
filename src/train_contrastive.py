@@ -223,10 +223,16 @@ def main() -> None:
     (out / "retrieval_examples" / ("task4_examples%s.json" % args.metrics_suffix)).write_text(
         json.dumps(examples, indent=2))
 
-    # zero-shot tagging: embed tag names, score clips, no tag supervision used
+    # Zero-shot tagging. The encoder never sees tag supervision, but the
+    # *evaluation* can still leak if it is not built carefully, and an earlier
+    # version of this block did exactly that: it chose the tag vocabulary by
+    # frequency in the test split and then tuned the decision threshold on the
+    # test labels. Both are decisions made with the answers in hand, and both
+    # inflate the reported F1. The vocabulary now comes from the training split
+    # and the threshold from validation; test labels are read once, to score.
     import collections
     counts = collections.Counter()
-    for d in test:
+    for d in splits["train"]:
         for a in d.labels_set:
             counts[a] += 1
     tags = [t for t, _ in counts.most_common(args.n_zeroshot_tags)]
@@ -235,17 +241,28 @@ def main() -> None:
                   max_length=args.max_length, return_tensors="pt").to(device)
         with torch.no_grad():
             tag_emb = model.encode_text(enc["input_ids"], enc["attention_mask"]).cpu()
+            val_G, _ = embed(loaders["val"])
+
+        val_true = [[1 if t in d.labels_set else 0 for t in tags]
+                    for d in splits["val"]]
+        val_probs = torch.sigmoid(
+            contrastive.zero_shot_tag_scores(tag_emb, val_G)
+            / model.temperature.cpu()).tolist()
+        thr, _ = ev.best_threshold(val_true, val_probs)
+
         scores = contrastive.zero_shot_tag_scores(tag_emb, G)
         y_true = [[1 if t in d.labels_set else 0 for t in tags] for d in test]
         probs = torch.sigmoid(scores / model.temperature.cpu()).tolist()
-        thr, _ = ev.best_threshold(y_true, probs)
         pred = ev.binarize(probs, thr)
         zs = {"n_tags": len(tags), "threshold": thr,
+              "vocabulary_from": "train split",
+              "threshold_from": "val split",
               "micro_f1": ev.micro_f1(y_true, pred),
               "macro_f1": ev.macro_f1(y_true, pred),
               "auc_pr": ev.macro_auc_pr(y_true, probs),
-              "note": "no tag supervision; compare against Task 1's supervised "
-                      "MusicCaps run in metrics_task1_musiccaps*.json"}
+              "note": "No tag supervision reaches the encoder, and no test label "
+                      "reaches the vocabulary or the threshold. Compare against a "
+                      "supervised model scored on this same vocabulary and split."}
         (out / "metrics_task4_zeroshot.json").write_text(json.dumps(zs, indent=2))
         print(f"[zero-shot] {len(tags)} tags  micro-F1 {zs['micro_f1']:.4f} "
               f"macro-F1 {zs['macro_f1']:.4f} AUC-PR {zs['auc_pr']:.4f}")
