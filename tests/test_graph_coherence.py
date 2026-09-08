@@ -52,3 +52,22 @@ def test_reading_credits_training_when_untrained_scores_lower():
             "untrained": 0.40, "real_minus_rewired": 0.35}
     text = gc._reading(best, separates=True)
     assert "attributable to training" in text
+
+
+def test_strongest_path_follows_the_heaviest_edges():
+    """Case studies must show a route through the clip, not just statistics."""
+    import numpy as np
+    from src.analyze_fusion import _strongest_path
+    # 0-1 weak, 1-2 strong, 2-3 strongest; node 1 has the highest degree
+    ei = np.array([[0, 1, 2, 1], [1, 2, 3, 3]])
+    ew = np.array([0.1, 0.9, 0.95, 0.2])
+    deg = np.bincount(ei[0], minlength=4)
+    path = _strongest_path(ei, ew, deg, max_len=4)
+    assert path[0] == int(deg.argmax())
+    assert len(path) == len(set(path)), "a path must not revisit a node"
+
+
+def test_strongest_path_is_empty_for_an_edgeless_graph():
+    import numpy as np
+    from src.analyze_fusion import _strongest_path
+    assert _strongest_path(np.zeros((2, 0), dtype=int), None, np.zeros(3)) == []

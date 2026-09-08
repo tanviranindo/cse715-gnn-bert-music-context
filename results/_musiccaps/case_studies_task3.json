@@ -15,28 +15,28 @@
     ],
     "top_predictions": [
       {
-        "tag": "piano",
-        "p": 0.827
+        "tag": "acoustic drums",
+        "p": 0.956
       },
       {
         "tag": "e-bass",
-        "p": 0.78
+        "p": 0.936
       },
       {
-        "tag": "acoustic drums",
-        "p": 0.681
+        "tag": "piano",
+        "p": 0.803
+      },
+      {
+        "tag": "pop",
+        "p": 0.58
       },
       {
         "tag": "uptempo",
-        "p": 0.634
-      },
-      {
-        "tag": "e-guitar",
-        "p": 0.25
+        "p": 0.285
       },
       {
         "tag": "medium tempo",
-        "p": 0.102
+        "p": 0.08
       }
     ],
     "graph": {
@@ -50,40 +50,44 @@
         2,
         1
       ],
-      "busiest_segment": 1
+      "busiest_segment": 1,
+      "strongest_path": [
+        1,
+        0
+      ]
     },
     "attention_top_tokens": [
       {
-        "token": "a",
-        "weight": 0.1705
-      },
-      {
-        "token": "is",
-        "weight": 0.1367
-      },
-      {
-        "token": "a",
-        "weight": 0.0911
-      },
-      {
-        "token": "a",
-        "weight": 0.0857
+        "token": "the",
+        "weight": 0.3417
       },
       {
         "token": "the",
-        "weight": 0.0661
+        "weight": 0.1651
       },
       {
-        "token": "contains",
-        "weight": 0.0631
+        "token": "a",
+        "weight": 0.1407
       },
       {
-        "token": "with",
-        "weight": 0.0544
+        "token": "an",
+        "weight": 0.1135
       },
       {
-        "token": "this",
-        "weight": 0.0477
+        "token": "one",
+        "weight": 0.0541
+      },
+      {
+        "token": "the",
+        "weight": 0.0361
+      },
+      {
+        "token": "digital",
+        "weight": 0.0212
+      },
+      {
+        "token": "one",
+        "weight": 0.0181
       }
     ]
   },
@@ -102,27 +106,27 @@
     "top_predictions": [
       {
         "tag": "no voices",
-        "p": 0.944
+        "p": 0.954
       },
       {
         "tag": "instrumental",
-        "p": 0.939
+        "p": 0.934
       },
       {
         "tag": "fast tempo",
-        "p": 0.847
+        "p": 0.917
       },
       {
-        "tag": "amateur recording",
-        "p": 0.145
+        "tag": "no other instruments",
+        "p": 0.9
       },
       {
         "tag": "moderate tempo",
-        "p": 0.134
+        "p": 0.212
       },
       {
-        "tag": "percussion",
-        "p": 0.116
+        "tag": "amateur recording",
+        "p": 0.193
       }
     ],
     "graph": {
@@ -136,40 +140,44 @@
         2,
         1
       ],
-      "busiest_segment": 1
+      "busiest_segment": 1,
+      "strongest_path": [
+        1,
+        0
+      ]
     },
     "attention_top_tokens": [
       {
-        "token": "this",
-        "weight": 0.5249
-      },
-      {
-        "token": "this",
-        "weight": 0.1807
+        "token": "the",
+        "weight": 0.2879
       },
       {
         "token": "the",
-        "weight": 0.0576
+        "weight": 0.1026
       },
       {
-        "token": "the",
-        "weight": 0.0566
-      },
-      {
-        "token": "the",
-        "weight": 0.0191
+        "token": "song",
+        "weight": 0.0778
       },
       {
         "token": "is",
-        "weight": 0.0123
+        "weight": 0.0698
       },
       {
-        "token": "is",
-        "weight": 0.0119
+        "token": "song",
+        "weight": 0.0676
       },
       {
         "token": "being",
-        "weight": 0.0119
+        "weight": 0.0458
+      },
+      {
+        "token": "is",
+        "weight": 0.0381
+      },
+      {
+        "token": "a",
+        "weight": 0.0306
       }
     ]
   },
@@ -189,27 +197,27 @@
     "top_predictions": [
       {
         "tag": "male voice",
-        "p": 0.963
+        "p": 0.953
       },
       {
         "tag": "moderate tempo",
-        "p": 0.733
+        "p": 0.693
       },
       {
         "tag": "percussion",
-        "p": 0.571
+        "p": 0.596
       },
       {
         "tag": "bass",
-        "p": 0.016
-      },
-      {
-        "tag": "instrumental",
-        "p": 0.01
+        "p": 0.099
       },
       {
         "tag": "slow tempo",
-        "p": 0.009
+        "p": 0.038
+      },
+      {
+        "tag": "acoustic guitar",
+        "p": 0.01
       }
     ],
     "graph": {
@@ -223,40 +231,44 @@
         2,
         1
       ],
-      "busiest_segment": 1
+      "busiest_segment": 1,
+      "strongest_path": [
+        1,
+        0
+      ]
     },
     "attention_top_tokens": [
       {
-        "token": "this",
-        "weight": 0.6728
-      },
-      {
-        "token": "this",
-        "weight": 0.0679
-      },
-      {
-        "token": "is",
-        "weight": 0.0579
-      },
-      {
-        "token": "this",
-        "weight": 0.0517
-      },
-      {
-        "token": "features",
-        "weight": 0.036
+        "token": "the",
+        "weight": 0.7841
       },
       {
         "token": "a",
-        "weight": 0.0317
+        "weight": 0.0422
       },
       {
         "token": "the",
-        "weight": 0.0161
+        "weight": 0.0349
       },
       {
-        "token": "is",
-        "weight": 0.0115
+        "token": "the",
+        "weight": 0.0334
+      },
+      {
+        "token": "a",
+        "weight": 0.0255
+      },
+      {
+        "token": "a",
+        "weight": 0.0177
+      },
+      {
+        "token": "by",
+        "weight": 0.0083
+      },
+      {
+        "token": "this",
+        "weight": 0.0067
       }
     ]
   }

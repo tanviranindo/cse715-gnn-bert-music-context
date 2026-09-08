@@ -77,7 +77,8 @@ to beat its text branch, using an attention-entropy measurement rather than an
 inference from F1.
 \item A data-scale measurement showing that our weak retrieval result is
 data-limited rather than broken: R@10 grows log-linearly in paired examples
-($R^2 = 0.914$), and MusicCaps' official split is two orders of magnitude short
+($R^2 = 0.914$) on four single-seed points, which indicates the regime rather
+than a required corpus size; on that fit MusicCaps' official split is far short
 of the regime the task needs.
 \item Honest negative results with controls: a lexical-match baseline for
 caption-based tagging, and a random-prevalence baseline for every multi-label
@@ -119,6 +120,7 @@ costs the primary task.
 
 \begin{figure*}[t]
 \centering
+\resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[
   font=\small,
   box/.style   ={draw, rounded corners=1pt, minimum height=7.5mm, align=center, inner sep=3pt},
@@ -175,7 +177,8 @@ costs the primary task.
 \draw[dashed, black!45] ([yshift=3mm]g.north east) -- ([yshift=-3mm]h.south east);
 \node[lbl, align=center, above right=1mm and -6mm of g.north east, text=black!55]
   {\itshape ablation cut:\\ either branch alone};
-\end{tikzpicture}
+\end{tikzpicture}%
+}
 \caption{System overview, and how the four tasks sit inside one architecture.
 Audio becomes a segment graph read by the GNN into a graph vector $g$; text is
 read by DistilBERT into a token sequence $H_{\text{text}}$ and its pooled vector
@@ -423,11 +426,12 @@ best-checkpoint selection.}
 \centering\small
 \caption{Task 2. FMA-small genre classification, 8 balanced classes
 (chance $=0.125$), artist-disjoint official splits.}
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lccc}
 \toprule
-Model & Params & Accuracy & Macro-F1 \\
+Model & Params & Acc. & Macro-F1 \\
 \midrule
-B4 PCA$+$MLP (audio features) & 8,712 & 0.379 & 0.371 \\
+B4 PCA$+$MLP & 8,712 & 0.379 & 0.371 \\
 GraphSAGE & 49,416 & 0.396 & 0.401 \\
 GAT & \textbf{26,120} & 0.433 & 0.426 \\
 CNN baseline (B2) & 241,992 & \textbf{0.483} & \textbf{0.479} \\
@@ -575,9 +579,10 @@ leakage. Every row is evaluated at the epoch chosen by best-validation
 Macro-F1, never at a fixed final epoch. The last two rows are the two
 follow-ups our earlier draft named as the experiments to try next.}
 \label{tab:t3ablation}
+\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lcccc}
 \toprule
-Mode & Params & Macro-F1 & Micro-F1 & AUC-PR \\
+Mode & Params & Macro & Micro & AUC-PR \\
 \midrule
 BERT-only & 66.4M & 0.171 & 0.306 & 0.168 \\
 GNN-only & 31.8K & 0.123 & 0.124 & 0.084 \\
@@ -631,13 +636,14 @@ we test it with a paired $t$-test.
 sample standard deviation; $p$ from a two-sided paired $t$-test on the
 per-seed difference.}
 \label{tab:sweep}
-\begin{tabular}{lccc}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
 \toprule
-& Shared lr & Non-BERT lr & Paired $\Delta$ \\
+& Shared lr & Non-BERT lr & $\Delta$ & $p$ \\
 \midrule
-Macro-F1 & $0.172 \pm 0.023$ & $0.240 \pm 0.020$ & $+0.067 \pm 0.023$ ($p{=}0.003$) \\
-Micro-F1 & $0.335 \pm 0.024$ & $0.416 \pm 0.028$ & $+0.081 \pm 0.018$ ($p{=}0.001$) \\
-AUC-PR   & $0.181 \pm 0.015$ & $0.260 \pm 0.018$ & $+0.079 \pm 0.010$ ($p{<}0.001$) \\
+Macro-F1 & $.172\pm.023$ & $.240\pm.020$ & $+.067\pm.023$ & $.003$ \\
+Micro-F1 & $.335\pm.024$ & $.416\pm.028$ & $+.081\pm.018$ & $.001$ \\
+AUC-PR   & $.181\pm.015$ & $.260\pm.018$ & $+.079\pm.010$ & $<.001$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -646,7 +652,7 @@ AUC-PR   & $0.181 \pm 0.015$ & $0.260 \pm 0.018$ & $+0.079 \pm 0.010$ ($p{<}0.00
 $+0.072, +0.040, +0.077, +0.098, +0.051$) and roughly three times the
 seed-to-seed spread, so the gap is not an artifact of a lucky seed. We note
 that seed-to-seed variation ($\pm0.023$ Macro-F1) is itself larger than several
-of the between-ablation margins in Table~3, which is a caution against reading
+of the between-ablation margins in Table~\ref{tab:t3ablation}, which is a caution against reading
 those smaller differences too firmly. We also reproduced seed 42 on different
 hardware and obtained $0.254$ rather than $0.246$, so the third decimal is not
 portable across machines.
@@ -799,38 +805,39 @@ horizontal line is the random baseline.}
 
 \textbf{Zero-shot tagging, against the supervised model on identical data.}
 The specification asks for zero-shot tagging measured against the Task~3
-supervised model. Doing that fairly requires both to be scored on the same
-clips with the same label set, so we retrained the Task~3 cross-attention
-fusion on MusicCaps under the \emph{official AudioSet eval partition} --- the
-same $2{,}195/387/2{,}773$ split the contrastive model uses --- over the same 50
-tags, derived from the training split alone.
+supervised model. Both models therefore derive their split from one shared
+function (\texttt{src/splits.official\_eval\_split}) and their vocabulary from
+the training clips of that split, and each writes its test clip ids and its
+vocabulary into its own metrics file so the equality can be \emph{checked}
+rather than assumed: the two runs score the same $2{,}773$ clips against the
+same $50$ tags.
 
 \begin{table}[H]
 \centering\small
-\caption{Zero-shot versus supervised on identical data: same corpus, same
-official eval split, same 50 tags derived from training clips only. Neither the
-zero-shot vocabulary nor its decision threshold sees a test label.}
+\caption{Zero-shot versus supervised on verified-identical data: same corpus,
+same official eval clips, same 50 tags derived from training clips only.
+Neither the zero-shot vocabulary nor its threshold sees a test label.}
 \label{tab:zeroshot}
 \begin{tabular}{lccc}
 \toprule
 & Micro-F1 & Macro-F1 & AUC-PR \\
 \midrule
-Task 3, supervised fusion & \textbf{0.657} & \textbf{0.593} & \textbf{0.620} \\
-Task 4, zero-shot & 0.100 & 0.093 & 0.058 \\
+Task 3, supervised fusion & \textbf{0.657} & \textbf{0.588} & \textbf{0.624} \\
+Task 4, zero-shot & 0.098 & 0.096 & 0.059 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \noindent Contrastive alignment alone recovers about $15\%$ of supervised
-Micro-F1. That is a smaller figure than our earlier draft reported, for two
-reasons we record rather than quietly correct. First, that draft compared
-against the Task~1 model, not Task~3 as the specification asks. Second, and more
-seriously, its zero-shot protocol leaked: the tag vocabulary was chosen by
-frequency \emph{in the test split} and the decision threshold was tuned on the
-test labels. The encoder never saw tag supervision, but the evaluation did, and
-both choices flatter the score. Fixing them moves Micro-F1 from $0.107$ to
-$0.100$; the correction is small, but a leak measured after the fact is worth
-less than a protocol that could not leak.
+Micro-F1. Two corrections sit behind that number and we record both. Our first
+draft compared against Task~1 rather than Task~3, and its zero-shot protocol
+leaked: the vocabulary was chosen by frequency \emph{in the test split} and the
+threshold tuned on test labels. The encoder never saw tag supervision, but the
+evaluation read the answers twice. A second, subtler version of the same fault
+survived the first fix --- the two scripts derived the split independently, one
+shuffling the pool and one not, so equal split \emph{sizes} concealed different
+train/validation membership while nothing printed disagreed. Sharing one split
+function and logging the clip ids is what makes the comparison checkable.
 
 \subsection{Task 4: what listeners said}
 
@@ -894,13 +901,19 @@ submission was faster than listening allows.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{tsne_task3.png}
-\caption{t-SNE of the fused representation $z$ (cross-attention,
-$384$-dim) over
-$1{,}500$ held-out MagnaTagATune clips, coloured by primary tag. Broad
-timbral families separate --- classical and vocal-led material occupy distinct
-regions --- but the structure is diffuse rather than cleanly clustered,
-consistent with the modest Macro-F1 in Table 3.}
+\includegraphics[width=\linewidth]{tsne_task3_views.png}
+\caption{t-SNE of the fused representation $z$ (cross-attention, $384$-dim)
+over $1{,}500$ held-out MagnaTagATune clips, split into the two views the
+specification asks for. Each clip is coloured by its \emph{primary} tag --- the
+single highest-prevalence tag it carries --- not by its full multi-label
+annotation, and clips whose primary tag falls outside the panel's vocabulary are
+drawn in grey. MagnaTagATune's top-50 list mixes genre, mood, instrument and
+production descriptors in one flat vocabulary, so the split is ours: the mood
+panel is a proxy that includes tempo and production words (\emph{fast},
+\emph{quiet}, \emph{loud}) alongside affective ones. Broad timbral families
+separate --- classical and vocal-led material occupy distinct regions --- but
+the structure is diffuse rather than cleanly clustered, consistent with the
+modest Macro-F1 in Table~\ref{tab:t3ablation}.}
 \end{figure}
 
 \noindent \textbf{Case studies.} Table~\ref{tab:cases} pairs graph structure
@@ -984,6 +997,8 @@ without being semantic, which is the freeze-BERT lesson of
 Section~\ref{sec:t3results} arriving from the opposite direction: sharpness is
 necessary for the mechanism to be doing anything, and is not evidence that it
 is doing the right thing.
+
+\noindent \textbf{Graph paths.} Each case study also records the heaviest walk out of its busiest segment, so the route the similarity graph ties together can be read against the caption rather than inferred from a degree sequence. On MusicCaps those walks are two nodes long, because a $10$\,s clip at $1.5$\,s segments yields about six nodes at average degree $1.7$. That is not a defect of the extraction but a fact about the corpus, and it is part of why the graph branch contributes little here: there is very little structure to traverse.
 
 \noindent \textbf{Retrieval behaviour.} Across the official-split gallery of
 $2{,}773$ clips the median true-clip rank is $527$, placing the correct clip in
@@ -1111,8 +1126,11 @@ seed, which is why we treat the flattening in the last interval as noise rather
 than saturation.
 
 \section{Conclusion}
-We implemented all four tasks and report results that are, for the fusion
-model, negative. We regard the diagnosis as the contribution: a measured
+We implemented all four tasks. Our first conclusion about fusion was negative
+and turned out to be an optimisation artefact: under a single learning rate the
+cross-attention collapses and fusion loses, and once the non-BERT parameters
+train at their own rate the same architecture beats its text branch. We regard
+the diagnosis, and the correction of our own claim, as the contribution: a measured
 performance ceiling from duplicated inputs, a measured artist leak in a
 standard split, a measured attention collapse, a multi-task term that proved
 roughly free rather than costly once our own checkpoint policy was corrected,

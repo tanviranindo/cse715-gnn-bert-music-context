@@ -261,6 +261,10 @@ def task4():
             "test_micro_f1": run["test_micro_f1"],
             "test_macro_f1": run["test_macro_f1"],
             "test_auc_pr": run["test_auc_pr"],
+            "split_shared_with_zero_shot": (
+                sorted(doc.get("test_clip_ids", [])) ==
+                sorted(read("metrics_task4_zeroshot.json").get("test_clip_ids", []))
+                if read("metrics_task4_zeroshot.json") else None),
         }
 
     human = read("metrics_task4_human.json")

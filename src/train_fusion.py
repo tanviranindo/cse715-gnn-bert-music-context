@@ -293,12 +293,11 @@ def main() -> None:
         # held out whole, and only the remaining pool is split. Without this a
         # supervised and a zero-shot model are scored on different clips and the
         # comparison the specification asks for is not like-for-like.
-        eval_items = [d for d in mtat if getattr(d, "is_eval", False)]
-        if not eval_items:
-            raise SystemExit("--split official_eval needs a cache carrying is_eval")
-        pool = [d for d in mtat if not getattr(d, "is_eval", False)]
-        n_val = max(1, int(0.15 * len(pool)))
-        m_tr, m_va, m_te = pool[n_val:], pool[:n_val], eval_items
+        from src.splits import official_eval_split
+        try:
+            m_tr, m_va, m_te = official_eval_split(mtat, seed=args.seed)
+        except ValueError as e:
+            raise SystemExit("--split official_eval: %s" % e)
         print(f"[data] official eval split: {len(m_tr)}/{len(m_va)}/{len(m_te)}")
     else:
         m_tr, m_va, m_te = artist_split(mtat, args.seed)
@@ -325,6 +324,10 @@ def main() -> None:
     node_dim = mtat[0].x.shape[1]
     modes = ["bert", "gnn", "concat", "crossattn"] if args.mode == "all" else [args.mode]
     results = {"config": vars(args), "n_tags": len(vocab), "vocab": vocab,
+               # Written so a reader can verify this run and the zero-shot one
+               # scored the same labels on the same clips, rather than trusting
+               # that equal split sizes imply equal splits -- they do not.
+               "test_clip_ids": sorted(str(getattr(d, "clip_id", "")) for d in m_te),
                "split_sizes": {k: len(v) for k, v in splits.items()}, "runs": {}}
 
     out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)

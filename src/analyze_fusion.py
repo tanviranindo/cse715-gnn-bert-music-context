@@ -18,6 +18,33 @@ import numpy as np
 import torch
 
 
+def _strongest_path(edge_index, edge_weight, deg, max_len: int = 6):
+    """Greedy heaviest walk from the highest-degree node, without revisiting.
+
+    A path is more legible than a degree sequence when the point is to say
+    "these segments are the ones the graph ties together". Greedy is enough
+    here: the graphs are ~20 nodes and this is an illustration, not a claim.
+    """
+    import collections
+    if edge_index is None or edge_index.shape[1] == 0:
+        return []
+    n_edges = int(edge_index.shape[1])
+    w = list(edge_weight) if edge_weight is not None else [1.0] * n_edges
+    nbr = collections.defaultdict(list)
+    for k, (a, b) in enumerate(zip(list(edge_index[0]), list(edge_index[1]))):
+        nbr[a].append((w[k], b))
+        nbr[b].append((w[k], a))
+    start = int(deg.argmax()) if len(deg) else 0
+    path, seen = [start], {start}
+    while len(path) < max_len:
+        cand = [(wt, n) for wt, n in nbr[path[-1]] if n not in seen]
+        if not cand:
+            break
+        wt, nxt = max(cand, key=lambda c: c[0])
+        path.append(int(nxt)); seen.add(nxt)
+    return path
+
+
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--checkpoint", default="results/task3_crossattn.pt")
@@ -114,6 +141,8 @@ def main() -> None:
                      if t not in ("[PAD]", "[CLS]", "[SEP]")]
             pairs.sort(key=lambda p: -p[1])
             ei = np.asarray(d.edge_index)
+            ew = np.asarray(getattr(d, "edge_weight", None)) \
+                if getattr(d, "edge_weight", None) is not None else None
             deg = np.bincount(ei[0], minlength=len(d.x)) if ei.shape[1] else np.zeros(len(d.x))
             cases.append({
                 "clip_id": d.clip_id,
@@ -127,6 +156,13 @@ def main() -> None:
                     "n_edges": int(ei.shape[1]),
                     "degree_sequence": deg.tolist(),
                     "busiest_segment": int(deg.argmax()) if len(deg) else -1,
+                    # The specification asks case studies to show graph paths
+                    # against the text, not just graph statistics. This is the
+                    # heaviest walk out of the busiest segment: at each step it
+                    # follows the strongest remaining edge, so the sequence is
+                    # the route through the clip the similarity graph considers
+                    # most connected, in segment order (each node is 1.5 s).
+                    "strongest_path": _strongest_path(ei, ew, deg),
                 },
                 "attention_top_tokens": [
                     {"token": t, "weight": round(w, 4)} for t, w in pairs[:8]],

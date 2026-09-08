@@ -72,10 +72,9 @@ def main() -> None:
         # resulting R@k would not be comparable with the official partition.
         if not eval_items:
             raise SystemExit("cache has is_eval but it selected 0 clips")
-        train_pool = [d for d in items if not getattr(d, "is_eval", False)]
-        random.shuffle(train_pool)
-        n_val = int(0.15 * len(train_pool))
-        splits = {"train": train_pool[n_val:], "val": train_pool[:n_val], "test": eval_items}
+        from src.splits import official_eval_split
+        tr, va, te = official_eval_split(items, seed=args.seed)
+        splits = {"train": tr, "val": va, "test": te}
         split_kind = "official_audioset_eval"
     else:
         # A cache built before the flag was carried through. Keep the previous
@@ -257,6 +256,10 @@ def main() -> None:
         zs = {"n_tags": len(tags), "threshold": thr,
               "vocabulary_from": "train split",
               "threshold_from": "val split",
+              # Written out so a reader can verify that this run and the
+              # supervised one scored the same labels, rather than trusting it.
+              "vocabulary": tags,
+              "test_clip_ids": sorted(str(d.clip_id) for d in test),
               "micro_f1": ev.micro_f1(y_true, pred),
               "macro_f1": ev.macro_f1(y_true, pred),
               "auc_pr": ev.macro_auc_pr(y_true, probs),
