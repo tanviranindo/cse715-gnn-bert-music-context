@@ -39,6 +39,13 @@ def load_cache(path, tokenizer, max_length: int):
             x=torch.from_numpy(np.asarray(r["x"], dtype=np.float32)),
             edge_index=torch.from_numpy(np.asarray(r["edge_index"], dtype=np.int64)),
         )
+        # The cache stores similarity weights per edge. They were dropped here,
+        # which silently turned any weighted analysis downstream into an
+        # unweighted one -- the case-study walk called itself "heaviest" while
+        # every edge scored 1.0.
+        if r.get("edge_weight") is not None:
+            d.edge_weight = torch.from_numpy(
+                np.asarray(r["edge_weight"], dtype=np.float32))
         d.input_ids = enc["input_ids"]
         d.attention_mask = enc["attention_mask"]
         d.artist = r.get("artist", "")

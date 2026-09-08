@@ -611,8 +611,8 @@ Macro-F1 on 19-node graphs), and the text tower has $66.4$M parameters against
 the graph branch's $31.8$K while sharing a single learning rate tuned for BERT
 fine-tuning ($2\times10^{-5}$).
 
-\textbf{The second cause is the operative one.} Giving the graph branch, the
-fusion block and the heads their own learning rate of $10^{-3}$ --- changing no
+\textbf{The second cause is the operative one.} Raising the learning rate of
+every parameter outside the text tower to $10^{-3}$ --- changing no
 architecture, no data and no seed --- raises Macro-F1 from $0.192$ to
 $\mathbf{0.246}$, Micro-F1 from $0.325$ to $\mathbf{0.415}$ and AUC-PR from
 $0.177$ to $\mathbf{0.248}$. The same run's attention entropy falls from
@@ -620,8 +620,9 @@ $1.000$ to $0.695$ of uniform and its peak rises from $1.03\times$ to
 $4.19\times$. The intervention that fixes the metric is the one that
 demonstrably un-collapses the attention, which is the mechanism our diagnosis
 predicted. Against BERT-only this is $+0.075$ Macro-F1 and $+0.109$ Micro-F1:
-on this corpus, structural fusion helps once the graph branch is actually
-trained.
+on this corpus, structural fusion helps once the non-BERT parameters are
+actually trained. Which of them mattered --- the graph encoder, the
+cross-attention block or the heads --- this experiment does not separate.
 
 \noindent \textbf{What this does and does not isolate.} The parameter group is everything outside the text tower --- the graph encoder, the cross-attention block and both heads --- so the result establishes that a higher learning rate on the non-BERT parameters helps, not that the graph encoder specifically was the bottleneck. Separating those factors would need a per-module sweep we did not run. We name the effect after the optimiser change rather than after the module we suspect.
 
@@ -651,11 +652,10 @@ AUC-PR   & $.181\pm.015$ & $.260\pm.018$ & $+.079\pm.010$ & $<.001$ \\
 \noindent The difference is positive for \emph{every} seed (macro-F1 deltas
 $+0.072, +0.040, +0.077, +0.098, +0.051$) and roughly three times the
 seed-to-seed spread, so the gap is not an artifact of a lucky seed. We note
-that seed-to-seed variation ($\pm0.023$ Macro-F1) is itself larger than several
-of the between-ablation margins in Table~\ref{tab:t3ablation}, which is a caution against reading
-those smaller differences too firmly. We also reproduced seed 42 on different
-hardware and obtained $0.254$ rather than $0.246$, so the third decimal is not
-portable across machines.
+that seed-to-seed variation ($\pm0.023$ Macro-F1) exceeds several
+between-ablation margins in Table~\ref{tab:t3ablation}, so those smaller
+differences should not be read firmly. Seed 42 on different hardware gave
+$0.254$, not $0.246$: the third decimal is not portable.
 
 We state one further caveat plainly. The earlier draft's
 conclusion that ``fusion does not clearly win'' was confounded by evaluating
@@ -998,7 +998,15 @@ Section~\ref{sec:t3results} arriving from the opposite direction: sharpness is
 necessary for the mechanism to be doing anything, and is not evidence that it
 is doing the right thing.
 
-\noindent \textbf{Graph paths.} Each case study also records the heaviest walk out of its busiest segment, so the route the similarity graph ties together can be read against the caption rather than inferred from a degree sequence. On MusicCaps those walks are two nodes long, because a $10$\,s clip at $1.5$\,s segments yields about six nodes at average degree $1.7$. That is not a defect of the extraction but a fact about the corpus, and it is part of why the graph branch contributes little here: there is very little structure to traverse.
+\noindent \textbf{Graph paths.} Each case study records a walk through its
+segment graph, so a route can be read against the caption: it starts at the
+highest-degree segment and steps to unvisited neighbours. Segment $k$ covers
+seconds $1.5k$--$1.5(k{+}1)$, so the walk $[1,0]$ names $1.5$--$3.0$\,s then
+$0$--$1.5$\,s. It is an illustrative walk and nothing more: it is unweighted,
+because the edge weights the cache stores were not carried into the graphs these
+case studies came from, and its stopping after two nodes says only that the
+greedy walk ran out of unvisited neighbours --- not that the graph lacks longer
+paths, which would need a path statistic we did not compute.
 
 \noindent \textbf{Retrieval behaviour.} Across the official-split gallery of
 $2{,}773$ clips the median true-clip rank is $527$, placing the correct clip in
@@ -1156,9 +1164,12 @@ Training requires a GPU; every evaluation, plot and notebook in the repository
 runs on CPU in seconds from the committed artifacts. The human study ran as a
 web application whose source, stimuli and per-listener submissions are all
 committed, so it can be repeated with new listeners rather than merely
-described.
+described. The Task 1 MusicCaps checkpoint is downloadable with a published
+SHA-256; the download, checksum check and a single inference call were verified
+from a clean copy, and \texttt{artifacts/checkpoints/README.md} carries the
+commands.
 
-\begin{thebibliography}{9}\small
+\begin{thebibliography}{10}\footnotesize\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}
 \bibitem{fma} M. Defferrard et al., ``FMA: A Dataset For Music Analysis,''
 \emph{ISMIR}, 2017.
 \bibitem{mtat} E. Law et al., ``Evaluation of Algorithms Using Games: The Case

@@ -94,10 +94,12 @@ The Task 3 learning-rate finding transfers: it doubles R@1 and lifts R@10 to
 numbers stay low because the task is data-limited, and that is measured rather
 than asserted — holding the gallery fixed and subsampling only the training
 pairs, R@10 grows log-linearly in paired examples (R² = 0.914, +0.0099 per
-doubling), putting a usable R@10 of 0.10 about 100× beyond MusicCaps' official
-split. Zero-shot tagging from captions reaches Micro-F1 0.107 against Task 1's
-supervised 0.657 — the Task 3 fusion under the *same* split and the *same* 50
-train-derived tags, which is the comparison the spec asks for. Both runs derive
+doubling). Extrapolated, a usable R@10 of 0.10 would need far more data than
+MusicCaps' official split provides — but that rests on four single-seed points
+spanning less than one order of magnitude, so treat it as the regime, not as a
+required corpus size. Zero-shot tagging from captions reaches Micro-F1 **0.098**
+against the **Task 3** supervised fusion's **0.657**, under the *same* split and
+the *same* 50 train-derived tags — the comparison the spec asks for. Both runs derive
 their split from one shared function and log their test clip ids and vocabulary,
 so `metrics.json` records `split_shared_with_zero_shot: true` as a checked fact. Zero-shot recovers ~15% of supervised Micro-F1. The zero-shot
 vocabulary comes from the train split and its threshold from validation; an
@@ -287,8 +289,9 @@ infra/          dataset fetch/extract/validate scripts, GPU box notes,
   R@1 and R@5 differ in the third decimal (0.0054/0.0177 vs 0.0058/0.0173).
   The tables in the report and `metrics.json` are the original run throughout,
   which is also what the data-scale ablation is internally consistent with.
-- No model checkpoint is committed (253 MB each), so a fresh clone can read
-  every result but can only run inference if you supply the weights.
+- The Task 1 MusicCaps checkpoint is **downloadable** (253 MB, link and
+  checksum in `artifacts/checkpoints/README.md`); verified end to end from a
+  fresh download. The other two are regenerable with one command each.
 - Single seed everywhere except the Task 3 learning-rate comparison (5 paired
   seeds) and the Task 1 curves. Measured seed spread is ±0.023 Macro-F1, which
   exceeds several of the Task 3 ablation margins.
