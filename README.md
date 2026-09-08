@@ -59,6 +59,10 @@ discarded before the GNN sees anything.
 
 **Task 3 — GNN-BERT fusion** (MagnaTagATune top-50, artist-grouped, best-val)
 
+Task 3 scores 21,315 clips where Task 1 scores 21,318: the fusion needs a
+usable segment graph and three MagnaTagATune clips are too short to yield two
+segments, so the graph builder drops them. Task 1 reads text only and keeps them.
+
 | Mode | Macro-F1 | Micro-F1 | AUC-PR | Attn. entropy vs uniform |
 |---|---|---|---|---|
 | BERT-only (B3) | 0.171 | 0.306 | 0.168 | — |
@@ -258,7 +262,7 @@ src/            audio_features, graph_builder, bert_encoder, gnn_model,
                 analyze_scale, attention_viz, human_eval, infer, dump_splits,
                 make_plots, aggregate_sweep, aggregate_metrics, graph_coherence,
                 make_report_numbers
-tests/          19 modules / 134 tests, run with pytest
+tests/          18 modules / 134 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
                 retrieval_examples/, case studies, t-SNE

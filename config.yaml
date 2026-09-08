@@ -1,8 +1,23 @@
+# Reference values for the preprocessing pipeline.
+#
+# Nothing loads this file at runtime: src/build_graphs.py builds its config from
+# command-line flags, and each run records the flags it used inside its own
+# metrics JSON. The specification's project tree names config.yaml, so it is
+# kept here as the single place to read the settings off — but the flags are
+# authoritative, and these values are the defaults they carry.
+
 audio:
-  sample_rate: 22050
-  n_mels: 128
-  n_chroma: 12
-  segment_seconds: 10
+  sample_rate: 22050      # --sample-rate
+  n_mels: 128             # --n-mels, log-mel bins for the CNN baseline
+  n_chroma: 12            # chroma bins, used for chord estimation
+  segment_seconds: 1.5    # --segment-seconds; ~20 nodes on a 30 s clip.
+                          # The spec suggests 5-10 s windows; we use 1.5 s
+                          # because a 30 s clip would otherwise yield 3-6
+                          # nodes, which is too few to message-pass over.
+                          # The report states this deviation.
+  duration: 30.0          # --duration, seconds read per track
+  tau: 0.35               # --tau, cosine threshold for a segment edge
+
 paths:
   raw_dir: data/raw
   processed_dir: data/processed
