@@ -1,5 +1,13 @@
 # Progress Log
 
+> **This is a historical week-by-week log.** Entries record what was true
+> when written and are deliberately not rewritten, so some numbers here were
+> later superseded — the zero-shot micro-F1 of 0.1070 below was measured under
+> a leaking protocol and is now 0.098, and the test count has grown since
+> `92 passed`. **The current numbers are in `results/metrics.json` and the
+> report; treat those as authoritative and this file as a record of process.**
+
+
 **Deadline: 11 September 2026** (corrected 2026-08-16, was 2 October).
 Same week structure and task order; the weeks are just shorter.
 

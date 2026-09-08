@@ -19,11 +19,13 @@ import torch
 
 
 def _strongest_path(edge_index, edge_weight, deg, max_len: int = 6):
-    """Greedy heaviest walk from the highest-degree node, without revisiting.
+    """Greedy walk from the highest-degree node, without revisiting.
 
     A path is more legible than a degree sequence when the point is to say
-    "these segments are the ones the graph ties together". Greedy is enough
-    here: the graphs are ~20 nodes and this is an illustration, not a claim.
+    "these segments are the ones the graph ties together". It follows the
+    heaviest available edge when weights are supplied and is arbitrary when
+    they are not, so read it as an illustration and never as a measurement of
+    connectivity -- where it stops depends on visit order, not on structure.
     """
     import collections
     if edge_index is None or edge_index.shape[1] == 0:
@@ -158,10 +160,12 @@ def main() -> None:
                     "busiest_segment": int(deg.argmax()) if len(deg) else -1,
                     # The specification asks case studies to show graph paths
                     # against the text, not just graph statistics. This is the
-                    # heaviest walk out of the busiest segment: at each step it
-                    # follows the strongest remaining edge, so the sequence is
-                    # the route through the clip the similarity graph considers
-                    # most connected, in segment order (each node is 1.5 s).
+                    # An illustrative walk from the busiest segment, stepping
+                    # to the strongest unvisited neighbour. Each node is a
+                    # 1.5 s window, so the indices name times. It is not a
+                    # claim about how connected the clip is: a greedy walk
+                    # stops when it runs out of unvisited neighbours, which
+                    # says nothing about whether longer paths exist.
                     "strongest_path": _strongest_path(ei, ew, deg),
                 },
                 "attention_top_tokens": [
