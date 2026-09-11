@@ -1,4 +1,11 @@
-# Project Artifacts
+# Artifacts
 
-Artifacts retrieved from remote training instances before instance termination.
-Because persistent cloud volumes proved unreliable (see [`infra/vast-connect.md`](../infra/vast-connect.md)), checkpoints, results, and split manifests are stored directly within the repository structure.
+This directory contains reproducibility metadata for experiment outputs.
+
+- `checkpoints/` contains checkpoint instructions and checksums.
+- `results/` is reserved for locally staged outputs and is not required for the
+  committed submission.
+- `splits/` is reserved for locally staged split exports.
+
+Final metrics, plots, graph samples, and split manifests are stored in the
+repository locations documented in the root [README](../README.md).
