@@ -11,8 +11,8 @@
 **Deadline: 11 September 2026** (corrected 2026-08-16, was 2 October).
 Same week structure and task order; the weeks are just shorter.
 
-Tracks weekly progress against `docs/superpowers/specs/2026-08-15-gnn-bert-music-context-design.md`
-(spec lives in the parent CSE715 notes repo at `../../docs/superpowers/specs/`). Each entry: what was done,
+Tracks weekly progress against [`docs/design-spec.md`](docs/design-spec.md).
+Each entry: what was done,
 links to proof (commits/plots/metrics), and open blockers.
 
 ## Week 1 (Aug 15-18): Repo scaffold + preprocessing foundations

@@ -50,10 +50,10 @@ FMA/MagnaTagATune and DEAM are **disjoint corpora** — no track carries both ta
 
 ## 3. Repository
 
-**Standalone private GitHub repo** — `github.com/tanviranindo/gnn-bert-music-context`, its own git repo with its own remote, matching the spec's prescribed structure verbatim:
+**Course submission repository** — `https://github.com/tanviranindo/cse715-gnn-bert-music-context` (standalone GitHub repo for submission, matching the spec's prescribed structure verbatim):
 
 ```
-gnn-bert-music-context/
+cse715-gnn-bert-music-context/
   README.md
   requirements.txt
   config.yaml
@@ -64,10 +64,7 @@ gnn-bert-music-context/
   report/final_report.pdf
 ```
 
-Created during Week 1 of implementation. It is checked out at
-`Project/gnn-bert-music-context/` inside this notes repo for convenience, and
-that path is listed in this repo's `.gitignore` so the two gits stay
-independent — the project repo pushes to its own remote, not to CSE715's.
+Maintained locally at `Project/cse715-gnn-bert-music-context-public/`.
 
 ## 4. Timeline (Aug 15 – Sep 11, 2026)
 

@@ -1,3 +1,4 @@
-Artifacts pulled down from rented instances before destroying them.
-Vast volumes proved unreliable (see infra/vast-connect.md), so checkpoints,
-results and splits are rsynced here instead.
+# Project Artifacts
+
+Artifacts retrieved from remote training instances before instance termination.
+Because persistent cloud volumes proved unreliable (see [`infra/vast-connect.md`](../infra/vast-connect.md)), checkpoints, results, and split manifests are stored directly within the repository structure.
