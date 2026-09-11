@@ -26,6 +26,20 @@ data/processed/*
 .prev_state.json
 status.json
 
+# Private development operations and generated runtime state
+artifacts/logs/*
+events.json
+log.json
+state.json
+status.html
+dashboard.html
+update_status.sh
+infra/vast-connect.md
+docs/session-logs/*
+
+# Raw human-evaluation responses may contain participant-identifying names.
+results/human_eval/ratings/*
+
 # Model checkpoints pulled down from rented instances. The weights themselves
 # are 253 MB each (over GitHub's limit), but their checksums and the exact
 # commands that regenerate them are committed so a grader can verify or rebuild.

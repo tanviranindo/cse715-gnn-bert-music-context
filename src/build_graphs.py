@@ -341,13 +341,8 @@ def main() -> None:
     out_records = []
     # A worker that dies mid-task must abort the run, not wedge it.
     #
-    # mp.Pool silently respawns a dead worker and simply never delivers the
-    # result its task was going to produce, so the parent blocks in
-    # imap_unordered forever. That cost two long Vast.ai rentals: a
-    # MagnaTagATune build froze at 10500/21318 and an FMA-small build at
-    # 4000/8000, both looking like a "hang" when the real event was a
-    # SIGSEGV inside a librosa numba kernel (see requirements.txt for the
-    # numba pin that fixes the crash itself).
+    # ProcessPoolExecutor raises BrokenProcessPool when a child dies, turning
+    # a silent preprocessing stall into an immediate, diagnosable failure.
     #
     # ProcessPoolExecutor raises BrokenProcessPool the moment a child dies,
     # which turns an hour of silent stalling into an immediate, diagnosable

@@ -1,26 +1,0 @@
-[data] musiccaps: 50 tags | train=3496 val=749 test=750
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 20440.08it/s]
-[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
-Key                     | Status     |  | 
-------------------------+------------+--+-
-vocab_layer_norm.bias   | UNEXPECTED |  | 
-vocab_transform.bias    | UNEXPECTED |  | 
-vocab_transform.weight  | UNEXPECTED |  | 
-vocab_layer_norm.weight | UNEXPECTED |  | 
-vocab_projector.bias    | UNEXPECTED |  | 
-
-Notes:
-- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-[epoch 1] loss 1.0981 micro-F1 0.2932 macro-F1 0.2999 (6.7s)
-[epoch 2] loss 0.8151 micro-F1 0.3415 macro-F1 0.3494 (6.6s)
-[epoch 3] loss 0.6954 micro-F1 0.4118 macro-F1 0.4121 (6.6s)
-[epoch 4] loss 0.6125 micro-F1 0.4544 macro-F1 0.4472 (6.6s)
-[epoch 5] loss 0.5517 micro-F1 0.4556 macro-F1 0.4503 (6.6s)
-[epoch 6] loss 0.5033 micro-F1 0.5258 macro-F1 0.5173 (6.6s)
-
-[test] micro-F1 0.6868 macro-F1 0.6464 (threshold 0.8)
-[base] B1_random_prevalence   micro-F1 0.0865 macro-F1 0.0495
-[base] B1_majority            micro-F1 0.0000 macro-F1 0.0000
-[base] B5_lexical_match       micro-F1 0.5815 macro-F1 0.5595
-[out ] results/metrics_task1_musiccaps.json, examples_task1_musiccaps.json

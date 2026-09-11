@@ -1,27 +1,0 @@
-[data] mtat: 50 tags | train=14975 val=3129 test=3214
-[data] artist leakage: {'train_test': 0, 'train_val': 0, 'val_test': 0}
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/100 [00:00<?, ?it/s]Loading weights: 100%|██████████| 100/100 [00:00<00:00, 17490.11it/s]
-[transformers] [1mDistilBertModel LOAD REPORT[0m from: distilbert-base-uncased
-Key                     | Status     |  | 
-------------------------+------------+--+-
-vocab_layer_norm.weight | UNEXPECTED |  | 
-vocab_transform.bias    | UNEXPECTED |  | 
-vocab_transform.weight  | UNEXPECTED |  | 
-vocab_projector.bias    | UNEXPECTED |  | 
-vocab_layer_norm.bias   | UNEXPECTED |  | 
-
-Notes:
-- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
-[epoch 1] loss 0.9842 micro-F1 0.2458 macro-F1 0.2299 (27.7s)
-[epoch 2] loss 0.7580 micro-F1 0.2627 macro-F1 0.2444 (27.6s)
-[epoch 3] loss 0.6874 micro-F1 0.2748 macro-F1 0.2448 (27.6s)
-[epoch 4] loss 0.6407 micro-F1 0.2756 macro-F1 0.2523 (27.6s)
-[epoch 5] loss 0.6043 micro-F1 0.2900 macro-F1 0.2564 (27.7s)
-[epoch 6] loss 0.5747 micro-F1 0.2885 macro-F1 0.2420 (27.8s)
-
-[test] micro-F1 0.2581 macro-F1 0.1823 (threshold 0.7)
-[base] B1_random_prevalence   micro-F1 0.1107 macro-F1 0.0605
-[base] B1_majority            micro-F1 0.0000 macro-F1 0.0000
-[out ] results/metrics_task1_mtat.json, examples_task1_mtat.json
-EXIT=0
