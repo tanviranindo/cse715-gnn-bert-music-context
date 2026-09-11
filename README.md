@@ -81,8 +81,9 @@ Micro-F1 `0.657` for the supervised Task 3 comparator on the same test IDs and
 label vocabulary.
 
 The human evaluation aggregate is 174 ratings from six listeners, with a mean
-score of `1.79 +/- 1.36` on a five-point scale. Participant-level responses are
-not included in this public repository.
+score of `1.79 +/- 1.36` on a five-point scale. Raw per-response data is not
+included in this public repository, and the per-listener summary is published
+under pseudonyms (`rater_1` ... `rater_6`) rather than participant names.
 
 ## Setup
 
@@ -107,22 +108,28 @@ tests passed and two non-failing warnings.
 
 ## Reproduction
 
+Every script defaults to the absolute `/data/raw` and `/data/processed`
+layout used on the rented GPU host. For a repo-local checkout, pass
+`--raw data/raw` and `--out data/processed` instead; `config.yaml` records
+that repo-relative layout.
+
 Validate datasets before preprocessing:
 
 ```bash
 python infra/validate_datasets.py --raw /data/raw
 ```
 
-Build graph caches and run the experiments with the scripts in `src/`:
+Build graph caches and run the experiments. These modules import from the
+`src` package, so run them with `python -m`, not as file paths:
 
 ```bash
-python src/build_graphs.py --dataset fma --out /data/processed \
+python -m src.build_graphs --dataset fma --out /data/processed \
   --audio-root /data/raw/fma_small \
   --tracks-csv /data/raw/fma_metadata/tracks.csv
-python src/train.py --dataset mtat --save-checkpoint
-python src/train_gnn.py --cache /data/processed/fma_small_graphs.pt --model all
-python src/train_fusion.py --mtat-cache /data/processed/mtat_graphs.pt --mode all
-python src/train_contrastive.py --cache /data/processed/musiccaps_graphs.pt
+python -m src.train --dataset mtat --save-checkpoint
+python -m src.train_gnn --cache /data/processed/fma_small_graphs.pt --model all
+python -m src.train_fusion --mtat-cache /data/processed/mtat_graphs.pt --mode all
+python -m src.train_contrastive --cache /data/processed/musiccaps_graphs.pt
 ```
 
 Aggregate metrics and regenerate report values:
@@ -143,7 +150,10 @@ artifacts runs on CPU.
 ```text
 src/                 preprocessing, models, training, evaluation, reporting
 tests/               automated tests
-data/processed/      committed graph examples
+infra/               dataset fetch/validation scripts and the listening study
+docs/                design specification
+artifacts/           checkpoint checksums and download instructions
+data/processed/      committed graph examples (FMA and MagnaTagATune)
 data/splits/         train, validation, and test manifests
 results/             metrics, plots, and retrieval examples
 notebooks/           analysis and demonstration notebooks

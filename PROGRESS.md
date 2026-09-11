@@ -82,5 +82,6 @@ development notes, infrastructure records, and operational logs remain private.
 - Task 4 retrieval quality remains modest and is reported without overclaiming.
 - Some corrected protocols require refreshed experiments before their results
   can replace older artifacts.
-- Participant-level human-evaluation responses are kept private; only the
-  aggregate result is included in the submission materials.
+- Raw human-evaluation responses are kept private; the submission materials
+  carry the aggregate result and a per-listener summary published under
+  pseudonyms rather than participant names.

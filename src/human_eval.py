@@ -507,6 +507,22 @@ def score(examples_path):
             "mean": round(statistics.mean(vals), 3) if vals else None,
         }
 
+    # The published block is keyed by pseudonym: a named per-rater breakdown
+    # would put participant identities in a public repository, which is the
+    # same reason results/human_eval/ratings/ is git-ignored. Ordering by
+    # (mean, n) keeps the id from tracking alphabetical or submission order,
+    # and the spread, the SD and the correlation below are unchanged.
+    _order = sorted(
+        per_rater,
+        key=lambda name: (
+            per_rater[name]["mean"] if per_rater[name]["mean"] is not None else -1.0,
+            per_rater[name]["n"],
+        ),
+    )
+    per_rater = {
+        "rater_%d" % i: per_rater[name] for i, name in enumerate(_order, start=1)
+    }
+
     allv = [v for vs in by_pair.values() for v in vs]
     pair_means = {k: statistics.mean(v) for k, v in by_pair.items()}
     xs = [pair_means[k] for k in sorted(pair_means)]

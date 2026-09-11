@@ -3380,29 +3380,29 @@
         }
       },
       "per_rater": {
-        "Afrin Heram": {
-          "n": 29,
-          "mean": 2.483
-        },
-        "Fahad Faisal Arpan": {
-          "n": 29,
-          "mean": 2.103
-        },
-        "Mahfuzur Rahman": {
-          "n": 29,
-          "mean": 2.069
-        },
-        "Md. Sakibur Rahman": {
-          "n": 29,
-          "mean": 1.414
-        },
-        "Shidhartha Chakrabarty Turzo": {
+        "rater_1": {
           "n": 29,
           "mean": 1.276
         },
-        "Tanvir Rahman": {
+        "rater_2": {
           "n": 29,
           "mean": 1.379
+        },
+        "rater_3": {
+          "n": 29,
+          "mean": 1.414
+        },
+        "rater_4": {
+          "n": 29,
+          "mean": 2.069
+        },
+        "rater_5": {
+          "n": 29,
+          "mean": 2.103
+        },
+        "rater_6": {
+          "n": 29,
+          "mean": 2.483
         }
       },
       "rating_vs_model_score_pearson_r": -0.051,

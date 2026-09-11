@@ -18,6 +18,10 @@ audio:
   duration: 30.0          # --duration, seconds read per track
   tau: 0.35               # --tau, cosine threshold for a segment edge
 
+# Repo-relative layout. The scripts do NOT default to these: their argparse
+# defaults are the absolute /data/raw and /data/processed paths of the rented
+# GPU host, because that is where the corpora actually lived. Pass --raw /
+# --out explicitly to work against the paths below.
 paths:
   raw_dir: data/raw
   processed_dir: data/processed

@@ -33,9 +33,15 @@ function slug(name) {
 }
 
 export default async function handler(req, res) {
+  // Collection for this study is finished (174 ratings, six listeners), so
+  // writes are closed by default: a submission carries the rater's typed name,
+  // and @vercel/blob 0.27 can only store blobs with public read access, which
+  // is not somewhere participant names belong. The page stays deployed and
+  // readable as a record of the instrument; set STUDY_OPEN=1 in the project's
+  // environment to reopen writes for a fresh round of collection.
+  //
   // A file:// copy of the sheet posts from a null origin, so allow it: the
-  // endpoint stores ratings for a public study, holds nothing private, and
-  // validates every field it accepts.
+  // endpoint validates every field it accepts.
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -43,6 +49,12 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'use POST' });
+  }
+
+  if (process.env.STUDY_OPEN !== '1') {
+    return res.status(410).json({
+      error: 'this listening study has closed; no further ratings are collected',
+    });
   }
 
   let body = req.body;

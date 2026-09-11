@@ -17,6 +17,15 @@ python src/human_eval.py build \
 
 Do not edit `index.html` manually.
 
+## Study Status
+
+Collection is closed. The page remains deployed at
+<https://gnn-bert-listening-study.vercel.app/> so the instrument stays
+inspectable, but `api/submit` answers `410 Gone` unless `STUDY_OPEN=1` is set
+in the Vercel project's environment. A submission carries the rater's typed
+name, and the pinned `@vercel/blob` release can only write publicly readable
+blobs, so the endpoint does not stay open past the round it was built for.
+
 ## Score Responses
 
 Participant responses are intentionally not stored in this public repository.

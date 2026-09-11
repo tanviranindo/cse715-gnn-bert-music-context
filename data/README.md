@@ -4,6 +4,10 @@ Raw datasets are not committed because they are large and some require
 separate access. Download them under `data/raw/` and validate them before
 preprocessing.
 
+The commands below use the absolute `/data/raw` path of the rented GPU host,
+which is every script's argparse default. For a repo-local checkout, pass
+`--raw data/raw` instead.
+
 ## Download And Validate
 
 The automated scripts are idempotent:
