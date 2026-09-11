@@ -87,3 +87,10 @@ def test_temperature_is_clamped_away_from_zero():
     torch.nn.Module.__init__(enc)
     enc.log_temperature = torch.nn.Parameter(torch.tensor(-50.0))
     assert float(enc.temperature) >= 1e-3, "unclamped tau would produce inf logits"
+
+
+def test_task4_checkpoint_name_tracks_run_suffix():
+    from src.train_contrastive import checkpoint_name
+
+    assert checkpoint_name("") == "task4_dual_encoder.pt"
+    assert checkpoint_name("_gnnlr") == "task4_dual_encoder_gnnlr.pt"

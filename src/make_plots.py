@@ -3,7 +3,8 @@
 The spec (S4.1) requires Macro-F1 / Micro-F1 curves against training epoch for
 Task 1. This was previously produced by an ad-hoc script that was never
 committed, so the figure could not be rebuilt when the numbers changed. It is a
-module now so `python -m src.make_plots` reproduces the figure exactly.
+module now so `python -m src.make_plots` reproduces the figure exactly. The
+report includes this canonical results path directly; there is no second copy.
 
     python -m src.make_plots --results results --out results/plots
 """
@@ -82,8 +83,9 @@ def main() -> None:
         ax.set_title("Task 4\n(missing)")
 
     fig.tight_layout()
-    fig.savefig(out / "training_curves.png", dpi=150)
-    print("[out ]", out / "training_curves.png")
+    canonical = out / "training_curves.png"
+    fig.savefig(canonical, dpi=150)
+    print("[out ]", canonical)
 
 
 if __name__ == "__main__":

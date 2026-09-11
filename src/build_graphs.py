@@ -230,11 +230,14 @@ def main() -> None:
         vocab = fma_data.genre_vocabulary(records)
     elif args.dataset == "mtat":
         from src import mtat_data
-        vocab, mrecs = mtat_data.build_dataset(
+        mrecs = mtat_data.load_labeled_records(
             Path(args.mtat_dir) / "annotations_final.csv",
             Path(args.mtat_dir) / "clip_info_final.csv",
-            n_tags=args.n_tags,
         )
+        # The final graph-aware training split chooses its vocabulary. Keeping
+        # every canonical label here prevents held-out labels from deciding
+        # which clips survive preprocessing or which tags are evaluated.
+        vocab = []
         records = [
             {"track_id": int(r["clip_id"]), "genre": sorted(r["labels"])[0],
              "artist": r["artist"], "split": "", "mp3_path": r["mp3_path"],

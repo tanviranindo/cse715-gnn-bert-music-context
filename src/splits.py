@@ -1,6 +1,21 @@
 """Artist-grouped train/val/test splitting (no artist leakage)."""
 
+import hashlib
+import json
 import random
+
+
+def record_id(record) -> str:
+    """Return the stable corpus ID from either a record dict or data object."""
+    for key in ("clip_id", "track_id", "ytid"):
+        value = record.get(key) if isinstance(record, dict) else getattr(record, key, None)
+        if value is not None and value != "":
+            return str(value)
+    raise KeyError("record carries no clip_id / track_id / ytid")
+
+
+def _field(record, key, default=None):
+    return record.get(key, default) if isinstance(record, dict) else getattr(record, key, default)
 
 
 def artist_grouped_split(
@@ -28,7 +43,7 @@ def artist_grouped_split(
 
 
 def official_eval_split(items, seed: int = 42, val_frac: float = 0.15,
-                        id_of=lambda d: getattr(d, "clip_id", "")):
+                        id_of=record_id):
     """Hold out the published eval partition, split the rest reproducibly.
 
     Two scripts must be able to produce the *same* split independently, or a
@@ -43,11 +58,37 @@ def official_eval_split(items, seed: int = 42, val_frac: float = 0.15,
     """
     import random as _random
 
-    eval_items = [d for d in items if getattr(d, "is_eval", False)]
+    eval_items = [d for d in items if _field(d, "is_eval", False)]
     if not eval_items:
         raise ValueError("no clip carries is_eval; cannot use the official split")
-    pool = sorted((d for d in items if not getattr(d, "is_eval", False)),
+    pool = sorted((d for d in items if not _field(d, "is_eval", False)),
                   key=id_of)
     _random.Random(seed).shuffle(pool)
     n_val = max(1, int(val_frac * len(pool)))
     return pool[n_val:], pool[:n_val], eval_items
+
+
+def split_records(dataset: str, records: list, seed: int = 42) -> tuple[dict[str, list], str]:
+    """Apply the one authoritative partition policy for a supported corpus."""
+    if dataset == "fma_small":
+        from src import fma_data
+
+        by_split = fma_data.official_splits(records)
+        return by_split, "official_fma_split"
+    if dataset == "musiccaps":
+        train, val, test = official_eval_split(records, seed=seed)
+        return {"train": train, "val": val, "test": test}, "official_audioset_eval"
+    if dataset == "mtat":
+        train, val, test = artist_grouped_split(records, seed=seed)
+        return {"train": train, "val": val, "test": test}, f"artist_grouped_seed{seed}"
+    raise ValueError(f"unsupported dataset {dataset!r}")
+
+
+def split_digest(by_split: dict[str, list], id_of=record_id) -> str:
+    """SHA-256 of canonical, sorted split membership."""
+    payload = {
+        name: sorted(id_of(record) for record in by_split.get(name, []))
+        for name in ("train", "val", "test")
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()

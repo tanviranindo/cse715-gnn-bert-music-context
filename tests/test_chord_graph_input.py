@@ -55,6 +55,7 @@ def test_to_pyg_chord_mode_uses_the_chord_graph_not_the_segment_graph():
     assert d.x.shape[0] == len(recs[0]["chord_nodes"])
     assert d.edge_index.shape[1] == recs[0]["chord_edge_index"].shape[1]
     assert d.edge_attr.shape[0] == d.edge_index.shape[1], "transition counts kept"
+    assert float(d.edge_attr.mean()) == pytest.approx(1.0), "counts are scale-normalised per graph"
     assert d.x.dtype == torch.float32, "must match the model's parameter dtype"
 
 
@@ -79,6 +80,23 @@ def test_labels_survive_the_chord_path():
     genres = ["Electronic", "Jazz", "Rock"]
     data = train_gnn.to_pyg(recs, genres, graph="chord")
     assert int(data[0].y) == genres.index("Jazz")
+
+
+def test_weighted_chord_classifier_changes_when_transition_counts_change():
+    from src.gnn_model import WeightedGNNClassifier
+
+    torch.manual_seed(7)
+    model = WeightedGNNClassifier(
+        in_dim=13, n_classes=3, hidden_dim=8, n_layers=2, dropout=0
+    ).eval()
+    x = torch.randn(3, 13)
+    edge_index = torch.tensor([[0, 1, 1, 2], [1, 0, 2, 1]])
+    batch = torch.zeros(3, dtype=torch.long)
+
+    out_a = model(x, edge_index, torch.tensor([1.0, 1.0, 1.0, 1.0]), batch)
+    out_b = model(x, edge_index, torch.tensor([9.0, 1.0, 1.0, 1.0]), batch)
+
+    assert not torch.allclose(out_a, out_b)
 
 
 @pytest.mark.parametrize("mode", ["segment", "chord"])

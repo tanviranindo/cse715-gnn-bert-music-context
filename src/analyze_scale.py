@@ -13,7 +13,7 @@ identical across runs, so R@K is directly comparable between points.
 Writes results/metrics_task4_scale.json and results/plots/task4_scale.png.
 """
 
-import glob
+import argparse
 import json
 import math
 import pathlib
@@ -22,17 +22,14 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-RESULTS = pathlib.Path("results")
-SCALE = RESULTS / "_scale"
-
-
-def load_points():
+def load_points(results: str | pathlib.Path = "results"):
     """(n_train, metrics) for each fraction, read from the run artifacts."""
+    results = pathlib.Path(results)
     files = {
-        0.25: SCALE / "frac025.json",
-        0.50: SCALE / "frac050.json",
-        0.75: SCALE / "frac075.json",
-        1.00: SCALE / "full.json",
+        0.25: results / "metrics_task4_frac025.json",
+        0.50: results / "metrics_task4_frac050.json",
+        0.75: results / "metrics_task4_frac075.json",
+        1.00: results / "metrics_task4_gnnlr.json",
     }
     points = []
     for frac, path in sorted(files.items()):
@@ -64,7 +61,11 @@ def linfit(xs, ys):
 
 
 def main():
-    pts = load_points()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--results", default="results", type=pathlib.Path)
+    args = parser.parse_args()
+    results = args.results
+    pts = load_points(results)
     if len(pts) < 3:
         raise SystemExit("need at least 3 scale points, found %d" % len(pts))
 
@@ -119,7 +120,7 @@ def main():
             ),
         },
     }
-    (RESULTS / "metrics_task4_scale.json").write_text(json.dumps(doc, indent=2) + "\n")
+    (results / "metrics_task4_scale.json").write_text(json.dumps(doc, indent=2) + "\n")
 
     # ---- figure ----
     fig, ax = plt.subplots(figsize=(6.2, 4.0))
@@ -146,7 +147,8 @@ def main():
     ax.legend(fontsize=8, frameon=False)
     ax.grid(alpha=0.25, lw=0.6)
     fig.tight_layout()
-    fig.savefig(RESULTS / "plots" / "task4_scale.png", dpi=170)
+    (results / "plots").mkdir(parents=True, exist_ok=True)
+    fig.savefig(results / "plots" / "task4_scale.png", dpi=170)
 
     print("points:")
     for p in pts:

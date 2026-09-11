@@ -8,6 +8,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf}
+\input{generated_metrics.tex}
 
 \title{GNN-Based BERT for Understanding Context from Music:\\
 A Measured Account of Where Cross-Modal Fusion Helps and Where It Does Not}
@@ -30,7 +31,8 @@ caption--audio retrieval. All four are trained and evaluated end to end.
 Our headline finding is a correction of our own first conclusion. Under a
 single learning rate, fusion does not beat its stronger unimodal branch and its
 cross-attention collapses to uniform weights; with the non-BERT parameters
-trained at their own rate, the same architecture beats BERT-only by $+0.075$
+trained at their own rate, the same architecture beats BERT-only by
+$\TaskThreeSeparateVsBert$
 Macro-F1. The negative result was an optimisation artefact, and we report both
 states because the diagnosis is the contribution. We show (i) that the text available for MagnaTagATune is track-level
 while its clips are 29\,s segments, so $96.8\%$ of clips share an input with
@@ -41,15 +43,17 @@ exactly uniform weights (entropy $1.000$ of the uniform maximum) under a shared
 learning rate, so the fusion degenerates into averaging the caption; and (iv)
 that raising the learning rate of every non-BERT parameter un-collapses that attention
 (entropy $0.695$, peak $4.19\times$) and lifts Macro-F1 by
-$+0.067 \pm 0.023$ over five paired seeds ($p = 0.003$), the largest effect we
+$\TaskThreeSeedDelta \pm \TaskThreeSeedDeltaSd$ over five paired seeds
+($p = \TaskThreeSeedP$), the largest effect we
 measured --- and one that transfers: applied to the contrastive dual encoder it
-doubles retrieval R@1 and lifts R@10 from $0.0220$ to $0.0339$. A six-listener
+doubles retrieval R@1 and lifts R@10 from $\TaskFourSharedCtwoaTen$ to
+$\TaskFourSeparateCtwoaTen$. A six-listener
 study corroborates those retrieval numbers from the other direction (mean
-$1.79/5$) and adds what recall cannot see: the ranking within the model's own
+$\TaskFourHumanMean/5$) and adds what recall cannot see: the ranking within the model's own
 top three does not predict human judgement ($r = -0.051$).
 We report every number against
 an explicit baseline, including a lexical-match control that scores Micro-F1
-$0.540$ where our model scores $0.565$ --- a margin small enough that, on
+$\TaskOneMusicCapsLexicalMicro$ where our model scores $\TaskOneMusicCapsMicro$ --- a margin small enough that, on
 Macro-F1, the control actually wins.
 \end{abstract}
 
@@ -66,7 +70,7 @@ alone.
 We test that premise rather than assume it. Our contributions are:
 
 \begin{itemize}\itemsep2pt
-\item Complete implementations of all four tasks, with $134$ unit
+\item Complete implementations of all four tasks, with more than $140$ unit
 tests and every result reproducible from a seeded configuration recorded
 alongside it.
 \item Two dataset integrity findings that change how the numbers must be read:
@@ -321,7 +325,7 @@ that has already begun to overfit --- is easy to miss in a contrastive setting.
 \label{sec:t1results}
 
 \begin{table}[H]
-\centering\small
+\centering\scriptsize
 \caption{Task 1. Test-set results with baselines. MusicCaps uses the
 \emph{official} AudioSet eval partition as its test set (2{,}579 clips after
 vocabulary filtering; 2{,}054 train / 362 val), not a random split. The
@@ -333,14 +337,14 @@ estimated from training labels only.}
 \toprule
 Setting & Micro-F1 & Macro-F1 \\
 \midrule
-MagnaTagATune (metadata) & 0.275 & 0.192 \\
-\quad B1 random-prevalence & 0.103 & 0.058 \\
+MagnaTagATune (metadata) & \TaskOneMtatMicro & \TaskOneMtatMacro \\
+\quad B1 random-prevalence & \TaskOneMtatRandomMicro & \TaskOneMtatRandomMacro \\
 \quad oracle ceiling & 0.673 & 0.575 \\
 \midrule
-MusicCaps (raw captions) & \textbf{0.565} & 0.532 \\
-\quad B5 lexical match & 0.540 & \textbf{0.550} \\
+MusicCaps (raw captions) & \textbf{\TaskOneMusicCapsMicro} & \TaskOneMusicCapsMacro \\
+\quad B5 lexical match & \TaskOneMusicCapsLexicalMicro & \textbf{\TaskOneMusicCapsLexicalMacro} \\
 \midrule
-MusicCaps (stripped) & 0.488 & 0.439 \\
+MusicCaps (stripped) & \TaskOneStrippedMicro & \TaskOneStrippedMacro \\
 \quad B5 lexical match & 0.000 & 0.000 \\
 \bottomrule
 \end{tabular}
@@ -389,7 +393,7 @@ designed to isolate.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{attention_task1_mtat.png}
+\includegraphics[width=\linewidth]{../results/plots/attention_task1_mtat.png}
 \caption{Final-layer \texttt{[CLS]} attention, averaged over heads, for the five
 committed MagnaTagATune example predictions --- the optional attention
 visualisation named in the specification. It shows the duplicated-input ceiling
@@ -407,7 +411,7 @@ a track-title corpus offers a language model to work with.}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{training_curves.png}
+\includegraphics[width=\linewidth]{../results/plots/training_curves.png}
 \caption{Validation Macro-F1 and Micro-F1 against training epoch for the three
 Task 1 configurations (left, centre) --- the curve deliverable required by the
 specification --- and Task 4's training dynamics (right). MusicCaps converges to
@@ -431,10 +435,10 @@ best-checkpoint selection.}
 \toprule
 Model & Params & Acc. & Macro-F1 \\
 \midrule
-B4 PCA$+$MLP & 8,712 & 0.379 & 0.371 \\
-GraphSAGE & 49,416 & 0.396 & 0.401 \\
-GAT & \textbf{26,120} & 0.433 & 0.426 \\
-CNN baseline (B2) & 241,992 & \textbf{0.483} & \textbf{0.479} \\
+B4 PCA$+$MLP & \TaskTwoBFourParams & \TaskTwoBFourAcc & \TaskTwoBFourMacro \\
+GraphSAGE & \TaskTwoSageParams & \TaskTwoSageAcc & \TaskTwoSageMacro \\
+GAT & \textbf{\TaskTwoGatParams} & \TaskTwoGatAcc & \TaskTwoGatMacro \\
+CNN baseline (B2) & \TaskTwoCnnParams & \textbf{\TaskTwoCnnAcc} & \textbf{\TaskTwoCnnMacro} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -470,10 +474,10 @@ CNN row is repeated for scale.}
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}
 Model & Acc. & Macro-F1 & Acc. & Macro-F1 \\
 \midrule
-GraphSAGE & 0.396 & 0.401 & 0.339 & 0.316 \\
-GAT & 0.433 & \textbf{0.426} & 0.303 & 0.271 \\
+GraphSAGE & \TaskTwoSageAcc & \TaskTwoSageMacro & \TaskTwoChordSageAcc & \TaskTwoChordSageMacro \\
+GAT & \TaskTwoGatAcc & \textbf{\TaskTwoGatMacro} & \TaskTwoChordGatAcc & \TaskTwoChordGatMacro \\
 \midrule
-CNN (B2) & \multicolumn{4}{c}{0.483 acc / \textbf{0.479} Macro-F1} \\
+CNN (B2) & \multicolumn{4}{c}{\TaskTwoCnnAcc\ acc / \textbf{\TaskTwoCnnMacro} Macro-F1} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -584,13 +588,13 @@ follow-ups our earlier draft named as the experiments to try next.}
 \toprule
 Mode & Params & Macro & Micro & AUC-PR \\
 \midrule
-BERT-only & 66.4M & 0.171 & 0.306 & 0.168 \\
-GNN-only & 31.8K & 0.123 & 0.124 & 0.084 \\
-Early concat & 66.4M & 0.168 & 0.314 & 0.182 \\
-Cross-attention & 66.8M & 0.192 & 0.324 & 0.176 \\
+BERT-only & 66.4M & \TaskThreeBertMacro & \TaskThreeBertMicro & \TaskThreeBertAuc \\
+GNN-only & 31.8K & \TaskThreeGnnMacro & \TaskThreeGnnMicro & \TaskThreeGnnAuc \\
+Early concat & 66.4M & \TaskThreeConcatMacro & \TaskThreeConcatMicro & \TaskThreeConcatAuc \\
+Cross-attention & 66.8M & \TaskThreeCrossMacro & \TaskThreeCrossMicro & \TaskThreeCrossAuc \\
 \midrule
 \quad $+$ frozen BERT & 0.5M & 0.118 & 0.315 & 0.197 \\
-\quad $+$ non-BERT lr $10^{-3}$ & 66.8M & \textbf{0.246} & \textbf{0.415} & \textbf{0.248} \\
+\quad $+$ non-BERT lr $10^{-3}$ & 66.8M & \textbf{\TaskThreeSeparateMacro} & \textbf{\TaskThreeSeparateMicro} & \textbf{\TaskThreeSeparateAuc} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -613,13 +617,14 @@ fine-tuning ($2\times10^{-5}$).
 
 \textbf{The second cause is the operative one.} Raising the learning rate of
 every parameter outside the text tower to $10^{-3}$ --- changing no
-architecture, no data and no seed --- raises Macro-F1 from $0.192$ to
-$\mathbf{0.246}$, Micro-F1 from $0.324$ to $\mathbf{0.415}$ and AUC-PR from
-$0.176$ to $\mathbf{0.248}$. The same run's attention entropy falls from
+architecture, no data and no seed --- raises Macro-F1 from $\TaskThreeCrossMacro$ to
+$\mathbf{\TaskThreeSeparateMacro}$, Micro-F1 from $\TaskThreeCrossMicro$ to
+$\mathbf{\TaskThreeSeparateMicro}$ and AUC-PR from $\TaskThreeCrossAuc$ to
+$\mathbf{\TaskThreeSeparateAuc}$. The same run's attention entropy falls from
 $1.000$ to $0.695$ of uniform and its peak rises from $1.03\times$ to
 $4.19\times$. The intervention that fixes the metric is the one that
 demonstrably un-collapses the attention, which is the mechanism our diagnosis
-predicted. Against BERT-only this is $+0.075$ Macro-F1 and $+0.109$ Micro-F1:
+predicted. Against BERT-only this is $\TaskThreeSeparateVsBert$ Macro-F1:
 on this corpus, structural fusion helps once the non-BERT parameters are
 actually trained. Which of them mattered --- the graph encoder, the
 cross-attention block or the heads --- this experiment does not separate.
@@ -637,14 +642,14 @@ we test it with a paired $t$-test.
 sample standard deviation; $p$ from a two-sided paired $t$-test on the
 per-seed difference.}
 \label{tab:sweep}
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{1pt}
 \begin{tabular}{lcccc}
 \toprule
 & Shared lr & Non-BERT lr & $\Delta$ & $p$ \\
 \midrule
-Macro-F1 & $.172\pm.023$ & $.240\pm.020$ & $+.067\pm.023$ & $.003$ \\
-Micro-F1 & $.335\pm.024$ & $.416\pm.028$ & $+.081\pm.018$ & $.001$ \\
-AUC-PR   & $.181\pm.015$ & $.260\pm.018$ & $+.079\pm.010$ & $<.001$ \\
+Macro-F1 & $\TaskThreeSeedSharedMacro\pm\TaskThreeSeedSharedMacroSd$ & $\TaskThreeSeedSeparateMacro\pm\TaskThreeSeedSeparateMacroSd$ & $\TaskThreeSeedDelta\pm\TaskThreeSeedDeltaSd$ & $\TaskThreeSeedP$ \\
+Micro-F1 & $\TaskThreeSeedSharedMicro\pm\TaskThreeSeedSharedMicroSd$ & $\TaskThreeSeedSeparateMicro\pm\TaskThreeSeedSeparateMicroSd$ & $\TaskThreeSeedMicroDelta\pm\TaskThreeSeedMicroDeltaSd$ & $\TaskThreeSeedMicroP$ \\
+AUC-PR   & $\TaskThreeSeedSharedAuc\pm\TaskThreeSeedSharedAucSd$ & $\TaskThreeSeedSeparateAuc\pm\TaskThreeSeedSeparateAucSd$ & $\TaskThreeSeedAucDelta\pm\TaskThreeSeedAucDeltaSd$ & $\TaskThreeSeedAucP$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -731,13 +736,13 @@ scale. ``Separate graph lr'' applies the Task 3 finding to this task.}
 \toprule
 Run & Direction & R@1 & R@5 & R@10 \\
 \midrule
-Shared lr & Caption $\to$ Audio & 0.0029 & 0.0108 & 0.0220 \\
-          & Audio $\to$ Caption & 0.0022 & 0.0126 & 0.0224 \\
+Shared lr & Caption $\to$ Audio & \TaskFourSharedCtwoaOne & \TaskFourSharedCtwoaFive & \TaskFourSharedCtwoaTen \\
+          & Audio $\to$ Caption & \TaskFourSharedAtocOne & \TaskFourSharedAtocFive & \TaskFourSharedAtocTen \\
 \midrule
-Separate  & Caption $\to$ Audio & \textbf{0.0058} & \textbf{0.0173} & \textbf{0.0339} \\
-graph lr  & Audio $\to$ Caption & 0.0054 & 0.0184 & 0.0317 \\
+Separate  & Caption $\to$ Audio & \textbf{\TaskFourSeparateCtwoaOne} & \textbf{\TaskFourSeparateCtwoaFive} & \textbf{\TaskFourSeparateCtwoaTen} \\
+graph lr  & Audio $\to$ Caption & \TaskFourSeparateAtocOne & \TaskFourSeparateAtocFive & \TaskFourSeparateAtocTen \\
 \midrule
-Random    & ---                 & 0.0004 & --- & 0.0036 \\
+Random    & ---                 & \TaskFourRandomOne & --- & \TaskFourRandomTen \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -796,7 +801,7 @@ evaluation.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{task4_scale.png}
+\includegraphics[width=\linewidth]{../results/plots/task4_scale.png}
 \caption{Task 4 R@10 against training-set size on a log axis, gallery held
 fixed at 2{,}773 clips. The fit is log-linear ($R^2 = 0.914$); the dashed
 horizontal line is the random baseline.}
@@ -822,8 +827,8 @@ Neither the zero-shot vocabulary nor its threshold sees a test label.}
 \toprule
 & Micro-F1 & Macro-F1 & AUC-PR \\
 \midrule
-Task 3, supervised fusion & \textbf{0.657} & \textbf{0.588} & \textbf{0.624} \\
-Task 4, zero-shot & 0.098 & 0.096 & 0.059 \\
+Task 3, supervised fusion & \textbf{\TaskFourSupervisedMicro} & \textbf{\TaskFourSupervisedMacro} & \textbf{\TaskFourSupervisedAuc} \\
+Task 4, zero-shot & \TaskFourZeroMicro & \TaskFourZeroMacro & \TaskFourZeroAuc \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -901,7 +906,7 @@ submission was faster than listening allows.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{tsne_task3_views.png}
+\includegraphics[width=\linewidth]{../results/plots/tsne_task3_views.png}
 \caption{t-SNE of the fused representation $z$ (cross-attention, $384$-dim)
 over $1{,}500$ held-out MagnaTagATune clips, split into the two views the
 specification asks for. Each clip is coloured by its \emph{primary} tag --- the
@@ -1153,10 +1158,11 @@ conditions under which it can be demonstrated.
 Code, seeded configurations, per-run metrics, $155$ example graphs
 ($50$ FMA, $105$ MagnaTagATune, each as both \texttt{.pt} and \texttt{.json}
 with an index manifest), the t-SNE projection and all training logs are in the
-project repository. Every number in this report is lifted from
-\texttt{results/metrics.json} into \texttt{report/\_numbers.json} by
-\texttt{src/aggregate\_metrics.py} and \texttt{src/make\_report\_numbers.py},
-so the paper's reference values cannot be older than the runs they describe.
+project repository. Headline tables and claims are generated from
+\texttt{results/metrics.json} into \texttt{report/generated\_metrics.tex} by
+\texttt{src/make\_report\_tex.py}; the report includes figures directly from
+\texttt{results/plots/}. Missing required values stop generation, preventing
+stale hand-copied tables or plots from compiling unnoticed.
 The train/validation/test manifests for all three corpora are committed under
 \texttt{data/splits/}, so the exact partition behind every number can be
 inspected without re-running preprocessing.

@@ -21,6 +21,8 @@ import torch
 from torch import nn
 
 from src import evaluate as ev, fma_data, gnn_model, graph_builder as gb
+from src.evaluation_artifacts import file_digest, write_multiclass_predictions
+from src.run_provenance import build_provenance
 
 
 def load_cache(path: str | Path) -> tuple[list[dict], list[str]]:
@@ -76,6 +78,8 @@ def to_pyg(records: list[dict], genres: list[str], graph: str = "segment"):
             x = chord_node_features(names)
             ei = np.asarray(r["chord_edge_index"], dtype=np.int64)
             w = np.asarray(r["chord_edge_weight"], dtype=np.float32)
+            if len(w):
+                w = w / max(float(w.mean()), 1e-12)
             d = Data(
                 x=torch.from_numpy(x),
                 edge_index=torch.from_numpy(ei),
@@ -109,15 +113,21 @@ def pad_mel(mel: np.ndarray, width: int) -> np.ndarray:
 
 
 @torch.no_grad()
-def eval_graph(model, loader, device) -> tuple[list[int], list[int]]:
+def eval_graph(model, loader, device, use_edge_weight=False) -> tuple[list[str], list[int], list[int]]:
     model.eval()
-    y_true, y_pred = [], []
+    ids, y_true, y_pred = [], [], []
     for batch in loader:
         batch = batch.to(device)
-        logits = model(batch.x, batch.edge_index, batch.batch)
+        logits = (
+            model(batch.x, batch.edge_index, batch.edge_attr.view(-1), batch.batch)
+            if use_edge_weight
+            else model(batch.x, batch.edge_index, batch.batch)
+        )
         y_pred.extend(logits.argmax(1).cpu().tolist())
         y_true.extend(batch.y.cpu().tolist())
-    return y_true, y_pred
+        track_ids = batch.track_id
+        ids.extend(str(value) for value in track_ids.cpu().tolist())
+    return ids, y_true, y_pred
 
 
 @torch.no_grad()
@@ -138,11 +148,18 @@ def run_graph_model(kind, splits, genres, args, device) -> dict:
         k: GeoLoader(v, batch_size=args.batch_size, shuffle=(k == "train"))
         for k, v in splits.items()
     }
-    model = gnn_model.GNNClassifier(
-        splits["train"][0].x.shape[1], len(genres),
-        hidden_dim=args.hidden, n_layers=args.layers, conv=kind,
-        dropout=args.dropout,
-    ).to(device)
+    use_edge_weight = kind == "weighted_chord"
+    if use_edge_weight:
+        model = gnn_model.WeightedGNNClassifier(
+            splits["train"][0].x.shape[1], len(genres),
+            hidden_dim=args.hidden, n_layers=args.layers, dropout=args.dropout,
+        ).to(device)
+    else:
+        model = gnn_model.GNNClassifier(
+            splits["train"][0].x.shape[1], len(genres),
+            hidden_dim=args.hidden, n_layers=args.layers, conv=kind,
+            dropout=args.dropout,
+        ).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
 
@@ -153,11 +170,16 @@ def run_graph_model(kind, splits, genres, args, device) -> dict:
         for batch in loaders["train"]:
             batch = batch.to(device)
             opt.zero_grad()
-            loss = loss_fn(model(batch.x, batch.edge_index, batch.batch), batch.y)
+            logits = (
+                model(batch.x, batch.edge_index, batch.edge_attr.view(-1), batch.batch)
+                if use_edge_weight
+                else model(batch.x, batch.edge_index, batch.batch)
+            )
+            loss = loss_fn(logits, batch.y)
             loss.backward()
             opt.step()
             total += loss.item()
-        yt, yp = eval_graph(model, loaders["val"], device)
+        _, yt, yp = eval_graph(model, loaders["val"], device, use_edge_weight)
         acc = ev.accuracy(yt, yp)
         row = {"epoch": epoch, "train_loss": total / len(loaders["train"]),
                "val_acc": acc,
@@ -172,15 +194,21 @@ def run_graph_model(kind, splits, genres, args, device) -> dict:
 
     if best[1]:
         model.load_state_dict(best[1])
-    yt, yp = eval_graph(model, loaders["test"], device)
+    ids, yt, yp = eval_graph(model, loaders["test"], device, use_edge_weight)
+    evidence_path = Path(args.out_dir) / "evaluation" / f"task2_{args.graph}_{kind}.json.gz"
+    write_multiclass_predictions(evidence_path, ids, yt, yp, genres)
     return {
         "model": kind,
+        "uses_edge_weight": use_edge_weight,
         "params": gnn_model.count_parameters(model),
         "history": history,
         "test_accuracy": ev.accuracy(yt, yp),
         "test_macro_f1": ev.multiclass_f1(yt, yp, len(genres)),
         "per_class_f1": ev.per_class_f1(yt, yp, genres),
         "confusion": ev.confusion_matrix(yt, yp, len(genres)),
+        "evaluation_artifact": {
+            "path": str(evidence_path), "sha256": file_digest(evidence_path)
+        },
     }
 
 
@@ -232,6 +260,9 @@ def run_cnn(records_by_split, genres, args, device) -> dict:
     if best[1]:
         model.load_state_dict(best[1])
     yt, yp = eval_cnn(model, loaders["test"], device)
+    ids = [str(record["track_id"]) for record in records_by_split["test"]]
+    evidence_path = Path(args.out_dir) / "evaluation" / "task2_cnn.json.gz"
+    write_multiclass_predictions(evidence_path, ids, yt, yp, genres)
     return {
         "model": "cnn_b2",
         "params": gnn_model.count_parameters(model),
@@ -240,6 +271,9 @@ def run_cnn(records_by_split, genres, args, device) -> dict:
         "test_macro_f1": ev.multiclass_f1(yt, yp, len(genres)),
         "per_class_f1": ev.per_class_f1(yt, yp, genres),
         "confusion": ev.confusion_matrix(yt, yp, len(genres)),
+        "evaluation_artifact": {
+            "path": str(evidence_path), "sha256": file_digest(evidence_path)
+        },
     }
 
 
@@ -247,7 +281,8 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--cache", default="/data/processed/fma_small_graphs.pt")
     p.add_argument("--out-dir", default="results")
-    p.add_argument("--model", default="all", choices=["sage", "gat", "cnn", "all"])
+    p.add_argument("--model", default="all",
+                   choices=["sage", "gat", "cnn", "weighted_chord", "all"])
     p.add_argument("--epochs", type=int, default=40)
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--lr", type=float, default=1e-3)
@@ -261,6 +296,9 @@ def main() -> None:
                    help="output filename; defaults to metrics_task2[_<graph>].json")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
+
+    if args.model == "weighted_chord" and args.graph != "chord":
+        p.error("--model weighted_chord requires --graph chord")
 
     torch.manual_seed(args.seed)
     random.seed(args.seed)
@@ -287,9 +325,16 @@ def main() -> None:
     if args.graph == "chord" and "cnn" in wanted:
         wanted = [k for k in wanted if k != "cnn"]
         print("[note] skipping the CNN baseline: it does not consume a graph")
+    if args.graph == "chord" and args.model == "all":
+        wanted.append("weighted_chord")
     results = {"config": vars(args), "graph": args.graph, "genres": genres,
                "split_sizes": {k: len(v) for k, v in by_split.items()},
-               "artist_leakage": leakage, "runs": {}}
+               "artist_leakage": leakage,
+               "provenance": build_provenance(
+                   vars(args), by_split, genres, "not_applicable", "val_accuracy",
+                   vocabulary_from="fma_small_definition",
+               ),
+               "runs": {}}
     for kind in wanted:
         print(f"\n=== {kind} ===")
         results["runs"][kind] = (

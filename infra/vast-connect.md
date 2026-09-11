@@ -46,15 +46,14 @@ What must NOT be re-derived — pull these DOWN to the Mac before destroying:
 Cached features (~14 GB) are re-computable in ~1 h of CPU ($0.15); pull them
 only if the connection makes that worthwhile.
 
-## Example rental (2026-08-29, long since destroyed)
-
-Kept as a worked example of the flags and costs. Instance and offer ids are
-single-use and these are dead; look up fresh ones each session.
-- Instance `49151882` | offer `45573262` | machine `143795`
-- Volume **`49151852`** (`22241134_gnnbert_data`), **60 GB** at `/data`
-- 1x RTX 4080 SUPER 16 GB, 64 threads, 62 GB RAM, **$0.143/hr** + volume $0.133/day
-- `ssh $(vastai ssh-url 49151882)`
-- Python: `/venv/main/bin/python` — 3.10.12, torch 2.5.1+cu121
+## Current rental (2026-09-10)
+- Instance `50483286` | offer `35580411`
+- 1x RTX 3090 24 GB, 12 effective CPU cores, 80 GB disk, Yunnan,
+  reliability 0.9932, **$0.16889/hr including disk**
+- `ssh $(vastai ssh-url 50483286)`
+- Exact training source revision: `3b2fbdcb0e0ecdb81251ab9b55076837b6e29d93`
+- The run is executed by `infra/final_experiments.sh`; its outputs must pass
+  `infra/validate_remote_results.py` before promotion or instance destruction.
 
 ## Stack note
 Image ships Python 3.10 / torch 2.5.1, NOT the `requirements.txt` pins
@@ -62,25 +61,27 @@ Image ships Python 3.10 / torch 2.5.1, NOT the `requirements.txt` pins
 so relax `requirements.txt` rather than rebuilding torch every session.
 
 ## Session workflow
-    # 1. rent + link
-    OFF=$(vastai search offers 'machine_id=143795 num_gpus=1' --storage 90 --raw \
-          | python3 -c "import json,sys;d=[o for o in json.load(sys.stdin) if o['rentable']];print(d[0]['id'])")
-    vastai create instance $OFF --image vastai/pytorch --disk 50 --ssh --direct \
-      --link-volume 49151852 --mount-path /data
+    # 1. rent ephemeral disk; inspect dph_total after creation because disk can
+    #    materially change the advertised offer price
+    vastai create instance <offer> --image vastai/pytorch --disk 80 --ssh --direct
     # 2. push code (do NOT put a GitHub key on a rented box)
     rsync -az -e "ssh -p <port>" --exclude='.git' --exclude='.venv' \
       --exclude='data/raw' ./ root@<host>:/workspace/gnn-bert/
-    # 3. datasets (idempotent - skips what is already on the volume)
+    # 3. datasets (idempotent within this ephemeral instance)
     ssh ... 'cd /workspace/gnn-bert && tmux new -d -s dl "bash infra/fetch_datasets.sh && bash infra/extract_datasets.sh"'
-    # 4. when stepping away
-    vastai destroy instance <id>        # volume + /data survive
+    # 4. run, download to a timestamped local staging directory, validate, then destroy
+    EXPERIMENT_SOURCE_REVISION=<40-char-sha> \
+      bash infra/final_experiments.sh /data /data/final
+    python infra/validate_remote_results.py --results <staging>/results \
+      --expected-revision <40-char-sha>
+    vastai destroy instance <id> -y
 
 ## Rules
-1. Only `/data` survives. Container disk `/` is disposable.
+1. Nothing on the instance survives destruction; `/data` is ephemeral too.
 2. Always work inside `tmux` — an SSH drop killed a job on 2026-08-24.
 3. Offer IDs are single-use; look up a fresh one each session.
-4. The volume is convenience, not backup. Push code/results to GitHub.
-   At $0 balance volumes can be reclaimed.
+4. Download and validate results before destruction. The rented box is never
+   the only copy of a completed run.
 5. Idle instance = $3.43/day. Destroy when stepping away.
 
 ## Dashboards (local)

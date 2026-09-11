@@ -12,6 +12,7 @@ proportionally to corpus size.
 """
 
 import argparse
+import collections
 import json
 import random
 import time
@@ -21,6 +22,8 @@ import numpy as np
 import torch
 
 from src import evaluate as ev, fusion_model
+from src.evaluation_artifacts import file_digest, write_multilabel_predictions
+from src.run_provenance import build_provenance
 
 
 def load_cache(path, tokenizer, max_length: int):
@@ -92,6 +95,40 @@ def artist_split(items, seed=42, fracs=(0.7, 0.15)):
     return ([r["d"] for r in tr], [r["d"] for r in va], [r["d"] for r in te])
 
 
+def prepare_tag_protocol(
+    items,
+    split_kind: str,
+    seed: int,
+    n_tags: int = 50,
+    cached_vocab: list[str] | None = None,
+):
+    """Split first, then select the Task 3 vocabulary from training labels."""
+    from src.splits import official_eval_split, split_digest
+
+    if split_kind == "official_eval":
+        train, val, test = official_eval_split(items, seed=seed)
+        policy = "official_audioset_eval"
+    elif split_kind == "artist":
+        train, val, test = artist_split(items, seed)
+        policy = f"artist_grouped_seed{seed}"
+    else:
+        raise ValueError(f"unsupported Task 3 split {split_kind!r}")
+
+    splits = {"train": train, "val": val, "test": test}
+    counts = collections.Counter(
+        label for item in train for label in (item.labels_set or ())
+    )
+    vocab = [label for label, _ in counts.most_common(n_tags)]
+    attach_tag_vectors(items, vocab)
+    metadata = {
+        "split_kind": policy,
+        "split_digest": split_digest(splits),
+        "vocabulary_from": "train",
+        "cache_vocabulary_ignored": bool(cached_vocab),
+    }
+    return vocab, splits, metadata
+
+
 @torch.no_grad()
 def attention_entropy(model, loader, device, max_batches: int = 20) -> dict:
     """How peaked is the cross-attention, as a fraction of the uniform maximum?
@@ -126,7 +163,7 @@ def attention_entropy(model, loader, device, max_batches: int = 20) -> dict:
 @torch.no_grad()
 def evaluate_split(model, loader, device, mode):
     model.eval()
-    tag_true, tag_prob, em_true, em_pred = [], [], [], []
+    tag_ids, tag_true, tag_prob, em_true, em_pred = [], [], [], [], []
     for batch in loader:
         batch = batch.to(device)
         logits, emotion, _ = model(
@@ -137,14 +174,18 @@ def evaluate_split(model, loader, device, mode):
         mask_e = batch.emotion_mask.view(-1).bool().cpu()
         probs = torch.sigmoid(logits).cpu()
         y = batch.y.view(probs.shape).cpu()
+        clip_ids = batch.clip_id
+        if isinstance(clip_ids, str):
+            clip_ids = [clip_ids]
         for i in range(len(probs)):
             if mask_t[i]:
+                tag_ids.append(str(clip_ids[i]))
                 tag_true.append(y[i].int().tolist())
                 tag_prob.append(probs[i].tolist())
             if mask_e[i]:
                 em_true.append(batch.emotion.view(-1, 2)[i].cpu().tolist())
                 em_pred.append(emotion[i].cpu().tolist())
-    return tag_true, tag_prob, em_true, em_pred
+    return tag_ids, tag_true, tag_prob, em_true, em_pred
 
 
 def run_mode(mode, splits, vocab, node_dim, args, device):
@@ -202,7 +243,7 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
             opt.step()
             total += float(loss)
             seen += 1
-        tt, tp, et, ep = evaluate_split(model, loaders["val"], device, mode)
+        _, tt, tp, et, ep = evaluate_split(model, loaders["val"], device, mode)
         pred = ev.binarize(tp, 0.5)
         row = {
             "epoch": epoch,
@@ -226,10 +267,12 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
         model.load_state_dict(best[2])
         print(f"  [{mode} select] restored epoch {best[1]} "
               f"(val macro-F1 {best[0]:.4f})", flush=True)
-    tt, tp, et, ep = evaluate_split(model, loaders["val"], device, mode)
+    _, tt, tp, et, ep = evaluate_split(model, loaders["val"], device, mode)
     thr, _ = ev.best_threshold(tt, tp)
-    tt, tp, et, ep = evaluate_split(model, loaders["test"], device, mode)
+    test_ids, tt, tp, et, ep = evaluate_split(model, loaders["test"], device, mode)
     pred = ev.binarize(tp, thr)
+    evidence_path = Path(args.out_dir) / "evaluation" / f"task3_{mode}.json.gz"
+    write_multilabel_predictions(evidence_path, test_ids, tt, tp, vocab, thr)
     result = {
         "mode": mode,
         "params": sum(p.numel() for p in model.parameters() if p.requires_grad),
@@ -240,6 +283,9 @@ def run_mode(mode, splits, vocab, node_dim, args, device):
         "test_macro_f1": ev.macro_f1(tt, pred),
         "test_micro_f1": ev.micro_f1(tt, pred),
         "test_auc_pr": ev.macro_auc_pr(tt, tp),
+        "evaluation_artifact": {
+            "path": str(evidence_path), "sha256": file_digest(evidence_path)
+        },
     }
     if et:
         result["valence"] = ev.regression_metrics([a[0] for a in et], [b[0] for b in ep])
@@ -289,39 +335,23 @@ def main() -> None:
     from src.bert_encoder import load_tokenizer
     tok = load_tokenizer()
 
-    vocab, mtat = load_cache(args.mtat_cache, tok, args.max_length)
+    cached_vocab, mtat = load_cache(args.mtat_cache, tok, args.max_length)
     deam = []
     if Path(args.deam_cache).exists():
         _, deam = load_cache(args.deam_cache, tok, args.max_length)
-    print(f"[data] mtat={len(mtat)} deam={len(deam)} tags={len(vocab)}")
+    print(f"[data] mtat={len(mtat)} deam={len(deam)} cached-tags={len(cached_vocab)}")
+    try:
+        vocab, tag_splits, protocol = prepare_tag_protocol(
+            mtat, args.split, args.seed, n_tags=50, cached_vocab=cached_vocab
+        )
+    except ValueError as exc:
+        raise SystemExit(f"--split {args.split}: {exc}") from exc
+    m_tr, m_va, m_te = (tag_splits[name] for name in ("train", "val", "test"))
+    print(f"[data] derived {len(vocab)} tags from the training split")
+    if cached_vocab:
+        print("[data] ignored cache vocabulary selected before the final split")
 
-    if args.split == "official_eval":
-        # Same partition train_contrastive.py uses: the published eval clips are
-        # held out whole, and only the remaining pool is split. Without this a
-        # supervised and a zero-shot model are scored on different clips and the
-        # comparison the specification asks for is not like-for-like.
-        from src.splits import official_eval_split
-        try:
-            m_tr, m_va, m_te = official_eval_split(mtat, seed=args.seed)
-        except ValueError as e:
-            raise SystemExit("--split official_eval: %s" % e)
-        print(f"[data] official eval split: {len(m_tr)}/{len(m_va)}/{len(m_te)}")
-    else:
-        m_tr, m_va, m_te = artist_split(mtat, args.seed)
-
-    if not vocab:
-        # The MusicCaps cache is built for the contrastive task and ships no tag
-        # vocabulary. Derive it from the TRAINING split only: choosing tags by
-        # frequency over the whole corpus would let the test split influence
-        # which labels the model is scored on, which is the same class of leak
-        # the zero-shot evaluation had. Same rule train_contrastive.py uses, so
-        # the supervised and zero-shot numbers share a vocabulary.
-        import collections
-        counts = collections.Counter(a for d in m_tr for a in (d.labels_set or ()))
-        vocab = [t for t, _ in counts.most_common(50)]
-        print(f"[data] derived {len(vocab)} tags from the training split")
-
-    attach_tag_vectors(mtat + deam, vocab)
+    attach_tag_vectors(deam, vocab)
 
     d_tr, d_va, d_te = artist_split(deam, args.seed) if deam else ([], [], [])
     splits = {"train": m_tr + d_tr, "val": m_va + d_va, "test": m_te + d_te}
@@ -331,6 +361,10 @@ def main() -> None:
     node_dim = mtat[0].x.shape[1]
     modes = ["bert", "gnn", "concat", "crossattn"] if args.mode == "all" else [args.mode]
     results = {"config": vars(args), "n_tags": len(vocab), "vocab": vocab,
+               "data_protocol": protocol,
+               "provenance": build_provenance(
+                   vars(args), tag_splits, vocab, "val", "val_macro_f1"
+               ),
                # Written so a reader can verify this run and the zero-shot one
                # scored the same labels on the same clips, rather than trusting
                # that equal split sizes imply equal splits -- they do not.

@@ -20,60 +20,67 @@ from torch import nn
 from torch.utils.data import DataLoader
 
 from src import bert_encoder, evaluate as ev, mtat_data, musiccaps_data
-from src.splits import artist_grouped_split
+from src.evaluation_artifacts import file_digest, write_multilabel_predictions
+from src.run_provenance import build_provenance
+from src.splits import split_records
 
 
 def build_records(args) -> tuple[list[str], dict[str, list[dict]]]:
     raw = Path(args.data_dir)
     if args.dataset == "mtat":
-        vocab, records = mtat_data.build_dataset(
+        records = mtat_data.load_labeled_records(
             raw / "magnatagatune" / "annotations_final.csv",
             raw / "magnatagatune" / "clip_info_final.csv",
-            n_tags=args.n_tags,
             use_artist=args.use_artist,
         )
         # Artist-grouped, NOT the official split: the official MTT split shares
         # 45 artists between train and test, covering 61.6% of test clips.
-        train, val, test = artist_grouped_split(records, seed=args.seed)
+        splits, _ = split_records("mtat", records, seed=args.seed)
+        vocab = mtat_data.top_labels(splits["train"], args.n_tags)
+        splits = {
+            name: mtat_data.project_vocabulary(part, vocab)
+            for name, part in splits.items()
+        }
     else:
-        vocab, records = musiccaps_data.build_dataset(
-            raw / "musiccaps" / "musiccaps-public.csv",
-            n_aspects=args.n_tags,
-            strip_leakage=args.strip_leakage,
+        records = musiccaps_data.load_labeled_records(
+            raw / "musiccaps" / "musiccaps-public.csv"
         )
         # MusicCaps publishes the AudioSet provenance split in the metadata:
         # keep its eval examples as test and only split the train pool.
         # Treating all rows as one random pool makes the reported test score
         # incomparable with the dataset's intended evaluation partition.
-        rng = random.Random(args.seed)
         if not any("is_eval" in r for r in records):
             raise SystemExit(
                 "musiccaps records carry no is_eval flag: the metadata CSV is "
                 "missing is_audioset_eval. Refusing to fall back to a random "
                 "split, which would not be comparable with the official one."
             )
-        train_pool = [r for r in records if not r.get("is_eval", False)]
-        test = [r for r in records if r.get("is_eval", False)]
-        if not test:
-            raise SystemExit("musiccaps is_audioset_eval selected 0 rows")
-        rng.shuffle(train_pool)
-        n_val = int(0.15 * len(train_pool))
-        val = train_pool[:n_val]
-        train = train_pool[n_val:]
-    return vocab, {"train": train, "val": val, "test": test}
+        try:
+            splits, _ = split_records("musiccaps", records, seed=args.seed)
+        except ValueError as exc:
+            raise SystemExit(str(exc)) from exc
+        vocab = musiccaps_data.top_aspects(splits["train"], args.n_tags)
+        splits = {
+            name: musiccaps_data.project_vocabulary(
+                part, vocab, strip_leakage=args.strip_leakage
+            )
+            for name, part in splits.items()
+        }
+    return vocab, splits
 
 
 @torch.no_grad()
-def predict(model, loader, device) -> tuple[list[list[int]], list[list[float]]]:
+def predict(model, loader, device) -> tuple[list[str], list[list[int]], list[list[float]]]:
     model.eval()
-    y_true, probs = [], []
+    ids, y_true, probs = [], [], []
     for batch in loader:
         logits = model(
             batch["input_ids"].to(device), batch["attention_mask"].to(device)
         )
         probs.extend(torch.sigmoid(logits).cpu().tolist())
         y_true.extend(batch["labels"].int().tolist())
-    return y_true, probs
+        ids.extend(str(value) for value in batch["clip_id"])
+    return ids, y_true, probs
 
 
 def main() -> None:
@@ -144,7 +151,7 @@ def main() -> None:
             loss.backward()
             opt.step()
             total += loss.item()
-        y, probs = predict(model, loaders["val"], device)
+        _, y, probs = predict(model, loaders["val"], device)
         pred = ev.binarize(probs, 0.5)
         row = {
             "epoch": epoch,
@@ -168,9 +175,9 @@ def main() -> None:
         print(f"[select] restored epoch {best[1]} (val macro-F1 {best[0]:.4f})")
 
     # threshold tuned on val, then applied once to test
-    y_val, p_val = predict(model, loaders["val"], device)
+    _, y_val, p_val = predict(model, loaders["val"], device)
     thr, _ = ev.best_threshold(y_val, p_val)
-    y_test, p_test = predict(model, loaders["test"], device)
+    test_ids, y_test, p_test = predict(model, loaders["test"], device)
     pred_test = ev.binarize(p_test, thr)
 
     y_train = [
@@ -182,6 +189,9 @@ def main() -> None:
         "config": vars(args),
         "n_tags": len(vocab),
         "vocab": vocab,
+        "provenance": build_provenance(
+            vars(args), splits, vocab, "val", "val_macro_f1"
+        ),
         "split_sizes": {k: len(v) for k, v in splits.items()},
         "history": history,
         "selected_epoch": best[1],
@@ -219,6 +229,14 @@ def main() -> None:
     out = Path(args.out_dir)
     (out / "plots").mkdir(parents=True, exist_ok=True)
     tag = f"task1_{args.dataset}" + ("_stripped" if args.strip_leakage else "")
+    evidence_path = out / "evaluation" / f"{tag}.json.gz"
+    write_multilabel_predictions(
+        evidence_path, test_ids, y_test, p_test, vocab, thr
+    )
+    results["evaluation_artifact"] = {
+        "path": str(evidence_path),
+        "sha256": file_digest(evidence_path),
+    }
     (out / f"metrics_{tag}.json").write_text(json.dumps(results, indent=2))
 
     # Persist the encoder: Task 3 fuses this text branch with the GNN, and

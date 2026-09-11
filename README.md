@@ -128,7 +128,7 @@ contains.
 
 Any of Python 3.10–3.14 works. The suite is currently developed and run on
 **3.14.6 with torch 2.9.1**; the rented GPU images shipped **3.10.12 with torch
-2.5.1+cu121**, and both pass all 134 tests. 3.12 was the original target, when
+2.5.1+cu121**, and both pass all 165 tests. 3.12 was the original target, when
 3.13+ wheels were still patchy — that is no longer the constraint it was.
 
 ```bash
@@ -148,7 +148,7 @@ evaluation run on CPU in seconds from the committed artifacts.
 ## Tests
 
 ```bash
-pytest -q     # 134 passed
+pytest -q     # 165 passed
 ```
 
 The root `conftest.py` is what puts the repo root on `sys.path` so that
@@ -282,7 +282,7 @@ src/            data loaders   fma_data, mtat_data, deam_data, musiccaps_data
                 human study    human_eval, enrich_examples, fetch_ratings
                 reporting      make_plots, plot_tsne_views, aggregate_sweep,
                                aggregate_metrics, make_report_numbers, dump_splits
-tests/          18 modules / 134 tests, run with pytest
+tests/          28 modules / 165 tests, run with pytest
 notebooks/      eda.ipynb (dataset findings), demo_context.ipynb (end-to-end demo)
 results/        metrics.json (aggregate) + per-task metrics, plots/,
                 retrieval_examples/, case studies, t-SNE

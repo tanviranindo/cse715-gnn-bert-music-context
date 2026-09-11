@@ -94,6 +94,7 @@ class TagDataset(torch.utils.data.Dataset):
             if t in self.index:
                 y[self.index[t]] = 1.0
         return {
+            "clip_id": str(r["clip_id"]),
             "input_ids": enc["input_ids"].squeeze(0),
             "attention_mask": enc["attention_mask"].squeeze(0),
             "labels": y,

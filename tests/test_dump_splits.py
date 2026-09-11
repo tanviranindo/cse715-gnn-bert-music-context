@@ -2,6 +2,13 @@
 are written in is worth pinning."""
 
 from src import dump_splits
+from src.splits import split_digest, split_records
+
+
+class _Item:
+    def __init__(self, clip_id, is_eval):
+        self.clip_id = clip_id
+        self.is_eval = is_eval
 
 
 def _records():
@@ -43,3 +50,21 @@ def test_splits_are_disjoint_in_the_manifest():
     doc = dump_splits.manifest(_records(), "artist_grouped_seed42")
     ids = doc["train"] + doc["val"] + doc["test"]
     assert len(ids) == len(set(ids))
+
+
+def test_musiccaps_manifest_uses_the_training_split_implementation():
+    records = [
+        _Item("z", False),
+        _Item("a", False),
+        _Item("e", True),
+        _Item("m", False),
+    ]
+    by_split, kind = split_records("musiccaps", records, seed=42)
+
+    doc = dump_splits.manifest_for_dataset("musiccaps", records, seed=42)
+
+    assert doc["split_kind"] == kind
+    assert doc["train"] == sorted(x.clip_id for x in by_split["train"])
+    assert doc["val"] == sorted(x.clip_id for x in by_split["val"])
+    assert doc["test"] == ["e"]
+    assert doc["split_digest"] == split_digest(by_split)

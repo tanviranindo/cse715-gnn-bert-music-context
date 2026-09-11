@@ -49,7 +49,7 @@ def top_aspects(records: list[dict], n: int = 50, min_count: int = 100) -> list[
     """
     counts: collections.Counter = collections.Counter()
     for r in records:
-        for a in r["aspects"]:
+        for a in r.get("aspects", r.get("labels", set())):
             counts[a] += 1
     return [a for a, c in counts.most_common(n) if c >= min_count]
 
@@ -82,30 +82,47 @@ def build_dataset(
     forcing the model to infer a label from surrounding context rather than
     detect its literal presence.
     """
-    records = load_musiccaps(path)
+    records = load_labeled_records(path)
     vocab = top_aspects(records, n_aspects, min_count)
+    return vocab, project_vocabulary(records, vocab, strip_leakage)
+
+
+def load_labeled_records(path: str | Path) -> list[dict]:
+    """Load every labeled MusicCaps row without choosing an evaluation vocabulary."""
+    return [
+        {
+            "clip_id": r["ytid"],
+            "artist": r["ytid"],  # no artist metadata; group by clip
+            "text": r["caption"],
+            "labels": set(r["aspects"]),
+            "is_eval": r["is_eval"],
+        }
+        for r in load_musiccaps(path)
+        if r["aspects"]
+    ]
+
+
+def project_vocabulary(
+    records: list[dict], vocab: list[str], strip_leakage: bool = False
+) -> list[dict]:
+    """Project records onto a vocabulary already chosen from training labels."""
     vocab_set = set(vocab)
 
     out = []
     for r in records:
-        labels = r["aspects"] & vocab_set
+        labels = set(r["labels"]) & vocab_set
         if not labels:
             continue
         text = (
-            strip_aspects_from_caption(r["caption"], labels)
+            strip_aspects_from_caption(r["text"], labels)
             if strip_leakage
-            else r["caption"]
+            else r["text"]
         )
-        out.append(
-            {
-                "clip_id": r["ytid"],
-                "artist": r["ytid"],  # no artist metadata; group by clip
-                "text": text,
-                "labels": labels,
-                "is_eval": r["is_eval"],
-            }
-        )
-    return vocab, out
+        projected = dict(r)
+        projected["text"] = text
+        projected["labels"] = labels
+        out.append(projected)
+    return out
 
 
 def lexical_match_predict(text: str, vocab: list[str]) -> set[str]:

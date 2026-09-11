@@ -85,6 +85,52 @@ class GNNClassifier(nn.Module):
         return self.head(self.encoder(x, edge_index, batch))
 
 
+class WeightedGraphEncoder(nn.Module):
+    """Edge-weight-aware encoder for chord transition-count graphs."""
+
+    def __init__(
+        self,
+        in_dim: int,
+        hidden_dim: int = 128,
+        n_layers: int = 2,
+        dropout: float = 0.3,
+    ) -> None:
+        super().__init__()
+        from torch_geometric.nn import GraphConv
+
+        self.layers = nn.ModuleList()
+        self.norms = nn.ModuleList()
+        width = in_dim
+        for _ in range(n_layers):
+            self.layers.append(GraphConv(width, hidden_dim))
+            self.norms.append(nn.BatchNorm1d(hidden_dim))
+            width = hidden_dim
+        self.out_dim = width
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, edge_index, edge_weight, batch):
+        from torch_geometric.nn import global_mean_pool
+
+        for layer, norm in zip(self.layers, self.norms):
+            x = layer(x, edge_index, edge_weight=edge_weight)
+            x = norm(x)
+            x = torch.relu(x)
+            x = self.dropout(x)
+        return global_mean_pool(x, batch)
+
+
+class WeightedGNNClassifier(nn.Module):
+    """Genre classifier whose messages are scaled by chord transition counts."""
+
+    def __init__(self, in_dim: int, n_classes: int, **kwargs) -> None:
+        super().__init__()
+        self.encoder = WeightedGraphEncoder(in_dim, **kwargs)
+        self.head = nn.Linear(self.encoder.out_dim, n_classes)
+
+    def forward(self, x, edge_index, edge_weight, batch):
+        return self.head(self.encoder(x, edge_index, edge_weight, batch))
+
+
 class CNNBaseline(nn.Module):
     """B2: 2-D CNN over the log-mel spectrogram — no graph, no text.
 

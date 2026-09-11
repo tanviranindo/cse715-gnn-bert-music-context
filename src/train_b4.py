@@ -19,6 +19,12 @@ from sklearn.preprocessing import StandardScaler
 from torch import nn
 
 from src import evaluate as ev, fma_data
+from src.evaluation_artifacts import file_digest, write_multiclass_predictions
+from src.run_provenance import build_provenance
+
+
+def evaluation_artifact_path(metrics_path: Path) -> Path:
+    return metrics_path.parent / "evaluation" / "task2_b4.json.gz"
 
 
 def track_features(record: dict) -> np.ndarray:
@@ -84,13 +90,24 @@ def main() -> None:
     with torch.no_grad():
         for xb, yb in loaders["test"]:
             yp.extend(model(xb.to(device)).argmax(1).cpu().tolist()); yt.extend(yb.tolist())
+    metrics_path = Path(args.out)
+    evidence_path = evaluation_artifact_path(metrics_path)
+    test_ids = [str(record["track_id"]) for record in splits["test"]]
+    write_multiclass_predictions(evidence_path, test_ids, yt, yp, genres)
     result = {"model": "pca_mlp_b4", "params": sum(p.numel() for p in model.parameters()),
               "components": n_components, "split_sizes": {k: len(v) for k, v in splits.items()},
               "artist_leakage": fma_data.artist_leakage(splits), "history": history,
               "test_accuracy": ev.accuracy(yt, yp), "test_macro_f1": ev.multiclass_f1(yt, yp, len(genres)),
-              "per_class_f1": ev.per_class_f1(yt, yp, genres), "genres": genres}
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).write_text(json.dumps(result, indent=2))
+              "per_class_f1": ev.per_class_f1(yt, yp, genres), "genres": genres,
+              "provenance": build_provenance(
+                  vars(args), splits, genres, "not_applicable", "val_accuracy",
+                  vocabulary_from="fma_small_definition",
+              ),
+              "evaluation_artifact": {
+                  "path": str(evidence_path), "sha256": file_digest(evidence_path)
+              }}
+    metrics_path.parent.mkdir(parents=True, exist_ok=True)
+    metrics_path.write_text(json.dumps(result, indent=2))
     print(json.dumps({k: result[k] for k in ["test_accuracy", "test_macro_f1", "components"]}, indent=2))
 
 

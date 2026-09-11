@@ -5,6 +5,7 @@ librosa>=0.10
 numpy>=1.26,<2.2
 scikit-learn>=1.4
 pandas>=2.2
+pyarrow>=15
 pytest>=8.0
 matplotlib>=3.8
 
@@ -15,13 +16,3 @@ matplotlib>=3.8
 # graph builder's worker pool. Pin the pairing that is known to work.
 numba>=0.61,<0.62
 llvmlite>=0.44,<0.45
-# MusicCaps ships as parquet shards with the audio inline, so the graph builder
-# reads them with pyarrow. Omitting this failed a fresh GPU box mid-pipeline
-# with ModuleNotFoundError rather than at install time.
-pyarrow>=15.0
-soundfile>=0.12
-
-# infra/fetch_datasets.sh pulls MagnaTagATune and the MusicCaps audio mirror
-# from the Hugging Face Hub.
-huggingface-hub>=0.23
-

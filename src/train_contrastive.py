@@ -22,6 +22,16 @@ import numpy as np
 import torch
 
 from src import contrastive, evaluate as ev
+from src.evaluation_artifacts import (
+    file_digest,
+    write_multilabel_predictions,
+    write_retrieval_ranks,
+)
+from src.run_provenance import build_provenance
+
+
+def checkpoint_name(metrics_suffix: str) -> str:
+    return f"task4_dual_encoder{metrics_suffix}.pt"
 
 
 def main() -> None:
@@ -48,6 +58,8 @@ def main() -> None:
                         "(Task 3 found this decisive; None = share --lr)")
     p.add_argument("--metrics-suffix", default="",
                    help="appended to metrics/example filenames, for ablation runs")
+    p.add_argument("--checkpoint-dir", default="",
+                   help="optional directory for the selected dual-encoder weights")
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
@@ -177,6 +189,20 @@ def main() -> None:
         model.load_state_dict(best[1])
         print(f"[best] restored epoch {best[2]} (val c2a R@10 {best[0]:.4f})")
     G, T = embed(loaders["test"])
+    out = Path(args.out_dir)
+    (out / "retrieval_examples").mkdir(parents=True, exist_ok=True)
+    test = splits["test"]
+    test_ids = [str(item.clip_id) for item in test]
+    sims = T @ G.t()
+    c2a_ranks = ((sims > sims.diag().unsqueeze(1)).sum(dim=1) + 1).tolist()
+    transposed = sims.t()
+    a2c_ranks = (
+        (transposed > transposed.diag().unsqueeze(1)).sum(dim=1) + 1
+    ).tolist()
+    retrieval_evidence = out / "evaluation" / f"task4{args.metrics_suffix}.json.gz"
+    write_retrieval_ranks(
+        retrieval_evidence, test_ids, test_ids, c2a_ranks, a2c_ranks
+    )
     results = {
         "config": vars(args),
         "split_sizes": {k: len(v) for k, v in splits.items()},
@@ -191,15 +217,34 @@ def main() -> None:
         "median_rank_audio_to_caption": contrastive.median_rank(G, T),
         "random_baseline_R@1": 1.0 / len(G),
         "random_baseline_R@10": 10.0 / len(G),
+        "provenance": build_provenance(
+            vars(args), splits, [], "not_applicable", "val_c2a_R@10",
+            vocabulary_from="not_applicable",
+        ),
+        "evaluation_artifact": {
+            "path": str(retrieval_evidence),
+            "sha256": file_digest(retrieval_evidence),
+        },
     }
 
-    out = Path(args.out_dir)
-    (out / "retrieval_examples").mkdir(parents=True, exist_ok=True)
+    if args.checkpoint_dir:
+        checkpoint_dir = Path(args.checkpoint_dir)
+        checkpoint_dir.mkdir(parents=True, exist_ok=True)
+        checkpoint_path = checkpoint_dir / checkpoint_name(args.metrics_suffix)
+        torch.save(
+            {
+                "model_state": model.state_dict(),
+                "config": vars(args),
+                "split_kind": split_kind,
+                "best_epoch": best[2],
+            },
+            checkpoint_path,
+        )
+        print(f"[ckpt] {checkpoint_path}")
+
     (out / ("metrics_task4%s.json" % args.metrics_suffix)).write_text(json.dumps(results, indent=2))
 
     # 10 qualitative caption -> top-3 clip retrievals
-    sims = T @ G.t()
-    test = splits["test"]
     examples = []
     for i in range(min(args.n_examples, len(test))):
         top = sims[i].topk(3).indices.tolist()
@@ -253,6 +298,10 @@ def main() -> None:
         y_true = [[1 if t in d.labels_set else 0 for t in tags] for d in test]
         probs = torch.sigmoid(scores / model.temperature.cpu()).tolist()
         pred = ev.binarize(probs, thr)
+        zero_shot_evidence = out / "evaluation" / "task4_zeroshot.json.gz"
+        write_multilabel_predictions(
+            zero_shot_evidence, test_ids, y_true, probs, tags, thr
+        )
         zs = {"n_tags": len(tags), "threshold": thr,
               "vocabulary_from": "train split",
               "threshold_from": "val split",
@@ -263,6 +312,13 @@ def main() -> None:
               "micro_f1": ev.micro_f1(y_true, pred),
               "macro_f1": ev.macro_f1(y_true, pred),
               "auc_pr": ev.macro_auc_pr(y_true, probs),
+              "provenance": build_provenance(
+                  vars(args), splits, tags, "val", "val_c2a_R@10"
+              ),
+              "evaluation_artifact": {
+                  "path": str(zero_shot_evidence),
+                  "sha256": file_digest(zero_shot_evidence),
+              },
               "note": "No tag supervision reaches the encoder, and no test label "
                       "reaches the vocabulary or the threshold. Compare against a "
                       "supervised model scored on this same vocabulary and split."}

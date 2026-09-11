@@ -131,18 +131,29 @@ def build_dataset(
     restricted to the tag vocabulary. Clips with no positive tag in the
     vocabulary are dropped, matching standard MTAT practice.
     """
+    records = load_labeled_records(
+        annotations_path, clip_info_path, use_artist=use_artist
+    )
+    vocab = top_labels(records, n_tags)
+    return vocab, project_vocabulary(records, vocab)
+
+
+def load_labeled_records(
+    annotations_path: str | Path,
+    clip_info_path: str | Path,
+    use_artist: bool = False,
+) -> list[dict]:
+    """Load all canonical labeled clips without selecting a top-N vocabulary."""
     raw_tags, records = load_annotations(annotations_path)
     info = load_clip_info(clip_info_path)
     tag_map = canonical_tag_map(raw_tags)
-    vocab = top_tags(records, tag_map, n_tags)
-    vocab_set = set(vocab)
 
     out = []
     for r in records:
         meta = info.get(r["clip_id"])
         if meta is None:
             continue
-        labels = {tag_map[t] for t in r["tags"] if t in tag_map} & vocab_set
+        labels = {tag_map[t] for t in r["tags"] if t in tag_map}
         if not labels:
             continue
         out.append(
@@ -154,7 +165,29 @@ def build_dataset(
                 "labels": labels,
             }
         )
-    return vocab, out
+    return out
+
+
+def top_labels(records: list[dict], n: int = 50) -> list[str]:
+    """Most frequent canonical labels from the records supplied by the caller."""
+    counts: collections.Counter = collections.Counter()
+    for record in records:
+        counts.update(set(record["labels"]))
+    return [tag for tag, _ in counts.most_common(n)]
+
+
+def project_vocabulary(records: list[dict], vocab: list[str]) -> list[dict]:
+    """Copy records whose labels intersect a preselected training vocabulary."""
+    vocab_set = set(vocab)
+    out = []
+    for record in records:
+        labels = set(record["labels"]) & vocab_set
+        if not labels:
+            continue
+        projected = dict(record)
+        projected["labels"] = labels
+        out.append(projected)
+    return out
 
 
 def labels_to_vector(labels: set[str], vocab: list[str]) -> list[int]:

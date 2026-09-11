@@ -1,4 +1,4 @@
-"""Regenerate `report/_numbers.json` from `results/metrics.json`.
+"""Regenerate report data products from `results/metrics.json`.
 
 The report used to carry a hand-curated copy of the numbers, which is how it
 came to state that the DEAM re-run was impossible while the re-run sat in
@@ -12,6 +12,11 @@ older than the runs.
 import json
 import pathlib
 import sys
+
+try:
+    from src.make_report_tex import generate as generate_tex
+except ModuleNotFoundError:  # documented direct-script invocation
+    from make_report_tex import generate as generate_tex
 
 RESULTS = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "results")
 REPORT = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else "report")
@@ -64,6 +69,9 @@ def main():
     out = REPORT / "_numbers.json"
     out.write_text(json.dumps(doc, indent=2) + "\n")
     print("wrote %s (%d bytes)" % (out, out.stat().st_size))
+    tex = REPORT / "generated_metrics.tex"
+    generate_tex(RESULTS / "metrics.json", tex)
+    print("wrote %s (%d bytes)" % (tex, tex.stat().st_size))
 
 
 if __name__ == "__main__":
